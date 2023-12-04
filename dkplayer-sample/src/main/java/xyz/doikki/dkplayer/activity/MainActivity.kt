@@ -11,7 +11,6 @@ import androidx.fragment.app.Fragment
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.navigation.NavigationBarView
 import xyz.doikki.dkplayer.R
-import xyz.doikki.dkplayer.fragment.main.ApiFragment
 import xyz.doikki.dkplayer.fragment.main.ExtensionFragment
 import xyz.doikki.dkplayer.fragment.main.ListFragment
 import xyz.doikki.dkplayer.fragment.main.PipFragment
@@ -61,7 +60,8 @@ class MainActivity : BaseActivity<VideoView>(), NavigationBarView.OnItemSelected
         }
         val bottomNavigationView = findViewById<BottomNavigationView>(R.id.nav_view)
         bottomNavigationView.setOnItemSelectedListener(this)
-        mFragments.add(ApiFragment())
+        // mFragments.add(ApiFragment())
+        mFragments.add(ListFragment())
         mFragments.add(ListFragment())
         mFragments.add(ExtensionFragment())
         mFragments.add(PipFragment())

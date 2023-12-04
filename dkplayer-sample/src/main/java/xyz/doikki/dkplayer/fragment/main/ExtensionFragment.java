@@ -4,7 +4,6 @@ import android.content.Intent;
 import android.view.View;
 
 import xyz.doikki.dkplayer.R;
-import xyz.doikki.dkplayer.activity.api.PlayerActivity;
 import xyz.doikki.dkplayer.activity.extend.ADActivity;
 import xyz.doikki.dkplayer.activity.extend.CacheActivity;
 import xyz.doikki.dkplayer.activity.extend.CustomExoPlayerActivity;
@@ -67,9 +66,6 @@ public class ExtensionFragment extends BaseFragment implements View.OnClickListe
                 break;
             case R.id.btn_definition:
                 startActivity(new Intent(getActivity(), DefinitionPlayerActivity.class));
-                break;
-            case R.id.btn_custom_render_view:
-                PlayerActivity.start(getActivity(), DataUtil.SAMPLE_URL, getString(R.string.str_custom_render_view), false, true);
                 break;
         }
     }
