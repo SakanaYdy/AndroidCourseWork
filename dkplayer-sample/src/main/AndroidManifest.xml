@@ -44,25 +44,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".activity.pip.PIPListActivity"
-            android:configChanges="keyboardHidden|orientation|screenSize|screenLayout"
-            android:screenOrientation="portrait" />
-        <activity
-            android:name=".activity.pip.PIPActivity"
-            android:configChanges="keyboardHidden|orientation|screenSize|screenLayout"
-            android:screenOrientation="portrait" />
-        <activity
-            android:name=".activity.pip.AndroidOPiPActivity"
-            android:configChanges="screenSize|smallestScreenSize|screenLayout|orientation"
-            android:excludeFromRecents="true"
-            android:supportsPictureInPicture="true"
-            android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
-        <activity
             android:name=".activity.list.DetailActivity"
-            android:configChanges="keyboardHidden|orientation|screenSize|screenLayout"
-            android:screenOrientation="portrait" />
-        <activity
-            android:name=".activity.pip.TinyScreenActivity"
             android:configChanges="keyboardHidden|orientation|screenSize|screenLayout"
             android:screenOrientation="portrait" />
         <activity

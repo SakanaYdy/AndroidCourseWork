@@ -3,25 +3,25 @@
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="match_parent">
     <Button
-        android:id="@+id/btn_pip"
+        android:id="@+id/test1"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/str_pip_demo" />
+        android:text="test1" />
     <Button
-        android:id="@+id/btn_pip_in_list"
+        android:id="@+id/test2"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/str_pip_in_list" />
+        android:text="test2" />
 
     <Button
-        android:id="@+id/btn_pip_android_o"
+        android:id="@+id/test3"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/str_pip_android_o" />
+        android:text="test3" />
 
     <Button
-        android:id="@+id/btn_tiny_screen"
+        android:id="@+id/test4"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="列表滑动进入小屏" />
+        android:text="test4" />
 </LinearLayout>
