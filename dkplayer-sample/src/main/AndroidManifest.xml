@@ -44,27 +44,11 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".activity.extend.FullScreenActivity"
-            android:configChanges="keyboardHidden|orientation|screenSize|screenLayout"
-            android:screenOrientation="landscape" />
-        <activity
-            android:name=".activity.extend.DanmakuActivity"
-            android:configChanges="keyboardHidden|orientation|screenSize|screenLayout"
-            android:screenOrientation="portrait" />
-        <activity
             android:name=".activity.pip.PIPListActivity"
             android:configChanges="keyboardHidden|orientation|screenSize|screenLayout"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".activity.extend.ADActivity"
-            android:configChanges="keyboardHidden|orientation|screenSize|screenLayout"
-            android:screenOrientation="portrait" />
-        <activity
             android:name=".activity.pip.PIPActivity"
-            android:configChanges="keyboardHidden|orientation|screenSize|screenLayout"
-            android:screenOrientation="portrait" />
-        <activity
-            android:name=".activity.extend.DefinitionPlayerActivity"
             android:configChanges="keyboardHidden|orientation|screenSize|screenLayout"
             android:screenOrientation="portrait" />
         <activity
@@ -74,31 +58,11 @@
             android:supportsPictureInPicture="true"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
         <activity
-            android:name=".activity.extend.CacheActivity"
-            android:configChanges="keyboardHidden|orientation|screenSize|screenLayout"
-            android:screenOrientation="portrait" />
-        <activity
             android:name=".activity.list.DetailActivity"
             android:configChanges="keyboardHidden|orientation|screenSize|screenLayout"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".activity.extend.PlayListActivity"
-            android:configChanges="keyboardHidden|orientation|screenSize|screenLayout"
-            android:screenOrientation="portrait" />
-        <activity
-            android:name=".activity.extend.PadActivity"
-            android:configChanges="keyboardHidden|orientation|screenSize|screenLayout"
-            android:screenOrientation="landscape" />
-        <activity
             android:name=".activity.pip.TinyScreenActivity"
-            android:configChanges="keyboardHidden|orientation|screenSize|screenLayout"
-            android:screenOrientation="portrait" />
-        <activity
-            android:name=".activity.extend.CustomExoPlayerActivity"
-            android:configChanges="keyboardHidden|orientation|screenSize|screenLayout"
-            android:screenOrientation="portrait" />
-        <activity
-            android:name=".activity.extend.CustomIjkPlayerActivity"
             android:configChanges="keyboardHidden|orientation|screenSize|screenLayout"
             android:screenOrientation="portrait" />
         <activity
