@@ -8,10 +8,7 @@ import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentStatePagerAdapter;
 
 import xyz.doikki.dkplayer.fragment.list.ListViewFragment;
-import xyz.doikki.dkplayer.fragment.list.RecyclerViewAutoPlayFragment;
 import xyz.doikki.dkplayer.fragment.list.RecyclerViewFragment;
-import xyz.doikki.dkplayer.fragment.list.RecyclerViewPortraitFragment;
-import xyz.doikki.dkplayer.fragment.list.SeamlessPlayFragment;
 import xyz.doikki.dkplayer.fragment.list.TikTokListFragment;
 
 import java.util.List;
