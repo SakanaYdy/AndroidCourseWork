@@ -66,9 +66,9 @@ class MainActivity : BaseActivity<VideoView>(), NavigationBarView.OnItemSelected
         mFragments.add(ExtensionFragment())
         mFragments.add(PipFragment())
         supportFragmentManager.beginTransaction()
-            .add(R.id.layout_content, mFragments[0])
+            .add(R.id.layout_content, mFragments[1])
             .commitAllowingStateLoss()
-        mCurrentIndex = 0
+        mCurrentIndex = 1
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
@@ -121,7 +121,7 @@ class MainActivity : BaseActivity<VideoView>(), NavigationBarView.OnItemSelected
         val index: Int
         val itemId = menuItem.itemId
         index = when (itemId) {
-            R.id.tab_api -> 0
+            // R.id.tab_api -> 0
             R.id.tab_list -> 1
             R.id.tab_extension -> 2
             R.id.tab_pip -> 3

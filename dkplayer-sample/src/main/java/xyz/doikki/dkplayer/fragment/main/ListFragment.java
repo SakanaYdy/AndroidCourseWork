@@ -33,10 +33,10 @@ public class ListFragment extends BaseFragment {
         List<String> titles = new ArrayList<>();
         titles.add(getString(R.string.str_list_view));
         titles.add(getString(R.string.str_recycler_view));
-        titles.add(getString(R.string.str_auto_play_recycler_view));
-        titles.add(getString(R.string.str_tiktok));
-        titles.add(getString(R.string.str_seamless_play));
-        titles.add(getString(R.string.str_portrait_when_fullscreen));
+        // titles.add(getString(R.string.str_auto_play_recycler_view));
+        titles.add("抖音");
+        // titles.add(getString(R.string.str_seamless_play));
+        // titles.add(getString(R.string.str_portrait_when_fullscreen));
 
         viewPager.setAdapter(new ListPagerAdapter(getChildFragmentManager(), titles));
 
