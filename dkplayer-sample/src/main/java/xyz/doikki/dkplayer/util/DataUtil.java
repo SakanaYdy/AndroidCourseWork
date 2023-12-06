@@ -53,7 +53,7 @@ public class DataUtil {
         List<VideoBean> videoList = new ArrayList<>();
         videoList.add(new VideoBean("预告片1",
                 "https://cms-bucket.nosdn.127.net/eb411c2810f04ffa8aaafc42052b233820180418095416.jpeg",
-                "http://vfx.mtime.cn/Video/2019/02/04/mp4/190204084208765161.mp4"));
+                "https://www.bilibili.com/video/BV1dC4y117Hh/?spm_id_from=333.1007.tianma.2-1-4.click"));
 
         videoList.add(new VideoBean("预告片2",
                 "https://cms-bucket.nosdn.127.net/cb37178af1584c1588f4a01e5ecf323120180418133127.jpeg",

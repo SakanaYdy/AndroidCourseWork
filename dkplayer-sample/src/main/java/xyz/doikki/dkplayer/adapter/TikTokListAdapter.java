@@ -77,8 +77,7 @@ public class TikTokListAdapter extends RecyclerView.Adapter<TikTokListAdapter.Ti
 //                            break;
 //                        case R.id.impl_view_pager_2: //ViewPager2
 //                            TikTok3Activity.start(itemView.getContext(), mPosition);
-//                            break;
-//                    }
+//                            break;//                    }
                     TikTok2Activity.start(itemView.getContext(), mPosition);
                 }
             });
