@@ -28,22 +28,12 @@ public class PipFragment extends BaseFragment implements View.OnClickListener {
         ViewPager viewPager = findViewById(R.id.view_pager);
 
         List<String> titles = new ArrayList<>();
-        // titles.add(getString(R.string.str_list_view));
-        // titles.add(getString(R.string.str_recycler_view));
-        // titles.add(getString(R.string.str_auto_play_recycler_view));
-        // titles.add("抖音");
-        // titles.add(getString(R.string.str_seamless_play));
-        // titles.add(getString(R.string.str_portrait_when_fullscreen));
         titles.add("个人上传视频");
 
         viewPager.setAdapter(new ListPagerAdapter(getChildFragmentManager(), titles));
 
         TabLayout tabLayout = findViewById(R.id.tab_layout);
         tabLayout.setupWithViewPager(viewPager);
-//        findViewById(R.id.test1).setOnClickListener(this);
-//        findViewById(R.id.test2).setOnClickListener(this);
-//        findViewById(R.id.test3).setOnClickListener(this);
-//        findViewById(R.id.test4).setOnClickListener(this);
     }
 
     @Override
