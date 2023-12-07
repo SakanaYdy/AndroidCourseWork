@@ -53,7 +53,7 @@ public class DataUtil {
         List<VideoBean> videoList = new ArrayList<>();
         videoList.add(new VideoBean("预告片1",
                 "https://ydy-sky.oss-cn-beijing.aliyuncs.com/ecad7c6d-758f-4c00-9496-6be46e7c7938.jpg?Expires=1701875535&OSSAccessKeyId=TMP.3KjYQjfE8VvnNP2WTGkDFNXoqojfKr6REnroag2ACMbmUpGVpFbW8o58pnbLC7h918dCb2ST6op4bgDXg75dGMbLYLtAtx&Signature=S802yeahmqGZtnF9wjR7nOpX1%2Bs%3D",
-                "C:\\Users\\杨大宇\\PycharmProjects\\pythonProject\\Project\\download\\1.mp4"));
+                "https://ydy-sky.oss-cn-beijing.aliyuncs.com/1.mp4?Expires=1701916953&OSSAccessKeyId=TMP.3KgmRvTjqEsuHSGaSkRF3njc33Aay7RZ6DwWnnw56kxDHMeeqftnRKkKSzpuninHNyTPSbCa3k7fq8UZhGcSosULD81jVy&Signature=6nFX3AVZJ93e%2Bv12aRZcefEJ9UU%3D"));
 
         videoList.add(new VideoBean("预告片2",
                 "https://cms-bucket.nosdn.127.net/cb37178af1584c1588f4a01e5ecf323120180418133127.jpeg",

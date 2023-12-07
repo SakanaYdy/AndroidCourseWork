@@ -73,8 +73,11 @@ android {
 
 dependencies {
     // compile 'com.aliyun.dpa:oss-android-sdk:+'
+    // https://mvnrepository.com/artifact/mysql/mysql-connector-java
+    // implementation group: 'mysql', name: 'mysql-connector-java', version: '5.0.7'
     implementation fileTree(include: ['*.jar'], dir: 'libs')
 //    debugImplementation 'com.squareup.leakcanary:leakcanary-android:2.0'
+    implementation 'mysql:mysql-connector-java:8.0.23'
     implementation "androidx.multidex:multidex:2.0.1"
     implementation "androidx.core:core-ktx:1.7.0"
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
