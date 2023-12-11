@@ -1,12 +1,6 @@
-package xyz.doikki.dkplayer.dataSource;
-
-import android.widget.Toast;
-
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
-
-import xyz.doikki.dkplayer.util.Tag;
 
 public class DBOpenHelper {
     private static String driver = "com.mysql.jdbc.Driver";
@@ -15,8 +9,8 @@ public class DBOpenHelper {
 //   private static String user = "Ydy";//用户名
 //   private static String password = "123Asd**";//密码
 
-    private static String url = "jdbc:mysql://10.0.2.2/android?characterEncoding=utf-8";
-    private static String user = "root";//用户名
+    private static String url = "jdbc:mysql://127.0.0.1/android?characterEncoding=utf-8";
+    private static String user = "ydy";//用户名
     private static String password = "Aa1783760364";//密码
 
     /*
@@ -32,4 +26,17 @@ public class DBOpenHelper {
        }
        return conn;
    }
+
+    public static void main(String[] args) {
+        DBOpenHelper dbOpenHelper = new DBOpenHelper();
+        try{
+            Connection conn = dbOpenHelper.getConn();
+            System.out.println("success" + conn.toString());
+            conn.close();
+        }catch (Exception e){
+            System.out.println("error");
+        }
+
+    }
+
 }
