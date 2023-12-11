@@ -52,8 +52,9 @@ public class DataUtil {
     public static List<VideoBean> getVideoList() {
         List<VideoBean> videoList = new ArrayList<>();
         videoList.add(new VideoBean("预告片1",
-                "https://cms-bucket.nosdn.127.net/eb411c2810f04ffa8aaafc42052b233820180418095416.jpeg",
-                "http://vfx.mtime.cn/Video/2019/02/04/mp4/190204084208765161.mp4"));
+                "https://tse2-mm.cn.bing.net/th/id/OIP-C.Euix6FlJRCEFAuPuCXmUXAHaE7?rs=1&pid=ImgDetMain",
+                //"https://cms-bucket.nosdn.127.net/eb411c2810f04ffa8aaafc42052b233820180418095416.jpeg",
+                "http://clips.vorwaerts-gmbh.de/big_buck_bunny.mp4"));
 
         videoList.add(new VideoBean("预告片2",
                 "https://cms-bucket.nosdn.127.net/cb37178af1584c1588f4a01e5ecf323120180418133127.jpeg",
