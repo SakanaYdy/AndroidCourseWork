@@ -16,6 +16,7 @@ import java.util.List;
  * ${@link xyz.doikki.dkplayer.fragment.list.RecyclerViewPortraitFragment} 我甚至使用了三重继承😂，
  * 实际开发中可以不需要这样。
  * 我这样做仅仅只为代码复用，方便维护
+ * @noinspection ALL
  */
 public class ListFragment extends BaseFragment {
 
