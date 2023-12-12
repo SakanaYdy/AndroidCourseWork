@@ -1,5 +1,6 @@
 package xyz.doikki.dkplayer.adapter;
 
+import android.annotation.SuppressLint;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -34,7 +35,7 @@ public class TikTokListAdapter extends RecyclerView.Adapter<TikTokListAdapter.Ti
     }
 
     @Override
-    public void onBindViewHolder(@NonNull TikTokListViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull TikTokListViewHolder holder, @SuppressLint("RecyclerView") int position) {
         TiktokBean item = data.get(position);
         holder.mTitle.setText(item.title);
         Glide.with(holder.mThumb.getContext())

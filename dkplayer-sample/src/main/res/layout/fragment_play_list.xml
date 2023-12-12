@@ -4,12 +4,12 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#8BC34A"
-    tools:context=".fragments.PlayListFragment">
+    tools:context=".fragment.PlayListFragment">
 
     <!-- TODO: Update blank fragment layout -->
     <TextView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:text="@string/hello_blank_fragment" />
+        android:text="hello_blank_fragment" />
 
 </FrameLayout>

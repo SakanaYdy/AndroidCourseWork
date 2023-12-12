@@ -7,7 +7,8 @@ import android.view.ViewGroup;
 
 import androidx.fragment.app.Fragment;
 
-import com.Tsingpig.youtube.R;
+import xyz.doikki.dkplayer.R;
+
 
 public class PlayListFragment extends Fragment
 {
