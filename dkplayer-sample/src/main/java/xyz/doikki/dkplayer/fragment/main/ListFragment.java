@@ -15,6 +15,7 @@ import java.util.List;
  * 注意：RecyclerView demo 我采用继承的方式实现，
  * 实际开发中可以不需要这样。
  * 我这样做仅仅只为代码复用，方便维护
+ * @noinspection ALL
  */
 public class ListFragment extends BaseFragment {
 

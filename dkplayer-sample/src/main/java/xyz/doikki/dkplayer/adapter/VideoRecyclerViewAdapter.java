@@ -1,5 +1,6 @@
 package xyz.doikki.dkplayer.adapter;
 
+import android.annotation.SuppressLint;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -39,7 +40,7 @@ public class VideoRecyclerViewAdapter extends RecyclerView.Adapter<VideoRecycler
     }
 
     @Override
-    public void onBindViewHolder(@NonNull VideoHolder holder, int position) {
+    public void onBindViewHolder(@NonNull VideoHolder holder, @SuppressLint("RecyclerView") int position) {
 
         VideoBean videoBean = videos.get(position);
 
@@ -51,6 +52,8 @@ public class VideoRecyclerViewAdapter extends RecyclerView.Adapter<VideoRecycler
 
         holder.mPosition = position;
     }
+
+
 
     @Override
     public int getItemCount() {

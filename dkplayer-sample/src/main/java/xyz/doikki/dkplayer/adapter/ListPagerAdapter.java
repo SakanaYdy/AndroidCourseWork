@@ -7,6 +7,7 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentStatePagerAdapter;
 
+import xyz.doikki.dkplayer.fragment.ChannelFragment;
 import xyz.doikki.dkplayer.fragment.list.ListViewFragment;
 import xyz.doikki.dkplayer.fragment.list.RecyclerViewFragment;
 import xyz.doikki.dkplayer.fragment.list.TikTokListFragment;
@@ -38,7 +39,7 @@ public class ListPagerAdapter extends FragmentStatePagerAdapter {
                     fragment = new ListViewFragment();
                     break;
                 case 1:
-                    fragment = new RecyclerViewFragment();
+                    fragment = new ChannelFragment();
                     break;
                 case 2:
                     fragment = new TikTokListFragment();
