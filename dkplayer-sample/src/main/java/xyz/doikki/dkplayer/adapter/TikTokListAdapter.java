@@ -57,7 +57,6 @@ public class TikTokListAdapter extends RecyclerView.Adapter<TikTokListAdapter.Ti
 
         public ImageView mThumb;
         public TextView mTitle;
-
         public int mPosition;
 
         public TikTokListViewHolder(@NonNull View itemView) {
@@ -68,16 +67,6 @@ public class TikTokListAdapter extends RecyclerView.Adapter<TikTokListAdapter.Ti
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-//                    switch (mId) {
-//                        case R.id.impl_recycler_view: //RecyclerView
-//                            TikTok2Activity.start(itemView.getContext(), mPosition);
-//                            break;
-//                        case R.id.impl_vertical_view_pager: //VerticalViewPager
-//                            TikTok2Activity.start(itemView.getContext(), mPosition);
-//                            break;
-//                        case R.id.impl_view_pager_2: //ViewPager2
-//                            TikTok3Activity.start(itemView.getContext(), mPosition);
-//                            break;//                    }
                     TikTok2Activity.start(itemView.getContext(), mPosition);
                 }
             });
