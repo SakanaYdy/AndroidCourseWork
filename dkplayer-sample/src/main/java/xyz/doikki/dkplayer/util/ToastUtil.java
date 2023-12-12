@@ -1,4 +1,4 @@
-package com.example.test_3.utils;
+package xyz.doikki.dkplayer.util;
 
 import android.content.Context;
 import android.widget.Toast;

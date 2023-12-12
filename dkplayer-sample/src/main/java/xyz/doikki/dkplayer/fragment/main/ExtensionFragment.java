@@ -1,24 +1,9 @@
 package xyz.doikki.dkplayer.fragment.main;
 
 import android.content.Intent;
-import android.os.AsyncTask;
-import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
-
-import com.alibaba.sdk.android.oss.ClientException;
-import com.alibaba.sdk.android.oss.OSS;
-import com.alibaba.sdk.android.oss.OSSClient;
-import com.alibaba.sdk.android.oss.ServiceException;
-import com.alibaba.sdk.android.oss.callback.OSSCompletedCallback;
-import com.alibaba.sdk.android.oss.callback.OSSProgressCallback;
-import com.alibaba.sdk.android.oss.common.auth.OSSCredentialProvider;
-import com.alibaba.sdk.android.oss.common.auth.OSSPlainTextAKSKCredentialProvider;
-import com.alibaba.sdk.android.oss.common.auth.OSSStsTokenCredentialProvider;
-import com.alibaba.sdk.android.oss.internal.OSSAsyncTask;
-import com.alibaba.sdk.android.oss.model.PutObjectRequest;
-import com.alibaba.sdk.android.oss.model.PutObjectResult;
 
 import java.sql.Connection;
 import java.sql.ResultSet;
@@ -28,7 +13,6 @@ import java.sql.Statement;
 import xyz.doikki.dkplayer.R;
 import xyz.doikki.dkplayer.dataSource.DBOpenHelper;
 import xyz.doikki.dkplayer.fragment.BaseFragment;
-import xyz.doikki.dkplayer.util.AliOssUtils;
 
 public class ExtensionFragment extends BaseFragment implements View.OnClickListener {
 
@@ -53,12 +37,12 @@ public class ExtensionFragment extends BaseFragment implements View.OnClickListe
     @Override
     public void onClick(View v) {
 
-        // 检查连接对象是否为null
-//        if (conn == null) {
-//            // 处理连接对象为null的情况，可能需要进行日志记录或其他操作
-//            Toast.makeText(getContext(),"空指针",Toast.LENGTH_SHORT).show();
-//            return;
-//        }
+         // 检查连接对象是否为null
+        if (conn == null) {
+            // 处理连接对象为null的情况，可能需要进行日志记录或其他操作
+            Toast.makeText(getContext(),"空指针",Toast.LENGTH_SHORT).show();
+            return;
+        }
 
         switch (v.getId()){
             case R.id.update:

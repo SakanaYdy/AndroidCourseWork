@@ -46,16 +46,16 @@ class MainActivity : BaseActivity<VideoView>(), NavigationBarView.OnItemSelected
         //检测当前是用的哪个播放器
         when (Utils.getCurrentPlayerFactory()) {
             is ExoMediaPlayerFactory -> {
-                setTitle(resources.getString(R.string.app_name) + " (ExoPlayer)")
+                setTitle(resources.getString(R.string.app_name) )
             }
             is IjkPlayerFactory -> {
-                setTitle(resources.getString(R.string.app_name) + " (IjkPlayer)")
+                setTitle(resources.getString(R.string.app_name) )
             }
             is AndroidMediaPlayerFactory -> {
-                setTitle(resources.getString(R.string.app_name) + " (MediaPlayer)")
+                setTitle(resources.getString(R.string.app_name) )
             }
             else -> {
-                setTitle(resources.getString(R.string.app_name) + " (unknown)")
+                setTitle(resources.getString(R.string.app_name) )
             }
         }
         val bottomNavigationView = findViewById<BottomNavigationView>(R.id.nav_view)
