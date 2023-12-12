@@ -16,6 +16,7 @@ import xyz.doikki.dkplayer.activity.MainActivity;
 import xyz.doikki.dkplayer.adapter.VideoRecyclerViewAdapter;
 import xyz.doikki.dkplayer.adapter.listener.OnItemChildClickListener;
 import xyz.doikki.dkplayer.bean.VideoBean;
+import xyz.doikki.dkplayer.dataSource.DbContect;
 import xyz.doikki.dkplayer.fragment.BaseFragment;
 import xyz.doikki.dkplayer.util.DataUtil;
 import xyz.doikki.dkplayer.util.Tag;
@@ -93,7 +94,7 @@ public class RecyclerViewFragment extends BaseFragment implements OnItemChildCli
         view.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mAdapter.addData(DataUtil.getVideoList());
+                mAdapter.addData(DataUtil.getVideoList(new DbContect(getContext())));
             }
         });
     }
@@ -127,7 +128,7 @@ public class RecyclerViewFragment extends BaseFragment implements OnItemChildCli
     @Override
     protected void initData() {
         super.initData();
-        List<VideoBean> videoList = DataUtil.getVideoList();
+        List<VideoBean> videoList = DataUtil.getVideoList(new DbContect(getContext()));
         mVideos.addAll(videoList);
         mAdapter.notifyDataSetChanged();
     }

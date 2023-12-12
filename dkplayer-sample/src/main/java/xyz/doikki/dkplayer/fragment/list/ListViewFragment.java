@@ -13,6 +13,7 @@ import xyz.doikki.dkplayer.R;
 import xyz.doikki.dkplayer.adapter.VideoListViewAdapter;
 import xyz.doikki.dkplayer.adapter.listener.OnItemChildClickListener;
 import xyz.doikki.dkplayer.bean.VideoBean;
+import xyz.doikki.dkplayer.dataSource.DbContect;
 import xyz.doikki.dkplayer.fragment.BaseFragment;
 import xyz.doikki.dkplayer.util.DataUtil;
 import xyz.doikki.dkplayer.util.Tag;
@@ -129,7 +130,7 @@ public class ListViewFragment extends BaseFragment implements OnItemChildClickLi
     @Override
     protected void initData() {
         super.initData();
-        List<VideoBean> videoList = DataUtil.getVideoList();
+        List<VideoBean> videoList = DataUtil.getVideoList(new DbContect(getContext()));
         mVideos.addAll(videoList);
         mAdapter.notifyDataSetChanged();
     }

@@ -2,14 +2,15 @@ package xyz.doikki.dkplayer.bean;
 
 public class Video {
 
+    private int id;
     private int userId;
-    private String name;
+    // private String name;
     private String imgUrl;
     private String videoUrl;
 
-    public Video(int userId, String name, String imgUrl, String videoUrl) {
+    public Video(int userId, int id, String imgUrl, String videoUrl) {
         this.userId = userId;
-        this.name = name;
+        this.id = id;
         this.imgUrl = imgUrl;
         this.videoUrl = videoUrl;
     }
@@ -22,12 +23,12 @@ public class Video {
         this.userId = userId;
     }
 
-    public String getName() {
-        return name;
+    public int getId() {
+        return id;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setId(int id) {
+        this.id = id;
     }
 
     public String getImgUrl() {

@@ -1,9 +1,14 @@
-package com.example.test_3;
+package xyz.doikki.dkplayer.bean;
 
 public class User {
     private Integer id;
     private String name;
     private String password;
+
+    public User(String name, String password) {
+        this.name = name;
+        this.password = password;
+    }
 
     public User(Integer id, String name, String password) {
         this.id = id;
