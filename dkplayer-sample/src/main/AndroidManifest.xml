@@ -44,7 +44,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".activity.MainActivity"
+            android:name=".activity.MainActivity_"
             android:exported="false"
             android:label="主程序" />
         <activity

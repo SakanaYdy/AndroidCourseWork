@@ -12,7 +12,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import xyz.doikki.dkplayer.R;
-import xyz.doikki.dkplayer.activity.MainActivity;
+import xyz.doikki.dkplayer.activity.MainActivity_;
 import xyz.doikki.dkplayer.adapter.VideoRecyclerViewAdapter;
 import xyz.doikki.dkplayer.adapter.listener.OnItemChildClickListener;
 import xyz.doikki.dkplayer.bean.VideoBean;
@@ -165,7 +165,7 @@ public class RecyclerViewFragment extends BaseFragment implements OnItemChildCli
     protected void resume() {
         if (mLastPos == -1)
             return;
-        if (MainActivity.mCurrentIndex != 1)
+        if (MainActivity_.mCurrentIndex != 1)
             return;
         //恢复上次播放的位置
         startPlay(mLastPos);

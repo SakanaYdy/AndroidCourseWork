@@ -39,24 +39,8 @@ class MainActivity : BaseActivity<VideoView>(), NavigationBarView.OnItemSelected
 
     override fun initView() {
         super.initView()
-        copyAssetsFile()
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             requestPermissions(arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE), 10000)
-        }
-        //检测当前是用的哪个播放器
-        when (Utils.getCurrentPlayerFactory()) {
-            is ExoMediaPlayerFactory -> {
-                setTitle(resources.getString(R.string.app_name) )
-            }
-            is IjkPlayerFactory -> {
-                setTitle(resources.getString(R.string.app_name) )
-            }
-            is AndroidMediaPlayerFactory -> {
-                setTitle(resources.getString(R.string.app_name) )
-            }
-            else -> {
-                setTitle(resources.getString(R.string.app_name) )
-            }
         }
         val bottomNavigationView = findViewById<BottomNavigationView>(R.id.nav_view)
         bottomNavigationView.setOnItemSelectedListener(this)
@@ -67,47 +51,6 @@ class MainActivity : BaseActivity<VideoView>(), NavigationBarView.OnItemSelected
             .add(R.id.layout_content, mFragments[0])
             .commitAllowingStateLoss()
         mCurrentIndex = 0
-    }
-
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        val itemId = item.itemId
-        when (itemId) {
-            R.id.close_float_window -> {
-                PIPManager.getInstance().stopFloatWindow()
-                PIPManager.getInstance().reset()
-            }
-            R.id.clear_cache -> if (ProxyVideoCacheManager.clearAllCache(this)) {
-                Toast.makeText(this, "清除缓存成功", Toast.LENGTH_SHORT).show()
-            }
-            R.id.cpu_info -> CpuInfoActivity.start(this)
-        }
-        if (itemId == R.id.ijk || itemId == R.id.exo || itemId == R.id.media) {
-            //切换播放核心，不推荐这么做，我这么写只是为了方便测试
-            val config = VideoViewManager.getConfig()
-            try {
-                val mPlayerFactoryField = config.javaClass.getDeclaredField("mPlayerFactory")
-                mPlayerFactoryField.isAccessible = true
-                var playerFactory: PlayerFactory<*>? = null
-                when (itemId) {
-                    R.id.ijk -> {
-                        playerFactory = IjkPlayerFactory.create()
-                        setTitle(resources.getString(R.string.app_name) + " (IjkPlayer)")
-                    }
-                    R.id.exo -> {
-                        playerFactory = ExoMediaPlayerFactory.create()
-                        setTitle(resources.getString(R.string.app_name) + " (ExoPlayer)")
-                    }
-                    R.id.media -> {
-                        playerFactory = AndroidMediaPlayerFactory.create()
-                        setTitle(resources.getString(R.string.app_name) + " (MediaPlayer)")
-                    }
-                }
-                mPlayerFactoryField[config] = playerFactory
-            } catch (e: Exception) {
-                e.printStackTrace()
-            }
-        }
-        return super.onOptionsItemSelected(item)
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
@@ -159,42 +102,4 @@ class MainActivity : BaseActivity<VideoView>(), NavigationBarView.OnItemSelected
         var mCurrentIndex = 0
     }
 
-    private fun copyAssetsFile(): Boolean {
-        val outFile = File(externalCacheDir, "test.mp4")
-        if (outFile.parentFile?.exists() != true) {
-            outFile.parentFile!!.mkdirs()
-        }
-
-        var inputStream: InputStream? = null
-        var out: OutputStream? = null
-
-        try {
-            inputStream = assets.open("test.mp4")
-            out = FileOutputStream(outFile)
-
-            val buffer = ByteArray(1024)
-            var read: Int = inputStream.read(buffer)
-            while (read != -1) {
-                out.write(buffer, 0, read)
-                read = inputStream.read(buffer)
-            }
-        } catch (e: IOException) {
-            return false
-        } finally {
-            if (inputStream != null) {
-                try {
-                    inputStream.close()
-                } catch (e: IOException) {
-                }
-            }
-            if (out != null) {
-                try {
-                    out.flush()
-                    out.close()
-                } catch (e: IOException) {
-                }
-            }
-        }
-        return true
-    }
 }
