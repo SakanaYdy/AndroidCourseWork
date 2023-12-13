@@ -56,12 +56,6 @@ public class MainActivity_ extends BaseActivity<VideoView> implements Navigation
     }
 
     @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.main_menu, menu);
-        return super.onCreateOptionsMenu(menu);
-    }
-
-    @Override
     public boolean onNavigationItemSelected(MenuItem menuItem) {
         int index;
         int itemId = menuItem.getItemId();

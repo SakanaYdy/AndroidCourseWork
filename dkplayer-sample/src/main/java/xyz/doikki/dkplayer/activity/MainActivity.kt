@@ -53,10 +53,6 @@ class MainActivity : BaseActivity<VideoView>(), NavigationBarView.OnItemSelected
         mCurrentIndex = 0
     }
 
-    override fun onCreateOptionsMenu(menu: Menu): Boolean {
-        menuInflater.inflate(R.menu.main_menu, menu)
-        return super.onCreateOptionsMenu(menu)
-    }
 
     override fun onNavigationItemSelected(menuItem: MenuItem): Boolean {
         val index: Int
