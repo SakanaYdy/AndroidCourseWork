@@ -1,11 +1,13 @@
 package xyz.doikki.dkplayer.adapter;
 
 import android.content.Context;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
@@ -15,6 +17,7 @@ import com.squareup.picasso.Picasso;
 import java.util.ArrayList;
 
 import xyz.doikki.dkplayer.R;
+import xyz.doikki.dkplayer.activity.YoutubeVideoPlayActivity;
 import xyz.doikki.dkplayer.dataModel.YoutubeDataModel;
 
 
@@ -81,6 +84,23 @@ public class VideoPostAdapter extends RecyclerView.Adapter<VideoPostAdapter.Yout
         // TODO: 图片将会从url下载
         //imageThumb.setImageResource(R.mipmap.img);
         Picasso.get().load(dataObject.getThumbNail()).into(imageThumb);
+
+        holder.itemView.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View view)
+            {
+                Toast.makeText(_context,"textViewTitle" ,Toast.LENGTH_LONG).show();
+                //String videoId = "qZ4UEhFEzvI";
+
+                String videoId= dataObject.getVideoId();
+
+                // 启动新的 Activity，将视频 ID 传递给该 Activity
+                Intent intent = new Intent(_context, YoutubeVideoPlayActivity.class);
+                intent.putExtra("videoId", videoId);
+                _context.startActivity(intent);
+            }
+        });
     }
 
 

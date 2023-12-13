@@ -128,12 +128,15 @@ public class ChannelFragment extends Fragment {
                                     String description = jsonSnippet.getString("description");
                                     String publishedAt = jsonSnippet.getString("publishedAt");
                                     String thumbNails = jsonSnippet.getJSONObject("thumbnails").getJSONObject("high").getString("url");
+                                    // 获得视频Id
+                                    String videoId = jsonID.getString("videoId");
 
                                     YoutubeDataModel youtube = new YoutubeDataModel();
                                     youtube.setTitle(title);
                                     youtube.setDescription(description);
                                     youtube.setPublishedAt(publishedAt);
                                     youtube.setThumbNail(thumbNails);
+                                    youtube.setVideoId(videoId);
                                     // 插入列表
                                     list.add(youtube);
                                 }

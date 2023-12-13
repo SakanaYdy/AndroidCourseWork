@@ -6,6 +6,7 @@ public class YoutubeDataModel
     private String _description = "";
     private String _publishedAt = "";
     private String _thumbNail = "";
+    private String _videoId = "";
 
     public String getTitle()
     {
@@ -47,6 +48,16 @@ public class YoutubeDataModel
         this._thumbNail = _thumbNail;
     }
 
+    public String getVideoId()
+    {
+        return _videoId;
+    }
+
+    public void setVideoId(String _videoId)
+    {
+        this._videoId = _videoId;
+    }
+
     // 覆盖toString方法
     @Override
     public String toString()
@@ -57,5 +68,4 @@ public class YoutubeDataModel
                 '\'' + ", _thumbNail='" + _thumbNail +
                 '\'' + '}';
     }
-
 }
