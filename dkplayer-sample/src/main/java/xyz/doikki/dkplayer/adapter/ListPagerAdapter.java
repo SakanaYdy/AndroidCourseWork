@@ -43,18 +43,6 @@ public class ListPagerAdapter extends FragmentStatePagerAdapter {
                     break;
                 case 2:
                     fragment = new TikTokListFragment();
-//                case 2:
-//                    fragment = new RecyclerViewAutoPlayFragment();
-//                    break;
-//                case 3:
-//                    fragment = new TikTokListFragment();
-//                    break;
-//                case 4:
-//                    fragment = new SeamlessPlayFragment();
-//                    break;
-//                case 5:
-//                    fragment = new RecyclerViewPortraitFragment();
-//                    break;
             }
             mFragments.put(position, fragment);
         }

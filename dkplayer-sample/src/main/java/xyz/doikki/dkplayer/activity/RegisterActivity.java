@@ -10,8 +10,6 @@ import android.widget.Toast;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.google.android.exoplayer2.util.Log;
-
 import xyz.doikki.dkplayer.R;
 import xyz.doikki.dkplayer.bean.User;
 import xyz.doikki.dkplayer.dataSource.DbContect;
@@ -47,7 +45,7 @@ public class RegisterActivity extends AppCompatActivity {
                     User user = new User(name,password);
                     DbcUtils.insert(helper,user);
                     Intent intent = new Intent();
-                    intent.setClass(RegisterActivity.this, MainActivity.class);
+                    intent.setClass(RegisterActivity.this, MainActivity_.class);
                     startActivity(intent);
                 }
             }
