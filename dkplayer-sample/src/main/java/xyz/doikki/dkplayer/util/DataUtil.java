@@ -54,13 +54,13 @@ public class DataUtil {
 
     public static List<VideoBean> getVideoList(DbContect helper) {
         List<VideoBean> videoList = new ArrayList<>();
-//        videoList.add(new VideoBean("预告片1",
-//                "https://ydy-sky.oss-cn-beijing.aliyuncs.com/421fc209-3647-4c20-bd0f-9c1e2460ae81.jpg?Expires=1702222432&OSSAccessKeyId=TMP.3KgAG35gUn1AmayZAsjkzdQ9LTduzFK1Uh32BHxLnazyC2XDwTzkG9gWEozLJfv9ByweTQk49uLz8n1Jb4CohBVtMjD5Fc&Signature=qlHSEBFJZFYltMAlhQeIIMf85rA%3D",
-//                "https://ydy-sky.oss-cn-beijing.aliyuncs.com/1.mp4?Expires=1702309304&OSSAccessKeyId=TMP.3KdZz6YQeVBtaoSw3r2nUvAo3Ry42A2nZZaQRk6qcxJTJmw5KbS7TDGUmPDBnxz7be2uPbMwoL4bMZ1hvPU1xZyH6at8zM&Signature=Ysyl3NzMdRzz89%2FhbbjOYempmDE%3D"));
-//
-//        videoList.add(new VideoBean("预告片2",
-//                "https://cms-bucket.nosdn.127.net/cb37178af1584c1588f4a01e5ecf323120180418133127.jpeg",
-//                "http://vfx.mtime.cn/Video/2019/03/21/mp4/190321153853126488.mp4"));
+        videoList.add(new VideoBean("预告片1",
+                "https://ydy-sky.oss-cn-beijing.aliyuncs.com/421fc209-3647-4c20-bd0f-9c1e2460ae81.jpg?Expires=1702222432&OSSAccessKeyId=TMP.3KgAG35gUn1AmayZAsjkzdQ9LTduzFK1Uh32BHxLnazyC2XDwTzkG9gWEozLJfv9ByweTQk49uLz8n1Jb4CohBVtMjD5Fc&Signature=qlHSEBFJZFYltMAlhQeIIMf85rA%3D",
+                "http://clips.vorwaerts-gmbh.de/big_buck_bunny.mp4"));
+
+        videoList.add(new VideoBean("预告片2",
+                "https://cms-bucket.nosdn.127.net/cb37178af1584c1588f4a01e5ecf323120180418133127.jpeg",
+                "http://vfx.mtime.cn/Video/2019/03/21/mp4/190321153853126488.mp4"));
 //
 //        videoList.add(new VideoBean("预告片3",
 //                "https://cms-bucket.nosdn.127.net/eb411c2810f04ffa8aaafc42052b233820180418095416.jpeg",
