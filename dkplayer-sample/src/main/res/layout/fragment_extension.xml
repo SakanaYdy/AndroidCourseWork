@@ -81,28 +81,24 @@ android:background="#ebebeb">
     android:paddingLeft="12dp">
 
     <ImageView
-        android:id="@+id/upload"
+        android:id="@+id/upload_img"
         android:layout_width="26dp"
         android:layout_height="26dp"
         android:layout_alignParentLeft="true"
         android:layout_centerVertical="true"
         android:layout_marginLeft="12dp"
         tools:srcCompat="@tools:sample/avatars" />
-    <TextView
+    <Button
+        android:id="@+id/upload"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerVertical="true"
         android:layout_marginLeft="20dp"
-        android:layout_toRightOf="@id/upload"
+        android:layout_toRightOf="@id/upload_img"
         android:text="视频上传"
         android:textColor="#353535"
         android:textSize="16sp" />
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="0.2dp"
-        android:layout_alignParentBottom="true"
-        android:layout_marginRight="12dp"
-        android:background="#dadada" />
+
 
 </RelativeLayout>
 <RelativeLayout
@@ -120,7 +116,7 @@ android:background="#ebebeb">
         android:layout_centerVertical="true"
         android:layout_marginLeft="12dp"
         tools:srcCompat="@android:drawable/btn_star_big_on" />
-    <TextView
+    <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerVertical="true"
@@ -140,19 +136,20 @@ android:background="#ebebeb">
     android:paddingLeft="12dp">
 
     <ImageView
-        android:id="@+id/update"
+        android:id="@+id/update_img"
         android:layout_width="26dp"
         android:layout_height="26dp"
         android:layout_alignParentLeft="true"
         android:layout_centerVertical="true"
         android:layout_marginLeft="12dp"
         tools:srcCompat="@mipmap/ic_launcher_foreground" />
-    <TextView
+    <Button
+        android:id="@+id/update"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerVertical="true"
         android:layout_marginLeft="20dp"
-        android:layout_toRightOf="@id/update"
+        android:layout_toRightOf="@id/update_img"
         android:text="信息修改"
         android:textColor="#353535"
         android:textSize="16sp" />
@@ -173,19 +170,20 @@ android:background="#ebebeb">
     android:paddingLeft="12dp">
 
     <ImageView
-        android:id="@+id/logout"
+        android:id="@+id/logout_img"
         android:layout_width="26dp"
         android:layout_height="26dp"
         android:layout_alignParentLeft="true"
         android:layout_centerVertical="true"
         android:layout_marginLeft="12dp"
         tools:srcCompat="@android:drawable/presence_busy" />
-    <TextView
+    <Button
+        android:id="@+id/logout"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerVertical="true"
         android:layout_marginLeft="20dp"
-        android:layout_toRightOf="@id/logout"
+        android:layout_toRightOf="@id/logout_img"
         android:text="退出登入"
         android:textColor="#353535"
         android:textSize="16sp" />
