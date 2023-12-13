@@ -86,9 +86,8 @@ public class TikTok2Activity extends BaseActivity<VideoView> {
         mVideoView = new VideoView(this);
         mVideoView.setLooping(true);
 
-        //以下只能二选一，看你的需求
+
         mVideoView.setRenderViewFactory(TikTokRenderViewFactory.create());
-//        mVideoView.setScreenScaleType(VideoView.SCREEN_SCALE_CENTER_CROP);
 
         mController = new TikTokController(this);
         mVideoView.setVideoController(mController);
