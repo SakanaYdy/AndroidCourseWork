@@ -6,10 +6,9 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.view.ViewTreeObserver;
+import android.view.WindowManager;
 import android.webkit.WebView;
 import android.widget.RelativeLayout;
-import android.widget.Toast;
-import android.widget.Toolbar;
 
 import xyz.doikki.dkplayer.R;
 
@@ -23,6 +22,8 @@ public class YoutubeVideoPlayActivity extends AppCompatActivity
     {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_youtube_video_play);
+        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
+
 
         _webView = findViewById(R.id.webView);
 
@@ -84,7 +85,7 @@ public class YoutubeVideoPlayActivity extends AppCompatActivity
                 + "      var player;\n"
                 + "      function onYouTubeIframeAPIReady() {\n"
                 + "        player = new YT.Player('player', {\n"
-                + "          height: '360',\n"
+                + "          height: '100%',\n"
                 + "          width: '100%',\n"
                 + "          videoId: '"
                 + videoId
@@ -112,15 +113,19 @@ public class YoutubeVideoPlayActivity extends AppCompatActivity
         _webView.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
             @Override
             public void onGlobalLayout() {
+                // 横屏时，全屏
                 if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
                     if (actionBar != null) {
                         actionBar.hide();
                     }
+                    getWindow().addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
                     _webView.loadDataWithBaseURL(null, data_landscape, "text/html", "UTF-8", null);
                 } else {
+                    // 竖屏
                     if (actionBar != null) {
                         actionBar.show();
                     }
+                    getWindow().clearFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
                     _webView.setLayoutParams(new RelativeLayout.LayoutParams(
                             RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.WRAP_CONTENT));
                 }
