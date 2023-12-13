@@ -29,9 +29,11 @@ import xyz.doikki.dkplayer.dataModel.YoutubeDataModel;
 public class ChannelFragment extends Fragment {
 
     // Google
-    private static String GOOGLE_YOUTUBE_API_KEY = "AIzaSyBUGTiAIYAEN7tuwzAx0wyX6Bd1eLENR4E";
-    //private static String CHANNEL_ID = "UC3KFV0PRieM4GoH8P5v6r0w";
-    private static String CHANNEL_ID = "UCb3TZ4SD_Ys3j4z0-8o6auA";
+    //private static String GOOGLE_YOUTUBE_API_KEY = "AIzaSyBUGTiAIYAEN7tuwzAx0wyX6Bd1eLENR4E";
+    private static String GOOGLE_YOUTUBE_API_KEY = "AIzaSyAV9KXI6EFqwiTars_sCuuJxvDGDmXtLtg";
+
+    private static String CHANNEL_ID = "UC3KFV0PRieM4GoH8P5v6r0w";
+    //private static String CHANNEL_ID = "UCb3TZ4SD_Ys3j4z0-8o6auA";
     private static String CHANNEL_GET_URL = "https://www.googleapis.com/youtube/v3/search?part=snippet&order=date&channelId=" + CHANNEL_ID + "&maxResults=20&key=" + GOOGLE_YOUTUBE_API_KEY;
 
     private RecyclerView _listVideos = null;

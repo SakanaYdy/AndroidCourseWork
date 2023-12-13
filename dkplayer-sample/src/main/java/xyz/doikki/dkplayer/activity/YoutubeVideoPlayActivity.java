@@ -85,7 +85,7 @@ public class YoutubeVideoPlayActivity extends AppCompatActivity
                 + "      var player;\n"
                 + "      function onYouTubeIframeAPIReady() {\n"
                 + "        player = new YT.Player('player', {\n"
-                + "          height: '100%',\n"
+                + "          height: 380,\n"
                 + "          width: '100%',\n"
                 + "          videoId: '"
                 + videoId
