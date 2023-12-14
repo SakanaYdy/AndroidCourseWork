@@ -37,5 +37,12 @@
         android:layout_height="wrap_content"
         android:text="登录" />
 
+    <Switch
+        android:id="@+id/remember"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:height="48dp"
+        android:text="是否记住密码" />
+
 
 </LinearLayout>

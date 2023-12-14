@@ -1,6 +1,7 @@
 package xyz.doikki.dkplayer.activity;
 
 import android.content.Intent;
+import android.database.sqlite.SQLiteOpenHelper;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -39,7 +40,10 @@ public class RegisterActivity extends AppCompatActivity {
                 String confirmedPassword = String.valueOf(confirmed_pass.getText());
                 Toast.makeText(getBaseContext(),"name:"+ name +"password:" + password,Toast.LENGTH_SHORT).show();
 
-                if(!password.equals(confirmedPassword)){
+                if(!check(helper,name)){
+                    ToastUtil.ShowMsg(getBaseContext(),"用户名已经存在");
+                }
+                else if(!password.equals(confirmedPassword)){
                     ToastUtil.ShowMsg(getBaseContext(),"两次密码不一致");
                 }else {
                     User user = new User(name,password);
@@ -50,7 +54,15 @@ public class RegisterActivity extends AppCompatActivity {
                 }
             }
         });
+    }
 
-
+    /**
+     * 检查用户名是否存在
+     * @return
+     */
+    public boolean check(SQLiteOpenHelper helper,String name){
+        User query = DbcUtils.query(helper, name);
+        if(query != null) return false;
+        return true;
     }
 }

@@ -11,6 +11,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 
 import xyz.doikki.dkplayer.R;
+import xyz.doikki.dkplayer.activity.LoginActivity;
 import xyz.doikki.dkplayer.dataSource.DBOpenHelper;
 import xyz.doikki.dkplayer.fragment.BaseFragment;
 
@@ -38,11 +39,11 @@ public class ExtensionFragment extends BaseFragment implements View.OnClickListe
     public void onClick(View v) {
 
          // 检查连接对象是否为null
-        if (conn == null) {
-            // 处理连接对象为null的情况，可能需要进行日志记录或其他操作
-            Toast.makeText(getContext(),"空指针",Toast.LENGTH_SHORT).show();
-            return;
-        }
+//        if (conn == null) {
+//            // 处理连接对象为null的情况，可能需要进行日志记录或其他操作
+//            Toast.makeText(getContext(),"空指针",Toast.LENGTH_SHORT).show();
+//            return;
+//        }
 
         switch (v.getId()){
             case R.id.update:
@@ -64,7 +65,10 @@ public class ExtensionFragment extends BaseFragment implements View.OnClickListe
                 Toast.makeText(getContext(),"上传视频", Toast.LENGTH_SHORT).show();
                 break;
             case R.id.logout:
+                Intent intent = new Intent();
+                intent.setClass(getContext(), LoginActivity.class);
                 Toast.makeText(getContext(),"用户登出", Toast.LENGTH_SHORT).show();
+                startActivity(intent);
                 break;
         }
 
