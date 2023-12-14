@@ -72,6 +72,7 @@ public class MainActivity_ extends BaseActivity<VideoView> implements Navigation
 //        mFragments.add(new ListFragment());
 //        mFragments.add(new ExtensionFragment());
 //        mFragments.add(new PipFragment());
+        // 设置初始页面视图
         getSupportFragmentManager().beginTransaction()
                 .add(R.id.layout_content, mFragments.get(0))
                 .commitAllowingStateLoss();

@@ -8,6 +8,11 @@ import android.widget.Button;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.alibaba.sdk.android.oss.OSS;
+import com.alibaba.sdk.android.oss.OSSClient;
+import com.alibaba.sdk.android.oss.common.auth.OSSCredentialProvider;
+import com.alibaba.sdk.android.oss.common.auth.OSSPlainTextAKSKCredentialProvider;
+
 import java.util.List;
 
 import xyz.doikki.dkplayer.R;
@@ -51,11 +56,13 @@ public class HelloActivity extends AppCompatActivity {
         });
 
         Button login = findViewById(R.id.login);
-        // TODO 跳转到不同页面进行操作  暂时直接进入主程序
+
+        /**
+         * 登录跳转
+         */
         login.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                List<Video> videos = DbcUtils.queryVideo(helper, 1);
                 Intent intent = new Intent();
                 intent.setClass(HelloActivity.this,LoginActivity.class);
                 startActivity(intent);

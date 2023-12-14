@@ -50,6 +50,7 @@ public class ListFragment extends BaseFragment implements ListPagerAdapter.OnMes
 
 
         List<String> titles = new ArrayList<>();
+
         titles.add(getString(R.string.str_list_view));
         titles.add(getString(R.string.str_recycler_view));
         titles.add("抖音");
