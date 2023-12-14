@@ -30,6 +30,7 @@ import xyz.doikki.dkplayer.adapter.VideoCommentAdapter;
 import xyz.doikki.dkplayer.dataModel.CommentDataModel;
 
 /** @noinspection ALL*/
+
 public class YoutubeVideoPlayActivity extends AppCompatActivity
 {
     private String _videoId = "";
@@ -53,6 +54,7 @@ public class YoutubeVideoPlayActivity extends AppCompatActivity
     private void init(ArrayList<CommentDataModel> data)
     {
         _recyclerView.setLayoutManager(new LinearLayoutManager(this));
+
         _adapter = new VideoCommentAdapter(data,this);
         _recyclerView.setAdapter(_adapter);
     }
@@ -69,8 +71,7 @@ public class YoutubeVideoPlayActivity extends AppCompatActivity
         _webView = findViewById(R.id.webView);
         ArrayList<CommentDataModel> datas = new ArrayList<>();
 
-        // 获取评论数据
-        new RequestComment().execute();
+
         //CommentDataModel data = new CommentDataModel("1", "1", "1");
 
         //datas.add(data);
@@ -84,6 +85,9 @@ public class YoutubeVideoPlayActivity extends AppCompatActivity
         // 获取传递过来的视频 ID
         // getIntent()是最顶层父类Activity中的函数
         _videoId = getIntent().getStringExtra("videoId");
+
+
+
 
         // 设置 WebView 播放视频
         _webView.getSettings().setJavaScriptEnabled(true);
@@ -207,6 +211,9 @@ public class YoutubeVideoPlayActivity extends AppCompatActivity
         });
 
 
+        // 获取评论数据
+        new RequestComment().execute();
+
 
     }
 
@@ -234,14 +241,14 @@ public class YoutubeVideoPlayActivity extends AppCompatActivity
                 try
                 {
                     Response response = client.newCall(request).execute();
-                    Log.d("URL2", "请求结果" + response.toString());
+                    Log.d("Comment", "请求结果" + response.toString());
                     if (response.isSuccessful())
                     {
                         return response.body().string();
                     }
                 } catch (IOException e)
                 {
-                    Log.e("URL2", "IOException: " + e.getMessage());
+                    Log.e("Comment", "IOException: " + e.getMessage());
                     e.printStackTrace();
                 }
             }
