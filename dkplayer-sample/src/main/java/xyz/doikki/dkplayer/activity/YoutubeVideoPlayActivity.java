@@ -166,9 +166,7 @@ public class YoutubeVideoPlayActivity extends AppCompatActivity
                 + "</html>";
         _webView.loadDataWithBaseURL(null, data_portait, "text/html", "UTF-8", null);
 
-        // 监听屏幕方向变化
         _webView.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
-
             // xxx
             RelativeLayout layout = findViewById(R.id.relativeLayout);
             RecyclerView recyclerView = findViewById(R.id.recyclerViewComments);
@@ -201,7 +199,7 @@ public class YoutubeVideoPlayActivity extends AppCompatActivity
                         ((ViewGroup) recyclerView.getParent()).removeView(recyclerView);
                     }
 
-                            // Add RecyclerView back to the layout
+                    // Add RecyclerView back to the layout
                     layout.addView(recyclerView, recyclerViewParams);
 
                     _webView.setLayoutParams(new RelativeLayout.LayoutParams(
