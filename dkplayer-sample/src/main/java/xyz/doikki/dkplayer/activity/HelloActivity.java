@@ -8,13 +8,6 @@ import android.widget.Button;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.alibaba.sdk.android.oss.OSS;
-import com.alibaba.sdk.android.oss.OSSClient;
-import com.alibaba.sdk.android.oss.common.auth.OSSCredentialProvider;
-import com.alibaba.sdk.android.oss.common.auth.OSSPlainTextAKSKCredentialProvider;
-
-import java.util.List;
-
 import xyz.doikki.dkplayer.R;
 import xyz.doikki.dkplayer.bean.User;
 import xyz.doikki.dkplayer.bean.Video;
