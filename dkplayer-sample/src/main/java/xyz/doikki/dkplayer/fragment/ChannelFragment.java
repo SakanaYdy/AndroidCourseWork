@@ -62,17 +62,25 @@ public class ChannelFragment extends Fragment {
 
         return view;
     }
+
+
+    /**
+     * 下拉刷新：随机获取ChannelId -> 清空数据 -> 网络请求
+     */
     private void refreshContent() {
-        // Handle the pull-to-refresh action here
-        // For example, update the CHANNEL_ID and reload data
+
         updateChannelId();
-        //noinspection deprecation
+
         _data.clear();
         new RequestYoutubeAPI().execute();
     }
 
+
+    /**
+     * 从资源文件中获取随机chanel Id
+     */
     private void updateChannelId() {
-        // 从资源文件中获取随机chanel Id
+
         String[] channelIds = getResources().getStringArray(R.array.channel_ids);
         String newChannelId;
 

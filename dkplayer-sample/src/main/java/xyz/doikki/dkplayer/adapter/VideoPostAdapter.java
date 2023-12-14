@@ -90,7 +90,7 @@ public class VideoPostAdapter extends RecyclerView.Adapter<VideoPostAdapter.Yout
             @Override
             public void onClick(View view)
             {
-                Toast.makeText(_context,"textViewTitle" ,Toast.LENGTH_LONG).show();
+                // Toast.makeText(_context,"textViewTitle" ,Toast.LENGTH_LONG).show();
                 //String videoId = "qZ4UEhFEzvI";
 
                 String videoId= dataObject.getVideoId();
