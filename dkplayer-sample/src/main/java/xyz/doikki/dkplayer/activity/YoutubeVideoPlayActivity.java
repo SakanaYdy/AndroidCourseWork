@@ -2,20 +2,40 @@ package xyz.doikki.dkplayer.activity;
 
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.res.Configuration;
 import android.os.Bundle;
+import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
 import android.view.WindowManager;
 import android.webkit.WebView;
 import android.widget.RelativeLayout;
 
+import java.util.ArrayList;
+
 import xyz.doikki.dkplayer.R;
+import xyz.doikki.dkplayer.adapter.VideoCommentAdapter;
+import xyz.doikki.dkplayer.adapter.VideoPostAdapter;
+import xyz.doikki.dkplayer.dataModel.CommentDataModel;
+import xyz.doikki.dkplayer.dataModel.YoutubeDataModel;
 
 public class YoutubeVideoPlayActivity extends AppCompatActivity
 {
     private WebView _webView;
     private ActionBar actionBar;
+
+    private RecyclerView _recyclerView = null;
+    private VideoCommentAdapter _adapter = null;
+    private ArrayList<CommentDataModel> _data = new ArrayList<>();
+
+    private void init(ArrayList<CommentDataModel> data)
+    {
+        _recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        _adapter = new VideoCommentAdapter(data,this);
+        _recyclerView.setAdapter(_adapter);
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -24,8 +44,13 @@ public class YoutubeVideoPlayActivity extends AppCompatActivity
         setContentView(R.layout.activity_youtube_video_play);
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
 
+        _recyclerView = findViewById(R.id.recyclerViewComments);
 
         _webView = findViewById(R.id.webView);
+        ArrayList<CommentDataModel> datas = new ArrayList<CommentDataModel>();
+        CommentDataModel data = new CommentDataModel("1", "1", "1");
+        datas.add(data);
+        init(datas);
 
         // 获取状态栏
         // getSupportActionBar 是 父类AppCompatActivity的函数
@@ -114,6 +139,12 @@ public class YoutubeVideoPlayActivity extends AppCompatActivity
 
         // 监听屏幕方向变化
         _webView.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+
+            // xxx
+            RelativeLayout layout = findViewById(R.id.relativeLayout);
+            RecyclerView recyclerView = findViewById(R.id.recyclerViewComments);
+            RelativeLayout.LayoutParams recyclerViewParams = (RelativeLayout.LayoutParams) recyclerView.getLayoutParams();
+
             @Override
             public void onGlobalLayout() {
                 // 横屏时，全屏
@@ -123,6 +154,11 @@ public class YoutubeVideoPlayActivity extends AppCompatActivity
                     }
                     getWindow().addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN); // 设置全屏标志
 
+                    // Remove RecyclerView from its parent if it has one
+                    if (recyclerView.getParent() != null) {
+                        ((ViewGroup) recyclerView.getParent()).removeView(recyclerView);
+                    }
+
                     _webView.loadDataWithBaseURL(null, data_landscape, "text/html", "UTF-8", null);
                 } else {
                     // 竖屏
@@ -130,11 +166,23 @@ public class YoutubeVideoPlayActivity extends AppCompatActivity
                         actionBar.show();   // 显示状态栏
                     }
                     getWindow().clearFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN); // 隐藏全屏标志
+
+                    // Remove RecyclerView from its parent if it has one
+                    if (recyclerView.getParent() != null) {
+                        ((ViewGroup) recyclerView.getParent()).removeView(recyclerView);
+                    }
+
+                            // Add RecyclerView back to the layout
+                    layout.addView(recyclerView, recyclerViewParams);
+
                     _webView.setLayoutParams(new RelativeLayout.LayoutParams(
                             RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.WRAP_CONTENT));
                 }
             }
         });
+
+
+
     }
 }
 

@@ -7,7 +7,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
@@ -51,7 +50,7 @@ public class VideoPostAdapter extends RecyclerView.Adapter<VideoPostAdapter.Yout
     {
         // LayoutInflater 是 Android 中用于将 XML 布局文件转换为实际视图的类。
         // inflate 是将 XML 布局文件转换为实际的 View 对象的过程。
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.youtube_post_layout, parent, false);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.layout_youtube_post, parent, false);
 
         // 将view 传递给YoutubePostHolder的构造函数
         YoutubePostHolder holderView = new YoutubePostHolder((view));
@@ -82,7 +81,6 @@ public class VideoPostAdapter extends RecyclerView.Adapter<VideoPostAdapter.Yout
         textViewDes.setText(dataObject.getDescription());
         textViewData.setText(dataObject.getPublishedAt());
         // TODO: 图片将会从url下载
-        //imageThumb.setImageResource(R.mipmap.img);
         Picasso.get().load(dataObject.getThumbNail()).into(imageThumb);
 
         holder.itemView.setOnClickListener(new View.OnClickListener()
@@ -93,7 +91,7 @@ public class VideoPostAdapter extends RecyclerView.Adapter<VideoPostAdapter.Yout
                 // Toast.makeText(_context,"textViewTitle" ,Toast.LENGTH_LONG).show();
                 //String videoId = "qZ4UEhFEzvI";
 
-                String videoId= dataObject.getVideoId();
+                String videoId = dataObject.getVideoId();
 
                 // 启动新的 Activity，将视频 ID 传递给该 Activity
                 Intent intent = new Intent(_context, YoutubeVideoPlayActivity.class);

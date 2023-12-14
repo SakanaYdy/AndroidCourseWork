@@ -47,6 +47,13 @@ public class ChannelFragment extends Fragment
                 + CHANNEL_ID + "&maxResults=20&key=" + GOOGLE_YOUTUBE_API_KEY;
     }
 
+    private static String VIDEO_COMMENTS_URL(String videoId) {
+        return "https://www.googleapis.com/youtube/v3/commentThreads?part=snippet&videoId="
+                + videoId + "&maxResults=20&key=" + GOOGLE_YOUTUBE_API_KEY;
+    }
+
+    // https://www.googleapis.com/youtube/v3/commentThreads?part=snippet&videoId=HKW6LlBCAN0&maxResults=20&key=AIzaSyAV9KXI6EFqwiTars_sCuuJxvDGDmXtLtg
+
     private RecyclerView _recyclerView = null;
     private VideoPostAdapter _adapter = null;
     private ArrayList<YoutubeDataModel> _data = new ArrayList<>();
