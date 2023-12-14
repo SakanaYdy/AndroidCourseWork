@@ -1,5 +1,8 @@
 package xyz.doikki.dkplayer.adapter;
 
+import android.os.Bundle;
+import android.util.Log;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.collection.SparseArrayCompat;
@@ -7,6 +10,8 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentStatePagerAdapter;
 
+import xyz.doikki.dkplayer.dataSource.DbContect;
+import xyz.doikki.dkplayer.dataSource.DbcUtils;
 import xyz.doikki.dkplayer.fragment.ChannelFragment;
 import xyz.doikki.dkplayer.fragment.list.ListViewFragment;
 import xyz.doikki.dkplayer.fragment.list.RecyclerViewFragment;
@@ -20,12 +25,39 @@ import java.util.List;
  */
 public class ListPagerAdapter extends FragmentStatePagerAdapter {
 
+    public interface OnMessageReceivedListener {
+        void onMessageReceived(String message);
+    }
+
     private List<String> mTitles;
     private SparseArrayCompat<Fragment> mFragments = new SparseArrayCompat<>();
+    private OnMessageReceivedListener messageListener;
+    private int userId;
 
     public ListPagerAdapter(FragmentManager fm, List<String> titles) {
         super(fm, BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT);
         mTitles = titles;
+    }
+
+    public ListPagerAdapter(FragmentManager fm, List<String> titles, OnMessageReceivedListener listener) {
+        super(fm, BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT);
+        this.mTitles = titles;
+        this.messageListener = listener;
+    }
+    public ListPagerAdapter(FragmentManager fm, List<String> titles, OnMessageReceivedListener listener,int id) {
+        super(fm, BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT);
+        this.mTitles = titles;
+        this.messageListener = listener;
+        this.userId = id;
+    }
+
+    /**
+     * 信息接收
+     */
+    private String listFragmentMessage;
+    // 用于接收ListFragment的消息
+    public void setListFragmentMessage(String message) {
+        listFragmentMessage = message;
     }
 
     @Override
@@ -37,6 +69,14 @@ public class ListPagerAdapter extends FragmentStatePagerAdapter {
                 default:
                 case 0:
                     fragment = new ListViewFragment();
+                    // 将信息传递给ListViewFragment
+                    Bundle args = new Bundle();
+                    args.putString("username",listFragmentMessage);
+                    args.putString("userId",userId+"");
+                    // args.putString("id", DbcUtils.query(new DbContect(fragment.getContext()),listFragmentMessage).getId()+"");
+                    Log.d("get_username",listFragmentMessage);
+                    Log.d("userId",userId+"");
+                    fragment.setArguments(args);
                     break;
                 case 1:
                     fragment = new ChannelFragment();

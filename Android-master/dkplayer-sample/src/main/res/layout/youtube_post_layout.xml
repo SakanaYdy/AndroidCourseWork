@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="15dp"
+    android:orientation="vertical">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="200dp">
+        <ImageView
+            android:id="@+id/imageThumb"
+            android:layout_width="match_parent"
+            android:layout_height="200dp"
+            android:background="#A8A8A8">
+        </ImageView>
+
+
+        <TextView
+            android:id="@+id/textViewData"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_marginStart="6dp"
+            android:layout_marginTop="6dp"
+            android:layout_marginEnd="6dp"
+            android:layout_marginRight="5dp"
+            android:layout_marginBottom="6dp"
+            android:fontFamily="sans-serif"
+            android:singleLine="true"
+            android:text="视频发布于"
+            android:textColor="#FFFFFF"
+            android:textSize="13dp"></TextView>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_margin="10dp"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/textViewTitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="sans-serif"
+                android:text="视频标题"
+                android:textSize="25dp"
+                android:singleLine="true"
+                android:textColor="#FFFFFF" >
+            </TextView>
+
+
+
+            <TextView
+            android:id="@+id/textViewDes"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="sans-serif"
+            android:text="视频描述...."
+            android:textSize="12dp"
+            android:singleLine="true"
+            android:textColor="#FFFFFF" >
+        </TextView>
+
+        </LinearLayout>
+
+    </RelativeLayout>
+
+</LinearLayout>

@@ -1,7 +1,9 @@
 package xyz.doikki.dkplayer.fragment.main;
 
 import android.content.Intent;
+import android.os.Bundle;
 import android.view.View;
+import android.widget.TextView;
 import android.widget.Toast;
 
 
@@ -14,13 +16,14 @@ import xyz.doikki.dkplayer.R;
 import xyz.doikki.dkplayer.activity.LoginActivity;
 import xyz.doikki.dkplayer.dataSource.DBOpenHelper;
 import xyz.doikki.dkplayer.fragment.BaseFragment;
+import xyz.doikki.dkplayer.util.ToastUtil;
 
 public class ExtensionFragment extends BaseFragment implements View.OnClickListener {
 
     // 建立数据库连接
-    Connection conn = (Connection) DBOpenHelper.getConn();
-
-    String sql = "select user_id from video where id=1";
+//    Connection conn = (Connection) DBOpenHelper.getConn();
+//
+//    String sql = "select user_id from video where id=1";
 
     @Override
     protected int getLayoutResId() {
@@ -33,6 +36,14 @@ public class ExtensionFragment extends BaseFragment implements View.OnClickListe
         findViewById(R.id.update).setOnClickListener(this);
         findViewById(R.id.upload).setOnClickListener(this);
         findViewById(R.id.logout).setOnClickListener(this);
+
+        TextView username = findViewById(R.id.yonghuxingming);
+        Bundle arguments = getArguments();
+        if(arguments != null) {
+            ToastUtil.ShowMsg(getContext(),"获取到用户信息");
+            username.setText((CharSequence) arguments.get("username"));
+        }
+        else ToastUtil.ShowMsg(getContext(),"获取用户信息失败");
     }
 
     @Override
@@ -48,15 +59,15 @@ public class ExtensionFragment extends BaseFragment implements View.OnClickListe
         switch (v.getId()){
             case R.id.update:
                 Toast.makeText(getContext(),"更新信息", Toast.LENGTH_SHORT).show();
-                Statement st = null;
-                try {
-                    st = (Statement) conn.createStatement();
-                    ResultSet rs = st.executeQuery(sql);
-                    Toast.makeText(getContext(),"获取成功",Toast.LENGTH_SHORT).show();
-                    System.out.println("----------------");
-                } catch (SQLException e) {
-                    throw new RuntimeException(e);
-                }
+//                Statement st = null;
+//                try {
+//                    st = (Statement) conn.createStatement();
+//                    ResultSet rs = st.executeQuery(sql);
+//                    Toast.makeText(getContext(),"获取成功",Toast.LENGTH_SHORT).show();
+//                    System.out.println("----------------");
+//                } catch (SQLException e) {
+//                    throw new RuntimeException(e);
+//                }
                 break;
             case R.id.upload:
                 Intent myFileIntent = new Intent(Intent.ACTION_GET_CONTENT);
@@ -73,15 +84,15 @@ public class ExtensionFragment extends BaseFragment implements View.OnClickListe
         }
 
     }
-    public void upload(){
-        // yourEndpoint填写Bucket所在地域对应的Endpoint。以华东1（杭州）为例，Endpoint填写为https://oss-cn-hangzhou.aliyuncs.com。
-        String endpoint = "ydy-sky.oss-cn-beijing.aliyuncs.com";
-        // 从STS服务获取的临时访问密钥（AccessKey ID和AccessKey Secret）。
-        String accessKeyId = "LTAI5tF8MSLykjbDwiU5RRJx";  //
-
-        String accessKeySecret = "BWUWiScZkgcx74HSHr7gwztFJsM242";
-        // 从STS服务获取的安全令牌（SecurityToken）。
-        String securityToken = "yourSecurityToken";
-
-    }
+//    public void upload(){
+//        // yourEndpoint填写Bucket所在地域对应的Endpoint。以华东1（杭州）为例，Endpoint填写为https://oss-cn-hangzhou.aliyuncs.com。
+//        String endpoint = "ydy-sky.oss-cn-beijing.aliyuncs.com";
+//        // 从STS服务获取的临时访问密钥（AccessKey ID和AccessKey Secret）。
+//        String accessKeyId = "LTAI5tF8MSLykjbDwiU5RRJx";  //
+//
+//        String accessKeySecret = "BWUWiScZkgcx74HSHr7gwztFJsM242";
+//        // 从STS服务获取的安全令牌（SecurityToken）。
+//        String securityToken = "yourSecurityToken";
+//
+//    }
 }

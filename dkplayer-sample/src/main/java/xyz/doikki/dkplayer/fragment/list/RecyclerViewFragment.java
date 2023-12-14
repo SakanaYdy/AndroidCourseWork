@@ -94,7 +94,7 @@ public class RecyclerViewFragment extends BaseFragment implements OnItemChildCli
         view.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mAdapter.addData(DataUtil.getVideoList(new DbContect(getContext())));
+                mAdapter.addData(DataUtil.getVideoList(new DbContect(getContext()),1));
             }
         });
     }
@@ -128,7 +128,7 @@ public class RecyclerViewFragment extends BaseFragment implements OnItemChildCli
     @Override
     protected void initData() {
         super.initData();
-        List<VideoBean> videoList = DataUtil.getVideoList(new DbContect(getContext()));
+        List<VideoBean> videoList = DataUtil.getVideoList(new DbContect(getContext()),1);
         mVideos.addAll(videoList);
         mAdapter.notifyDataSetChanged();
     }

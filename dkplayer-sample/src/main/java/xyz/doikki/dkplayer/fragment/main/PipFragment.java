@@ -1,5 +1,7 @@
 package xyz.doikki.dkplayer.fragment.main;
 
+import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
@@ -12,11 +14,16 @@ import java.util.List;
 
 import xyz.doikki.dkplayer.R;
 import xyz.doikki.dkplayer.adapter.ListPagerAdapter;
+import xyz.doikki.dkplayer.bean.User;
+import xyz.doikki.dkplayer.dataSource.DbContect;
+import xyz.doikki.dkplayer.dataSource.DbcUtils;
 import xyz.doikki.dkplayer.fragment.BaseFragment;
 import xyz.doikki.dkplayer.util.Tag;
 
-public class PipFragment extends BaseFragment implements View.OnClickListener {
+public class PipFragment extends BaseFragment implements View.OnClickListener,ListPagerAdapter.OnMessageReceivedListener {
 
+    private ListPagerAdapter pagerAdapter;
+    DbContect helper;
     @Override
     protected int getLayoutResId() {
         return R.layout.fragment_list;
@@ -25,12 +32,21 @@ public class PipFragment extends BaseFragment implements View.OnClickListener {
     @Override
     protected void initView() {
         super.initView();
+
+        Bundle arguments = getArguments();
+        String username = (String) arguments.get("username");
+        helper = new DbContect(getContext());
+        User query = DbcUtils.query(helper, username);
+        int id = query.getId();
+
         ViewPager viewPager = findViewById(R.id.view_pager);
 
         List<String> titles = new ArrayList<>();
-        titles.add("个人上传视频");
-
-        viewPager.setAdapter(new ListPagerAdapter(getChildFragmentManager(), titles));
+        titles.add("个人上传视频" + id);
+        Log.d("个人id",id+"");
+        pagerAdapter = new ListPagerAdapter(getChildFragmentManager(),titles,this,id);
+        pagerAdapter.setListFragmentMessage(username);
+        viewPager.setAdapter(pagerAdapter);
 
         TabLayout tabLayout = findViewById(R.id.tab_layout);
         tabLayout.setupWithViewPager(viewPager);
@@ -58,5 +74,10 @@ public class PipFragment extends BaseFragment implements View.OnClickListener {
 //                Toast.makeText(getContext(),"test4", Toast.LENGTH_SHORT).show();
 //                break;
 //        }
+    }
+
+    @Override
+    public void onMessageReceived(String message) {
+
     }
 }

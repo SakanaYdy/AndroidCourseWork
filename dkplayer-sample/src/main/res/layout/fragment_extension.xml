@@ -5,75 +5,57 @@
 android:layout_width="match_parent"
 android:layout_height="match_parent"
 android:background="#ebebeb">
-<RelativeLayout
-    android:id="@+id/re_myinfo"
-    android:layout_width="match_parent"
-    android:layout_height="100dp"
-    android:layout_marginBottom="18dp"
-    android:clickable="true"
-    android:layout_marginTop="16dp"
-    android:background="@drawable/shape_ad_bg"
-    android:paddingBottom="8dp"
-    android:paddingTop="8dp">
+
+    <RelativeLayout
+        android:id="@+id/re_myinfo"
+        android:layout_width="match_parent"
+        android:layout_height="100dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginBottom="18dp"
+        android:background="@drawable/shape_ad_bg"
+        android:clickable="true"
+        android:paddingTop="8dp"
+        android:paddingBottom="8dp">
 
 
-    <ImageView
-        android:id="@+id/iv_avatar"
-        android:layout_width="64dp"
-        android:layout_height="64dp"
-        android:layout_marginLeft="15dp"
-        tools:srcCompat="@tools:sample/backgrounds/scenic" />
-    <LinearLayout
-        android:id="@+id/ll_name"
-        android:orientation="horizontal"
+        <ImageView
+            android:id="@+id/iv_avatar"
+            android:layout_width="64dp"
+            android:layout_height="64dp"
+            android:layout_marginLeft="15dp"
+            tools:srcCompat="@tools:sample/backgrounds/scenic" />
 
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="16dp"
-        android:layout_marginTop="12dp"
-        android:layout_toRightOf="@id/iv_avatar">
-
-        <TextView
-            android:id="@+id/tv_name"
+        <LinearLayout
+            android:id="@+id/ll_name"
             android:layout_width="wrap_content"
+
             android:layout_height="wrap_content"
-            android:text="用户名："
-            android:textColor="#353535"
-            android:textSize="16sp"/>
-        <TextView
-            android:id="@+id/yonghuxingming"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_marginLeft="16dp"
+            android:layout_marginTop="12dp"
+            android:layout_toRightOf="@id/iv_avatar"
+            android:orientation="horizontal">
 
-            android:textColor="#353535"
-            android:textSize="16sp"/>
+            <TextView
+                android:id="@+id/tv_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="用户名："
+                android:textColor="#353535"
+                android:textSize="16sp" />
 
-    </LinearLayout>
-    <TextView
-        android:id="@+id/tv_fxid"
-        android:layout_alignParentBottom="true"
-        android:layout_marginBottom="10dp"
-        android:layout_marginLeft="16dp"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_toRightOf="@id/iv_avatar"
-        android:text="账号:"
-        android:textColor="#AAAAAA"
-        android:textSize="14sp"/>
-    <TextView
-        android:id="@+id/dengruyonghu"
-        android:layout_alignParentBottom="true"
-        android:layout_marginBottom="10dp"
-        android:layout_marginLeft="55dp"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_toRightOf="@id/iv_avatar"
+            <TextView
+                android:id="@+id/yonghuxingming"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="user_1000"
+                android:textColor="#353535"
+                android:textSize="16sp" />
 
-        android:textColor="#AAAAAA"
-        android:textSize="14sp"/>
+        </LinearLayout>
 
-</RelativeLayout>
-<RelativeLayout
+    </RelativeLayout>
+
+    <RelativeLayout
     android:id="@+id/re_xiangce"
     android:layout_width="match_parent"
     android:layout_height="65dp"

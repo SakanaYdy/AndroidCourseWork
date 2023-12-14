@@ -1,6 +1,8 @@
 package xyz.doikki.dkplayer.fragment.list;
 
 import android.content.pm.ActivityInfo;
+import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.AbsListView;
 import android.widget.FrameLayout;
@@ -10,10 +12,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 import xyz.doikki.dkplayer.R;
+import xyz.doikki.dkplayer.adapter.ListPagerAdapter;
 import xyz.doikki.dkplayer.adapter.VideoListViewAdapter;
 import xyz.doikki.dkplayer.adapter.listener.OnItemChildClickListener;
+import xyz.doikki.dkplayer.bean.User;
 import xyz.doikki.dkplayer.bean.VideoBean;
 import xyz.doikki.dkplayer.dataSource.DbContect;
+import xyz.doikki.dkplayer.dataSource.DbcUtils;
 import xyz.doikki.dkplayer.fragment.BaseFragment;
 import xyz.doikki.dkplayer.util.DataUtil;
 import xyz.doikki.dkplayer.util.Tag;
@@ -29,7 +34,7 @@ import xyz.doikki.videoplayer.player.VideoView;
 /**
  * ListView demo，不推荐，建议使用{@link RecyclerViewFragment}
  */
-public class ListViewFragment extends BaseFragment implements OnItemChildClickListener {
+public class ListViewFragment extends BaseFragment implements OnItemChildClickListener, ListPagerAdapter.OnMessageReceivedListener {
 
     private List<VideoBean> mVideos = new ArrayList<>();
     private VideoListViewAdapter mAdapter;
@@ -39,14 +44,45 @@ public class ListViewFragment extends BaseFragment implements OnItemChildClickLi
     private int mCurPosition = -1;
     private TitleView mTitleView;
 
+    private DbContect helper = new DbContect(getContext());
+
+    private int receivedId;
+
     @Override
     protected int getLayoutResId() {
         return R.layout.fragment_list_view;
     }
 
+    /**
+     * 接收用户信息
+     */
+    private String listViewFragmentMessage;
+
+    // 用于接收来自ListPagerAdapter的消息
+    public void setListViewFragmentMessage(String message) {
+        listViewFragmentMessage = message;
+        // 在这里处理接收到的消息
+        Log.d("recerver_username",message);
+        User query = DbcUtils.query(helper, message);
+        assert query != null;
+        receivedId = query.getId();
+    }
+
     @Override
     protected void initView() {
         super.initView();
+
+        Bundle arguments = getArguments();
+        String username = (String) arguments.get("username");
+        String id = (String) arguments.get("userId");
+        Log.d("receivedId",id);
+        receivedId = Integer.parseInt(id);
+        Log.d("receivedId",receivedId+"");
+        // int id = (int) arguments.get("id");
+        // Log.d("recerver_username",username + "  " + id);
+        // User query = DbcUtils.query(helper, username);
+        // Log.d("query_id",query.getId() + "");
+
         mVideoView = new VideoView(getActivity());
         mVideoView.setOnStateChangeListener(new VideoView.SimpleOnStateChangeListener() {
             @Override
@@ -126,13 +162,20 @@ public class ListViewFragment extends BaseFragment implements OnItemChildClickLi
             }
         });
     }
-
+    private void initData(int id) {
+        // 使用接收到的 id 进行初始化
+        List<VideoBean> videoList = DataUtil.getVideoList(new DbContect(getContext()), id);
+        mVideos.addAll(videoList);
+        mAdapter.notifyDataSetChanged();
+    }
     @Override
     protected void initData() {
         super.initData();
-        List<VideoBean> videoList = DataUtil.getVideoList(new DbContect(getContext()));
-        mVideos.addAll(videoList);
-        mAdapter.notifyDataSetChanged();
+//        List<VideoBean> videoList = DataUtil.getVideoList(new DbContect(getContext()),1);
+//        mVideos.addAll(videoList);
+//        mAdapter.notifyDataSetChanged();
+        initData(receivedId);
+        Log.d("initData_id" ,"" + receivedId);
     }
 
     @Override
@@ -182,5 +225,11 @@ public class ListViewFragment extends BaseFragment implements OnItemChildClickLi
             getActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         }
         mCurPosition = -1;
+    }
+
+    @Override
+    public void onMessageReceived(String message) {
+        // 在这里处理接收到的消息
+        Log.d("ListViewFragment_info", "Received message: " + message);
     }
 }
