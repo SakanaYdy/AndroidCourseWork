@@ -1,48 +1,57 @@
 package xyz.doikki.dkplayer.dataModel;
 
-public class CommentDataModel {
+public class CommentDataModel
+{
 
-    private String authorDisplayName;
-    private String textDisplay;
-    private String publishedAt;
+    private String _authorDisplayName = "";
+    private String _textDisplay = "";
+    private String _publishedAt = "";
 
-    public CommentDataModel(String authorDisplayName, String textDisplay, String publishedAt) {
-        this.authorDisplayName = authorDisplayName;
-        this.textDisplay = textDisplay;
-        this.publishedAt = publishedAt;
+//    public CommentDataModel() {}
+
+    public CommentDataModel(String authorDisplayName, String textDisplay, String publishedAt)
+    {
+        this._authorDisplayName = authorDisplayName;
+        this._textDisplay = textDisplay;
+        this._publishedAt = publishedAt;
     }
 
-    public String getAuthorDisplayName() {
-        return authorDisplayName;
+    public String getAuthorDisplayName()
+    {
+        return _authorDisplayName;
     }
 
-    public void setAuthorDisplayName(String authorDisplayName) {
-        this.authorDisplayName = authorDisplayName;
+//    public void setAuthorDisplayName(String authorDisplayName)
+//    {
+//        this._authorDisplayName = authorDisplayName;
+//    }
+
+    public String getTextDisplay()
+    {
+        return _textDisplay;
     }
 
-    public String getTextDisplay() {
-        return textDisplay;
+//    public void setTextDisplay(String textDisplay)
+//    {
+//        this._textDisplay = textDisplay;
+//    }
+
+    public String getPublishedAt()
+    {
+        return _publishedAt;
     }
 
-    public void setTextDisplay(String textDisplay) {
-        this.textDisplay = textDisplay;
-    }
+//    public void setPublishedAt(String publishedAt)
+//    {
+//        this._publishedAt = publishedAt;
+//    }
 
-    public String getPublishedAt() {
-        return publishedAt;
-    }
 
-    public void setPublishedAt(String publishedAt) {
-        this.publishedAt = publishedAt;
-    }
-
-    // Override toString method
     @Override
-    public String toString() {
-        return "CommentDataModel{" +
-                "authorDisplayName='" + authorDisplayName + '\'' +
-                ", textDisplay='" + textDisplay + '\'' +
-                ", publishedAt='" + publishedAt + '\'' +
-                '}';
+    public String toString()
+    {
+        return "CommentDataModel{" + "authorDisplayName='" + _authorDisplayName + '\''
+                + ", textDisplay='" + _textDisplay + '\'' + ", publishedAt='" + _publishedAt + '\''
+                + '}';
     }
 }

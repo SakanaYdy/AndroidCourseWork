@@ -6,23 +6,43 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.res.Configuration;
+import android.os.AsyncTask;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
 import android.view.WindowManager;
 import android.webkit.WebView;
 import android.widget.RelativeLayout;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.IOException;
 import java.util.ArrayList;
 
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.Response;
 import xyz.doikki.dkplayer.R;
 import xyz.doikki.dkplayer.adapter.VideoCommentAdapter;
-import xyz.doikki.dkplayer.adapter.VideoPostAdapter;
 import xyz.doikki.dkplayer.dataModel.CommentDataModel;
-import xyz.doikki.dkplayer.dataModel.YoutubeDataModel;
 
+/** @noinspection ALL*/
 public class YoutubeVideoPlayActivity extends AppCompatActivity
 {
+    private String _videoId = "";
+
+    // Google
+    //private static String GOOGLE_YOUTUBE_API_KEY = "AIzaSyBUGTiAIYAEN7tuwzAx0wyX6Bd1eLENR4E";
+    private static String GOOGLE_YOUTUBE_API_KEY = "AIzaSyAV9KXI6EFqwiTars_sCuuJxvDGDmXtLtg";
+
+    private static String VIDEO_COMMENTS_URL(String videoId) {
+        return "https://www.googleapis.com/youtube/v3/commentThreads?part=snippet&videoId="
+                + videoId + "&maxResults=20&key=" + GOOGLE_YOUTUBE_API_KEY;
+    }
+
     private WebView _webView;
     private ActionBar actionBar;
 
@@ -47,10 +67,15 @@ public class YoutubeVideoPlayActivity extends AppCompatActivity
         _recyclerView = findViewById(R.id.recyclerViewComments);
 
         _webView = findViewById(R.id.webView);
-        ArrayList<CommentDataModel> datas = new ArrayList<CommentDataModel>();
-        CommentDataModel data = new CommentDataModel("1", "1", "1");
-        datas.add(data);
-        init(datas);
+        ArrayList<CommentDataModel> datas = new ArrayList<>();
+
+        // 获取评论数据
+        new RequestComment().execute();
+        //CommentDataModel data = new CommentDataModel("1", "1", "1");
+
+        //datas.add(data);
+
+        //init(datas);
 
         // 获取状态栏
         // getSupportActionBar 是 父类AppCompatActivity的函数
@@ -58,7 +83,7 @@ public class YoutubeVideoPlayActivity extends AppCompatActivity
 
         // 获取传递过来的视频 ID
         // getIntent()是最顶层父类Activity中的函数
-        String videoId = getIntent().getStringExtra("videoId");
+        _videoId = getIntent().getStringExtra("videoId");
 
         // 设置 WebView 播放视频
         _webView.getSettings().setJavaScriptEnabled(true);
@@ -79,7 +104,7 @@ public class YoutubeVideoPlayActivity extends AppCompatActivity
                 + "          height: '200',\n"
                 + "          width: '100%',\n"
                 + "          videoId: '"
-                + videoId
+                + _videoId
                 + "',\n"
                 + "          events: {\n"
                 + "            'onReady': onPlayerReady,\n"
@@ -116,7 +141,7 @@ public class YoutubeVideoPlayActivity extends AppCompatActivity
                 + "          height: 380,\n"
                 + "          width: '100%',\n"
                 + "          videoId: '"
-                + videoId
+                + _videoId
                 + "',\n"
                 + "          events: {\n"
                 + "            'onReady': onPlayerReady,\n"
@@ -182,6 +207,117 @@ public class YoutubeVideoPlayActivity extends AppCompatActivity
         });
 
 
+
+    }
+
+    private class RequestComment extends AsyncTask<Void, String, String>
+    {
+
+        // 最大网络请求次数3次
+        private static final int MAX_RETRIES = 3;
+
+        /**
+         * @noinspection deprecation
+         * doInBackground(Params... params): 在后台线程中执行耗时任务的地方。
+         * 在这个方法中执行网络请求、文件读写等耗时操作。
+         */
+        @Override
+        protected String doInBackground(Void... params)
+        {
+            OkHttpClient client = new OkHttpClient();
+            // 使用okHTTP进行网络请求
+            Request request = new Request.Builder().url(VIDEO_COMMENTS_URL(_videoId)).build();
+
+            Log.d("Comment", VIDEO_COMMENTS_URL(_videoId));
+            for (int retry = 0; retry < MAX_RETRIES; retry++)
+            {
+                try
+                {
+                    Response response = client.newCall(request).execute();
+                    Log.d("URL2", "请求结果" + response.toString());
+                    if (response.isSuccessful())
+                    {
+                        return response.body().string();
+                    }
+                } catch (IOException e)
+                {
+                    Log.e("URL2", "IOException: " + e.getMessage());
+                    e.printStackTrace();
+                }
+            }
+            return null;
+        }
+
+        /**
+         * @noinspection deprecation
+         * onPostExecute(Result result): 在 doInBackground 方法执行完毕后调用，
+         * 用于处理执行结果。在这个方法中更新 UI，处理执行结果。
+         */
+        @Override
+        protected void onPostExecute(String response)
+        {
+            super.onPostExecute(response);
+            if (response != null)
+            {
+                try
+                {
+                    // doInBackground 中的response返回的数据（String) 会传进onPostExecute(String response)
+                    // response转换成JSONObject即为其中的Json序列化数据
+                    JSONObject jsonObject = new JSONObject(response);
+
+                    // Json序列化解析
+                    _data = parseCommentListFromJson(jsonObject);
+
+                    for (CommentDataModel item : _data)
+                    {
+                        Log.d("Comment", item.toString());
+                    }
+                    init(_data);
+
+                } catch (JSONException e)
+                {
+                    e.printStackTrace();
+                }
+            }
+
+//            // 停止播放刷新动画
+//            swipeRefreshLayout.setRefreshing(false);
+        }
+
+        /**
+         * @param jsonObject 序列化Json数据对象
+         * @return YoutubeData列表
+         */
+        // Json 数据解析
+        private ArrayList<CommentDataModel> parseCommentListFromJson(JSONObject jsonObject) {
+            ArrayList<CommentDataModel> list = new ArrayList<>();
+            if (jsonObject.has("items")) {
+                try {
+                    JSONArray jsonArray = jsonObject.getJSONArray("items");
+                    for (int i = 0; i < jsonArray.length(); i++) {
+                        JSONObject jsonItem = jsonArray.getJSONObject(i);
+                        if (jsonItem.has("kind") && jsonItem.getString("kind").equals("youtube#commentThread")) {
+                            JSONObject jsonSnippet = jsonItem.getJSONObject("snippet");
+                            if (jsonSnippet.has("topLevelComment")) {
+                                JSONObject jsonTopComment = jsonSnippet.getJSONObject("topLevelComment");
+                                JSONObject jsonSnippetComment = jsonTopComment.getJSONObject("snippet");
+
+                                String textDisplay = jsonSnippetComment.getString("textDisplay");
+                                String authorDisplayName = jsonSnippetComment.getString("authorDisplayName");
+                                String publishedAt = jsonSnippetComment.getString("publishedAt");
+
+
+                                CommentDataModel commentData = new CommentDataModel(authorDisplayName, textDisplay, publishedAt);
+                                list.add(commentData);
+                            }
+                        }
+                    }
+                } catch (JSONException e) {
+                    throw new RuntimeException(e);
+                }
+            }
+            return list;
+        }
 
     }
 }

@@ -37,8 +37,8 @@ public class VideoCommentAdapter extends RecyclerView.Adapter<VideoCommentAdapte
         // LayoutInflater 是 Android 中用于将 XML 布局文件转换为实际视图的类。
         // inflate 是将 XML 布局文件转换为实际的 View 对象的过程。
 
-        // TODO: R.layout修改
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.layout_youtube_post, parent, false);
+
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.layout_youtube_comment, parent, false);
 
         // 将view 传递给YoutubePostHolder的构造函数
         CommentHolder holderView = new CommentHolder((view));
@@ -59,9 +59,9 @@ public class VideoCommentAdapter extends RecyclerView.Adapter<VideoCommentAdapte
         CommentDataModel dataObject = _commentListDatas.get(position);
 
 
-//        textContent.setText(dataObject.getTextDisplay());
-//        textAuthorDisplayName.setText(dataObject.getAuthorDisplayName());
-//        textPublishedAt.setText(dataObject.getPublishedAt());
+        textContent.setText(dataObject.getTextDisplay());
+        textAuthorDisplayName.setText(dataObject.getAuthorDisplayName());
+        textPublishedAt.setText(dataObject.getPublishedAt());
 
 
     }
@@ -86,7 +86,6 @@ public class VideoCommentAdapter extends RecyclerView.Adapter<VideoCommentAdapte
             _textAuthorDisplayName = (TextView) itemView.findViewById(R.id.textAuthorDisplayName);
             _textContent = (TextView) itemView.findViewById(R.id.textDisplay);
             _textPublishedAt = (TextView) itemView.findViewById(R.id.textPublishedAt);
-
         }
 
 

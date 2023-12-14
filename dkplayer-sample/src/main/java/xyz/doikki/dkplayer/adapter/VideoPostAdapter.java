@@ -24,7 +24,6 @@ import xyz.doikki.dkplayer.dataModel.YoutubeDataModel;
 // 适配器中，泛型参数 <VideoPostAdapter.YoutubePostHolder> 指定了适配器使用的 ViewHolder 类型，
 public class VideoPostAdapter extends RecyclerView.Adapter<VideoPostAdapter.YoutubePostHolder>
 {
-
     // 存储了要在 RecyclerView 中显示的数据
     private ArrayList<YoutubeDataModel> _listVideoDatas;
 
