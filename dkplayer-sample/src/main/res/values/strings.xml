@@ -16,7 +16,7 @@
     <string name="str_file" translatable="false">播放文件</string>
     <string name="str_multi_player" translatable="false">多播放器同时播放</string>
     <string name="str_list_view" translatable="false">视频列表</string>
-    <string name="str_recycler_view" translatable="false">循环视图</string>
+    <string name="str_recycler_view" translatable="false">Youtube频道</string>
     <string name="str_auto_play_recycler_view" translatable="false">自动播放的RecyclerView</string>
     <string name="str_portrait_when_fullscreen" translatable="false">全屏后手动横屏</string>
     <string name="str_tiktok" translatable="false">抖音</string>

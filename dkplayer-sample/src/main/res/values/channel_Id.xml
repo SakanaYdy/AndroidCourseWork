@@ -1,0 +1,7 @@
+<resources>
+    <string-array name="channel_ids">
+        <item>UC3KFV0PRieM4GoH8P5v6r0w</item>
+        <item>UCb3TZ4SD_Ys3j4z0-8o6auA</item>
+        <!-- Add more channel IDs as needed -->
+    </string-array>
+</resources>

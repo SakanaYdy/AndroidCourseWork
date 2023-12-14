@@ -10,6 +10,7 @@ import android.view.ViewGroup;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 
 import org.json.JSONArray;
@@ -18,6 +19,7 @@ import org.json.JSONObject;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Random;
 
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
@@ -28,36 +30,69 @@ import xyz.doikki.dkplayer.dataModel.YoutubeDataModel;
 
 public class ChannelFragment extends Fragment {
 
+    private SwipeRefreshLayout swipeRefreshLayout;
+
     // Google
     //private static String GOOGLE_YOUTUBE_API_KEY = "AIzaSyBUGTiAIYAEN7tuwzAx0wyX6Bd1eLENR4E";
     private static String GOOGLE_YOUTUBE_API_KEY = "AIzaSyAV9KXI6EFqwiTars_sCuuJxvDGDmXtLtg";
 
-    private static String CHANNEL_ID = "UC3KFV0PRieM4GoH8P5v6r0w";
-    //private static String CHANNEL_ID = "UCb3TZ4SD_Ys3j4z0-8o6auA";
-    private static String CHANNEL_GET_URL = "https://www.googleapis.com/youtube/v3/search?part=snippet&order=date&channelId=" + CHANNEL_ID + "&maxResults=20&key=" + GOOGLE_YOUTUBE_API_KEY;
-
-    private RecyclerView _listVideos = null;
+    //private static String CHANNEL_ID = "UC3KFV0PRieM4GoH8P5v6r0w";
+    private static String CHANNEL_ID = "UCb3TZ4SD_Ys3j4z0-8o6auA";
+    //private static String CHANNEL_GET_URL = "https://www.googleapis.com/youtube/v3/search?part=snippet&order=date&channelId=" + CHANNEL_ID + "&maxResults=20&key=" + GOOGLE_YOUTUBE_API_KEY;
+    private static String CHANNEL_GET_URL() {
+        return  "https://www.googleapis.com/youtube/v3/search?part=snippet&order=date&channelId=" + CHANNEL_ID + "&maxResults=20&key=" + GOOGLE_YOUTUBE_API_KEY;
+    }
+    private RecyclerView _recyclerView= null;
     private VideoPostAdapter _adapter = null;
-    private ArrayList<YoutubeDataModel> _listVideoDatas = new ArrayList<>();
+    private ArrayList<YoutubeDataModel> _data= new ArrayList<>();
 
-    /** @noinspection deprecation*/ // Fragment View 视图层创建时调用
+    /** @noinspection deprecation*/
+    // Fragment View 视图层创建时调用
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         // 通过xml布局文件，初始化view视图
         View view = inflater.inflate(R.layout.fragment_channel, container, false);
-        _listVideos = view.findViewById(R.id.listVideos);
+        swipeRefreshLayout = view.findViewById(R.id.swipeRefreshLayout);
+
+        // 下拉刷新时的监听事件
+        swipeRefreshLayout.setOnRefreshListener(this::refreshContent);
+
+        _recyclerView = view.findViewById(R.id.listVideos);
         new RequestYoutubeAPI().execute();
+
         return view;
     }
+    private void refreshContent() {
+        // Handle the pull-to-refresh action here
+        // For example, update the CHANNEL_ID and reload data
+        updateChannelId();
+        //noinspection deprecation
+        _data.clear();
+        new RequestYoutubeAPI().execute();
+    }
+
+    private void updateChannelId() {
+        // 从资源文件中获取随机chanel Id
+        String[] channelIds = getResources().getStringArray(R.array.channel_ids);
+        String newChannelId;
+
+        do {
+            newChannelId = channelIds[new Random().nextInt(channelIds.length)];
+            Log.d("updateChannelId", newChannelId);
+        } while (newChannelId.equals(CHANNEL_ID));
+
+        CHANNEL_ID = newChannelId;
+    }
+
 
     /**
      * @param data Youtube视频数据
      */
     // 初始化 RecyclerView，VideoPostAdapter
     private void init(ArrayList<YoutubeDataModel> data) {
-        _listVideos.setLayoutManager(new LinearLayoutManager(getActivity()));
+        _recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         _adapter = new VideoPostAdapter(data, getActivity());
-        _listVideos.setAdapter(_adapter);
+        _recyclerView.setAdapter(_adapter);
     }
 
     private class RequestYoutubeAPI extends AsyncTask<Void, String, String> {
@@ -70,8 +105,8 @@ public class ChannelFragment extends Fragment {
         protected String doInBackground(Void... params) {
             OkHttpClient client = new OkHttpClient();
             // 使用okHTTP进行网络请求
-            Request request = new Request.Builder().url(CHANNEL_GET_URL).build();
-            Log.d("URL2", CHANNEL_GET_URL);
+            Request request = new Request.Builder().url(CHANNEL_GET_URL()).build();
+            Log.d("URL2", CHANNEL_GET_URL());
 
 
             for (int retry = 0; retry < MAX_RETRIES; retry++) {
@@ -97,16 +132,19 @@ public class ChannelFragment extends Fragment {
             if (response != null) {
                 try {
                     JSONObject jsonObject = new JSONObject(response);
-                    _listVideoDatas = parseVideoListFromResponse(jsonObject);
+                    _data= parseVideoListFromResponse(jsonObject);
 
-                    for (YoutubeDataModel item : _listVideoDatas) {
+                    for (YoutubeDataModel item : _data) {
                         Log.d("URL2", item.toString());
                     }
-                    init(_listVideoDatas);
+                    init(_data);
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
             }
+
+            // Stop the refresh animation
+            swipeRefreshLayout.setRefreshing(false);
         }
 
         /**
