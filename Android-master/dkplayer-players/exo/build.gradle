@@ -1,0 +1,32 @@
+apply plugin: 'com.android.library'
+apply from: '../../constants.gradle'
+
+android {
+    compileSdkVersion project.ext.compileSdkVersion
+    buildToolsVersion project.ext.buildToolsVersion
+
+    defaultConfig {
+        minSdkVersion project.ext.minSdkVersion
+        targetSdkVersion project.ext.targetSdkVersion
+    }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+}
+
+dependencies {
+    implementation fileTree(include: ['*.jar'], dir: 'libs')
+    implementation project(':dkplayer-java')
+    api "com.google.android.exoplayer:exoplayer-core:$project.exoPlayerVersion"
+    api "com.google.android.exoplayer:exoplayer-dash:$project.exoPlayerVersion"
+    api "com.google.android.exoplayer:exoplayer-hls:$project.exoPlayerVersion"
+    api "com.google.android.exoplayer:exoplayer-rtsp:$project.exoPlayerVersion"
+    api "com.google.android.exoplayer:extension-rtmp:$project.exoPlayerVersion"
+}
+
+ext {
+    PUBLISH_ARTIFACT_ID = 'player-exo'
+}
+
+apply from: '../../publish.gradle'

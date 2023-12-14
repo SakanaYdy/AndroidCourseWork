@@ -18,6 +18,7 @@ import xyz.doikki.dkplayer.R;
 import xyz.doikki.dkplayer.bean.User;
 import xyz.doikki.dkplayer.dataSource.DbContect;
 import xyz.doikki.dkplayer.dataSource.DbcUtils;
+import xyz.doikki.dkplayer.fragment.main.ExtensionFragment;
 
 public class LoginActivity extends AppCompatActivity {
 
@@ -78,9 +79,16 @@ public class LoginActivity extends AppCompatActivity {
                         editor.remove("issave");
                         editor.apply();
                     }
-
                     // 跳转到主界面
                     Intent intent = new Intent();
+                    // 组件间信息传递，传递登录用户信息
+                    Bundle bundle = new Bundle();
+                    bundle.putString("username",name);
+                    intent.putExtra("login",bundle);
+                    // 向fragment传递
+                    ExtensionFragment fragment = new ExtensionFragment();
+                    fragment.setArguments(bundle);
+
                     intent.setClass(LoginActivity.this, MainActivity_.class);
                     startActivity(intent);
                 }

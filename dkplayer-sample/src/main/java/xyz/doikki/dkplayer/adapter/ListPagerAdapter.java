@@ -1,5 +1,8 @@
 package xyz.doikki.dkplayer.adapter;
 
+import android.os.Bundle;
+import android.util.Log;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.collection.SparseArrayCompat;
@@ -20,12 +23,32 @@ import java.util.List;
  */
 public class ListPagerAdapter extends FragmentStatePagerAdapter {
 
+    public interface OnMessageReceivedListener {
+        void onMessageReceived(String message);
+    }
+
     private List<String> mTitles;
     private SparseArrayCompat<Fragment> mFragments = new SparseArrayCompat<>();
+    private OnMessageReceivedListener messageListener;
 
     public ListPagerAdapter(FragmentManager fm, List<String> titles) {
         super(fm, BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT);
         mTitles = titles;
+    }
+
+    public ListPagerAdapter(FragmentManager fm, List<String> titles, OnMessageReceivedListener listener) {
+        super(fm, BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT);
+        this.mTitles = titles;
+        this.messageListener = listener;
+    }
+
+    /**
+     * 信息接收
+     */
+    private String listFragmentMessage;
+    // 用于接收ListFragment的消息
+    public void setListFragmentMessage(String message) {
+        listFragmentMessage = message;
     }
 
     @Override
@@ -37,6 +60,11 @@ public class ListPagerAdapter extends FragmentStatePagerAdapter {
                 default:
                 case 0:
                     fragment = new ListViewFragment();
+                    // 将信息传递给ListViewFragment
+                    Bundle args = new Bundle();
+                    args.putString("username",listFragmentMessage);
+                    Log.d("get_username",listFragmentMessage);
+                    fragment.setArguments(args);
                     break;
                 case 1:
                     fragment = new ChannelFragment();

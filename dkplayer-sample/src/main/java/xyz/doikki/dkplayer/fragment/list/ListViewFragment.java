@@ -1,6 +1,7 @@
 package xyz.doikki.dkplayer.fragment.list;
 
 import android.content.pm.ActivityInfo;
+import android.util.Log;
 import android.view.View;
 import android.widget.AbsListView;
 import android.widget.FrameLayout;
@@ -10,6 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import xyz.doikki.dkplayer.R;
+import xyz.doikki.dkplayer.adapter.ListPagerAdapter;
 import xyz.doikki.dkplayer.adapter.VideoListViewAdapter;
 import xyz.doikki.dkplayer.adapter.listener.OnItemChildClickListener;
 import xyz.doikki.dkplayer.bean.VideoBean;
@@ -29,7 +31,7 @@ import xyz.doikki.videoplayer.player.VideoView;
 /**
  * ListView demo，不推荐，建议使用{@link RecyclerViewFragment}
  */
-public class ListViewFragment extends BaseFragment implements OnItemChildClickListener {
+public class ListViewFragment extends BaseFragment implements OnItemChildClickListener, ListPagerAdapter.OnMessageReceivedListener {
 
     private List<VideoBean> mVideos = new ArrayList<>();
     private VideoListViewAdapter mAdapter;
@@ -42,6 +44,18 @@ public class ListViewFragment extends BaseFragment implements OnItemChildClickLi
     @Override
     protected int getLayoutResId() {
         return R.layout.fragment_list_view;
+    }
+
+    /**
+     * 接收用户信息
+     */
+    private String listViewFragmentMessage;
+
+    // 用于接收来自ListPagerAdapter的消息
+    public void setListViewFragmentMessage(String message) {
+        listViewFragmentMessage = message;
+        // 在这里处理接收到的消息
+        // 例如，您可以将消息存储在成员变量中，以便在其他地方使用
     }
 
     @Override
@@ -130,7 +144,7 @@ public class ListViewFragment extends BaseFragment implements OnItemChildClickLi
     @Override
     protected void initData() {
         super.initData();
-        List<VideoBean> videoList = DataUtil.getVideoList(new DbContect(getContext()));
+        List<VideoBean> videoList = DataUtil.getVideoList(new DbContect(getContext()),1);
         mVideos.addAll(videoList);
         mAdapter.notifyDataSetChanged();
     }
@@ -182,5 +196,11 @@ public class ListViewFragment extends BaseFragment implements OnItemChildClickLi
             getActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         }
         mCurPosition = -1;
+    }
+
+    @Override
+    public void onMessageReceived(String message) {
+        // 在这里处理接收到的消息
+        Log.d("ListViewFragment_info", "Received message: " + message);
     }
 }

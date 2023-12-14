@@ -2,8 +2,10 @@ package xyz.doikki.dkplayer.activity;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
+import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import androidx.fragment.app.Fragment;
@@ -46,9 +48,30 @@ public class MainActivity_ extends BaseActivity<VideoView> implements Navigation
         }
         BottomNavigationView bottomNavigationView = findViewById(R.id.nav_view);
         bottomNavigationView.setOnItemSelectedListener(this);
-        mFragments.add(new ListFragment());
-        mFragments.add(new ExtensionFragment());
-        mFragments.add(new PipFragment());
+
+        // 在此可以将用户名传递给 ExtensionFragment 或其他 Fragment
+        Intent intent = getIntent();
+        Bundle bundle = intent.getBundleExtra("login");
+        // Bundle bundle = new Bundle();
+        // bundle.putString("username", username);
+        Log.d("info_get",bundle.get("username").toString());
+        // 初始化 Fragment
+        ListFragment listFragment = new ListFragment();
+        listFragment.setArguments(bundle);
+
+        ExtensionFragment extensionFragment = new ExtensionFragment();
+        extensionFragment.setArguments(bundle);
+
+        PipFragment pipFragment = new PipFragment();
+        pipFragment.setArguments(bundle);
+
+        mFragments.add(listFragment);
+        mFragments.add(extensionFragment);
+        mFragments.add(pipFragment);
+
+//        mFragments.add(new ListFragment());
+//        mFragments.add(new ExtensionFragment());
+//        mFragments.add(new PipFragment());
         getSupportFragmentManager().beginTransaction()
                 .add(R.id.layout_content, mFragments.get(0))
                 .commitAllowingStateLoss();
