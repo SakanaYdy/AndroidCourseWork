@@ -9,10 +9,12 @@
 
     <ImageView
         android:id="@+id/imageView3"
-        android:layout_width="420dp"
-        android:layout_height="486dp"
-        app:srcCompat="@mipmap/ic_launcher"
-        tools:ignore="MissingConstraints" />
+        android:layout_width="250dp"
+        android:layout_height="227dp"
+        app:srcCompat="@drawable/ic_hello"
+        tools:ignore="MissingConstraints"
+        tools:layout_editor_absoluteX="80dp"
+        tools:layout_editor_absoluteY="168dp" />
 
     <Button
         android:id="@+id/register"

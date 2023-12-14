@@ -27,9 +27,12 @@ public class YoutubeVideoPlayActivity extends AppCompatActivity
 
         _webView = findViewById(R.id.webView);
 
+        // 获取状态栏
+        // getSupportActionBar 是 父类AppCompatActivity的函数
         actionBar = getSupportActionBar();
 
         // 获取传递过来的视频 ID
+        // getIntent()是最顶层父类Activity中的函数
         String videoId = getIntent().getStringExtra("videoId");
 
         // 设置 WebView 播放视频
@@ -116,16 +119,17 @@ public class YoutubeVideoPlayActivity extends AppCompatActivity
                 // 横屏时，全屏
                 if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
                     if (actionBar != null) {
-                        actionBar.hide();
+                        actionBar.hide();   // 隐藏状态栏
                     }
-                    getWindow().addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
+                    getWindow().addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN); // 设置全屏标志
+
                     _webView.loadDataWithBaseURL(null, data_landscape, "text/html", "UTF-8", null);
                 } else {
                     // 竖屏
                     if (actionBar != null) {
-                        actionBar.show();
+                        actionBar.show();   // 显示状态栏
                     }
-                    getWindow().clearFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
+                    getWindow().clearFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN); // 隐藏全屏标志
                     _webView.setLayoutParams(new RelativeLayout.LayoutParams(
                             RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.WRAP_CONTENT));
                 }
