@@ -1,6 +1,7 @@
 package xyz.doikki.dkplayer.fragment.main;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
@@ -42,8 +43,8 @@ public class PipFragment extends BaseFragment implements View.OnClickListener,Li
 
         List<String> titles = new ArrayList<>();
         titles.add("个人上传视频" + id);
-
-        pagerAdapter = new ListPagerAdapter(getChildFragmentManager(),titles,this);
+        Log.d("个人id",id+"");
+        pagerAdapter = new ListPagerAdapter(getChildFragmentManager(),titles,this,id);
         pagerAdapter.setListFragmentMessage(username);
         viewPager.setAdapter(pagerAdapter);
 

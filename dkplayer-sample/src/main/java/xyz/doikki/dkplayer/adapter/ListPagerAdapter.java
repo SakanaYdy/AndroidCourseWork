@@ -10,6 +10,8 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentStatePagerAdapter;
 
+import xyz.doikki.dkplayer.dataSource.DbContect;
+import xyz.doikki.dkplayer.dataSource.DbcUtils;
 import xyz.doikki.dkplayer.fragment.ChannelFragment;
 import xyz.doikki.dkplayer.fragment.list.ListViewFragment;
 import xyz.doikki.dkplayer.fragment.list.RecyclerViewFragment;
@@ -30,6 +32,7 @@ public class ListPagerAdapter extends FragmentStatePagerAdapter {
     private List<String> mTitles;
     private SparseArrayCompat<Fragment> mFragments = new SparseArrayCompat<>();
     private OnMessageReceivedListener messageListener;
+    private int userId;
 
     public ListPagerAdapter(FragmentManager fm, List<String> titles) {
         super(fm, BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT);
@@ -40,6 +43,12 @@ public class ListPagerAdapter extends FragmentStatePagerAdapter {
         super(fm, BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT);
         this.mTitles = titles;
         this.messageListener = listener;
+    }
+    public ListPagerAdapter(FragmentManager fm, List<String> titles, OnMessageReceivedListener listener,int id) {
+        super(fm, BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT);
+        this.mTitles = titles;
+        this.messageListener = listener;
+        this.userId = id;
     }
 
     /**
@@ -63,7 +72,10 @@ public class ListPagerAdapter extends FragmentStatePagerAdapter {
                     // 将信息传递给ListViewFragment
                     Bundle args = new Bundle();
                     args.putString("username",listFragmentMessage);
+                    args.putString("userId",userId+"");
+                    // args.putString("id", DbcUtils.query(new DbContect(fragment.getContext()),listFragmentMessage).getId()+"");
                     Log.d("get_username",listFragmentMessage);
+                    Log.d("userId",userId+"");
                     fragment.setArguments(args);
                     break;
                 case 1:

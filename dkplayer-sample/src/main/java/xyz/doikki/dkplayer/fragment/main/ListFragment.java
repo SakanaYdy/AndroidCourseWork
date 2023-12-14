@@ -6,6 +6,9 @@ import androidx.viewpager.widget.ViewPager;
 
 import xyz.doikki.dkplayer.R;
 import xyz.doikki.dkplayer.adapter.ListPagerAdapter;
+import xyz.doikki.dkplayer.bean.User;
+import xyz.doikki.dkplayer.dataSource.DbContect;
+import xyz.doikki.dkplayer.dataSource.DbcUtils;
 import xyz.doikki.dkplayer.fragment.BaseFragment;
 import xyz.doikki.dkplayer.util.Tag;
 import com.google.android.material.tabs.TabLayout;
@@ -22,6 +25,7 @@ import java.util.List;
 public class ListFragment extends BaseFragment implements ListPagerAdapter.OnMessageReceivedListener{
 
     private ListPagerAdapter pagerAdapter;
+    DbContect helper;
 
     @Override
     protected int getLayoutResId() {
@@ -40,13 +44,17 @@ public class ListFragment extends BaseFragment implements ListPagerAdapter.OnMes
         if (arguments != null) {
             username = arguments.getString("username", "");
         }
+        helper = new DbContect(getContext());
+        User query = DbcUtils.query(helper, username);
+        int id = query.getId();
+
 
         List<String> titles = new ArrayList<>();
         titles.add(getString(R.string.str_list_view));
         titles.add(getString(R.string.str_recycler_view));
         titles.add("抖音");
 
-        pagerAdapter = new ListPagerAdapter(getChildFragmentManager(),titles,this);
+        pagerAdapter = new ListPagerAdapter(getChildFragmentManager(),titles,this,id);
         pagerAdapter.setListFragmentMessage(username);
         // 将当前 ListFragment 注册为消息接收监听器
         // viewPager.setAdapter(new ListPagerAdapter(getChildFragmentManager(), titles,this));
