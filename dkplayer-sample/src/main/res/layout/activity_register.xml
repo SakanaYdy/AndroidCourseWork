@@ -11,7 +11,7 @@
         android:id="@+id/imageView4"
         android:layout_width="match_parent"
         android:layout_height="335dp"
-        app:srcCompat="@mipmap/ic_launcher" />
+        app:srcCompat="@drawable/ic_hello" />
 
     <EditText
         android:id="@+id/name_1"
@@ -19,6 +19,7 @@
         android:layout_height="48dp"
         android:height="48dp"
         android:ems="10"
+        android:layout_margin="10dp"
         android:inputType="text"
         android:hint="用户名" />
 
@@ -28,6 +29,8 @@
         android:layout_height="48dp"
         android:height="48dp"
         android:ems="10"
+        android:layout_margin="10dp"
+
         android:hint="密码"
         android:inputType="textPassword" />
 
@@ -38,10 +41,13 @@
         android:height="48dp"
         android:ems="10"
         android:hint="确认密码"
+        android:layout_margin="10dp"
+
         android:inputType="textPassword" />
 
     <Button
         android:id="@+id/register_1"
+        android:layout_margin="10dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="登录" />
