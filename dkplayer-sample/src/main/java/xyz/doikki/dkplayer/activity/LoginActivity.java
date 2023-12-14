@@ -57,7 +57,7 @@ public class LoginActivity extends AppCompatActivity {
                 password = String.valueOf(pass.getText());
                 isSave = viewById.isChecked();
 
-                Toast.makeText(getBaseContext(), "name:" + name + " password:" + password, Toast.LENGTH_SHORT).show();
+                // Toast.makeText(getBaseContext(), "name:" + name + " password:" + password, Toast.LENGTH_SHORT).show();
 
                 User query = DbcUtils.query(helper, name);
 

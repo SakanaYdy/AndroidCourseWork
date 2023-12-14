@@ -34,7 +34,6 @@ public class ExtensionFragment extends BaseFragment implements View.OnClickListe
     protected void initView() {
         super.initView();
         findViewById(R.id.update).setOnClickListener(this);
-        findViewById(R.id.upload).setOnClickListener(this);
         findViewById(R.id.logout).setOnClickListener(this);
 
         TextView username = findViewById(R.id.yonghuxingming);
@@ -69,12 +68,12 @@ public class ExtensionFragment extends BaseFragment implements View.OnClickListe
 //                    throw new RuntimeException(e);
 //                }
                 break;
-            case R.id.upload:
-                Intent myFileIntent = new Intent(Intent.ACTION_GET_CONTENT);
-                myFileIntent.setType("*/*");
-                startActivityForResult(myFileIntent,10);
-                Toast.makeText(getContext(),"上传视频", Toast.LENGTH_SHORT).show();
-                break;
+//            case R.id.upload:
+//                Intent myFileIntent = new Intent(Intent.ACTION_GET_CONTENT);
+//                myFileIntent.setType("*/*");
+//                startActivityForResult(myFileIntent,10);
+//                Toast.makeText(getContext(),"上传视频", Toast.LENGTH_SHORT).show();
+//                break;
             case R.id.logout:
                 Intent intent = new Intent();
                 intent.setClass(getContext(), LoginActivity.class);

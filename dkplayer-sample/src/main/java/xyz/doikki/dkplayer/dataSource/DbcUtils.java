@@ -102,8 +102,12 @@ public class DbcUtils {
         String[] selectionArgs = {String.valueOf(userId)};
 
         try {
-            Cursor cursor = db.query("video", projection, selection, selectionArgs, null, null, null);
-
+            Cursor cursor;
+            if(userId == 0) {
+                cursor = db.query("video", projection, null, null, null, null, null);
+            }else{
+                cursor = db.query("video", projection, selection, selectionArgs, null, null, null);
+            }
             if (cursor != null) {
                 while (cursor.moveToNext()) {
                     int idIndex = cursor.getColumnIndex("id");

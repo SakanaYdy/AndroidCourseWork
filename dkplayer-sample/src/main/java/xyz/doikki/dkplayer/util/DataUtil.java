@@ -54,6 +54,9 @@ public class DataUtil {
 
     public static List<VideoBean> getVideoList(DbContect helper,int id) {
         List<VideoBean> videoList = new ArrayList<>();
+        if(id == 0){
+
+        }
         List<Video> videos = DbcUtils.queryVideo(helper, id);
         int cnt = 1;
         for(Video video:videos){
