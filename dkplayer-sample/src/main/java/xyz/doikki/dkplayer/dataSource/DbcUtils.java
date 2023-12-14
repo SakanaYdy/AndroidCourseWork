@@ -70,6 +70,34 @@ public class DbcUtils {
     }
 
     /**
+     * 更新用户密码
+     * @param helper
+     * @param username
+     * @param newPassword
+     */
+    public static void updatePassword(SQLiteOpenHelper helper, String username, String newPassword) {
+        SQLiteDatabase db = helper.getWritableDatabase();
+
+        ContentValues values = new ContentValues();
+        values.put("password", newPassword);
+
+        // 构造 WHERE 子句，以确保只更新特定用户的密码
+        String selection = "name=?";
+        String[] selectionArgs = {username};
+
+        // 执行更新操作
+        int numRowsUpdated = db.update("user", values, selection, selectionArgs);
+
+        // 判断是否更新成功
+        if (numRowsUpdated > 0) {
+            Log.d("Database", "密码更新成功");
+        } else {
+            Log.d("Database", "密码更新失败");
+        }
+    }
+
+
+    /**
      * 插入视频数据
      * @param helper
      * @param
