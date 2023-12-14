@@ -9,8 +9,9 @@
 
     <ImageView
         android:id="@+id/imageView3"
-        android:layout_width="match_parent"
-        android:layout_height="358dp"
+        android:layout_width="274dp"
+        android:layout_height="248dp"
+        android:layout_gravity="center_horizontal"
         app:srcCompat="@drawable/ic_hello" />
 
     <EditText
