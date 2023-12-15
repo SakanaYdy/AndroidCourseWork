@@ -43,8 +43,8 @@ public class HelloActivity extends AppCompatActivity {
 //                Video video = new Video(1,1,img_1,video_url);
 //                DbcUtils.insertVideo(helper,video);
 //                ToastUtil.ShowMsg(getBaseContext(),"插入数据成功");
-                DbcUtils.queryVideo(helper,1);
-                ToastUtil.ShowMsg(getBaseContext(),"查询数据成功");
+//                DbcUtils.queryVideo(helper,1);
+//                ToastUtil.ShowMsg(getBaseContext(),"查询数据成功");
             }
         });
 
