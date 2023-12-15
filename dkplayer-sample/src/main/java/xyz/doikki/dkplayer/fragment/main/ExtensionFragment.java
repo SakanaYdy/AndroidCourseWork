@@ -1,8 +1,13 @@
 package xyz.doikki.dkplayer.fragment.main;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -14,17 +19,19 @@ import java.sql.Statement;
 
 import xyz.doikki.dkplayer.R;
 import xyz.doikki.dkplayer.activity.LoginActivity;
+import xyz.doikki.dkplayer.activity.MainActivity_;
+import xyz.doikki.dkplayer.bean.User;
 import xyz.doikki.dkplayer.dataSource.DBOpenHelper;
+import xyz.doikki.dkplayer.dataSource.DbContect;
+import xyz.doikki.dkplayer.dataSource.DbcUtils;
 import xyz.doikki.dkplayer.fragment.BaseFragment;
 import xyz.doikki.dkplayer.util.ToastUtil;
 
 public class ExtensionFragment extends BaseFragment implements View.OnClickListener {
 
-    // 建立数据库连接
-//    Connection conn = (Connection) DBOpenHelper.getConn();
-//
-//    String sql = "select user_id from video where id=1";
-
+    DbContect helper;
+    String oldPass;
+    String user_name;
     @Override
     protected int getLayoutResId() {
         return R.layout.fragment_extension;
@@ -34,14 +41,16 @@ public class ExtensionFragment extends BaseFragment implements View.OnClickListe
     protected void initView() {
         super.initView();
         findViewById(R.id.update).setOnClickListener(this);
-        findViewById(R.id.upload).setOnClickListener(this);
         findViewById(R.id.logout).setOnClickListener(this);
 
         TextView username = findViewById(R.id.yonghuxingming);
         Bundle arguments = getArguments();
         if(arguments != null) {
             ToastUtil.ShowMsg(getContext(),"获取到用户信息");
+            user_name = (String) arguments.get("username");
             username.setText((CharSequence) arguments.get("username"));
+            oldPass = (String) arguments.get("pass");
+            Log.d("oldPassword",oldPass);
         }
         else ToastUtil.ShowMsg(getContext(),"获取用户信息失败");
     }
@@ -49,31 +58,11 @@ public class ExtensionFragment extends BaseFragment implements View.OnClickListe
     @Override
     public void onClick(View v) {
 
-         // 检查连接对象是否为null
-//        if (conn == null) {
-//            // 处理连接对象为null的情况，可能需要进行日志记录或其他操作
-//            Toast.makeText(getContext(),"空指针",Toast.LENGTH_SHORT).show();
-//            return;
-//        }
 
         switch (v.getId()){
             case R.id.update:
-                Toast.makeText(getContext(),"更新信息", Toast.LENGTH_SHORT).show();
-//                Statement st = null;
-//                try {
-//                    st = (Statement) conn.createStatement();
-//                    ResultSet rs = st.executeQuery(sql);
-//                    Toast.makeText(getContext(),"获取成功",Toast.LENGTH_SHORT).show();
-//                    System.out.println("----------------");
-//                } catch (SQLException e) {
-//                    throw new RuntimeException(e);
-//                }
-                break;
-            case R.id.upload:
-                Intent myFileIntent = new Intent(Intent.ACTION_GET_CONTENT);
-                myFileIntent.setType("*/*");
-                startActivityForResult(myFileIntent,10);
-                Toast.makeText(getContext(),"上传视频", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getContext(),"密码更新", Toast.LENGTH_SHORT).show();
+                showUpdatePasswordDialog();
                 break;
             case R.id.logout:
                 Intent intent = new Intent();
@@ -84,15 +73,57 @@ public class ExtensionFragment extends BaseFragment implements View.OnClickListe
         }
 
     }
-//    public void upload(){
-//        // yourEndpoint填写Bucket所在地域对应的Endpoint。以华东1（杭州）为例，Endpoint填写为https://oss-cn-hangzhou.aliyuncs.com。
-//        String endpoint = "ydy-sky.oss-cn-beijing.aliyuncs.com";
-//        // 从STS服务获取的临时访问密钥（AccessKey ID和AccessKey Secret）。
-//        String accessKeyId = "LTAI5tF8MSLykjbDwiU5RRJx";  //
-//
-//        String accessKeySecret = "BWUWiScZkgcx74HSHr7gwztFJsM242";
-//        // 从STS服务获取的安全令牌（SecurityToken）。
-//        String securityToken = "yourSecurityToken";
-//
-//    }
+    // 显示密码更新的信息框
+    // 显示密码更新的信息框
+    private void showUpdatePasswordDialog() {
+        // 创建一个布局，包含原密码、新密码和确认新密码的输入框
+        View view = LayoutInflater.from(getContext()).inflate(R.layout.dialog_update_password, null);
+
+        // 构建对话框
+        AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+        builder.setTitle("密码更新");  // 设置对话框标题
+        builder.setView(view); // 将自定义的视图设置给对话框
+
+        // 设置确定按钮
+        builder.setPositiveButton("确定", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                // 在这里处理确定按钮的点击事件
+                // 可以获取输入框中的内容并进行密码更新的相关逻辑
+                EditText oldPasswordEditText = view.findViewById(R.id.editTextOldPassword);
+                EditText newPasswordEditText = view.findViewById(R.id.editTextNewPassword);
+                EditText confirmNewPasswordEditText = view.findViewById(R.id.editTextConfirmNewPassword);
+
+                String oldPassword = oldPasswordEditText.getText().toString();
+                String newPassword = newPasswordEditText.getText().toString();
+                String confirmNewPassword = confirmNewPasswordEditText.getText().toString();
+
+                // 在这里处理密码更新的逻辑
+                if(!oldPass.equals(oldPassword)){
+                    ToastUtil.ShowMsg(getContext(),"原密码错误，无法修改");
+                }else if(!newPassword.equals(confirmNewPassword)){
+                    ToastUtil.ShowMsg(getContext(),"两次新密码不一致，无法修改");
+                }else{
+                    // 进行数据库更新操作
+                    helper = new DbContect(getContext());
+                    DbcUtils.updatePassword(helper,user_name,newPassword);
+                }
+
+                dialog.dismiss(); // 关闭对话框
+            }
+        });
+
+        // 设置取消按钮
+        builder.setNegativeButton("取消", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                // 在这里处理取消按钮的点击事件
+                dialog.dismiss(); // 关闭对话框
+            }
+        });
+
+        // 创建并显示对话框
+        builder.create().show();
+    }
+
 }

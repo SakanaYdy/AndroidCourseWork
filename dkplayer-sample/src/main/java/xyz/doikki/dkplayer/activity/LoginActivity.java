@@ -57,7 +57,7 @@ public class LoginActivity extends AppCompatActivity {
                 password = String.valueOf(pass.getText());
                 isSave = viewById.isChecked();
 
-                Toast.makeText(getBaseContext(), "name:" + name + " password:" + password, Toast.LENGTH_SHORT).show();
+                // Toast.makeText(getBaseContext(), "name:" + name + " password:" + password, Toast.LENGTH_SHORT).show();
 
                 User query = DbcUtils.query(helper, name);
 
@@ -84,6 +84,7 @@ public class LoginActivity extends AppCompatActivity {
                     // 组件间信息传递，传递登录用户信息
                     Bundle bundle = new Bundle();
                     bundle.putString("username",name);
+                    bundle.putString("pass",password);
                     intent.putExtra("login",bundle);
                     // 向fragment传递
                     ExtensionFragment fragment = new ExtensionFragment();
