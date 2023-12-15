@@ -14,13 +14,13 @@
 
 以下是封装实现的该应用的一些数据库操作。
 
-![image-20231215204957006](README.assets\image-20231215204957006.png)
+![image.png](https://pic.leetcode.cn/1702651396-gWoGeb-image.png)
 
 2. 实现了记住密码功能，当用户登录成功时点击保存密码，那么下次用户打开APP或者是进入到登录页面时，就会进行自动填充，不需要再次输入。
 
 使用SharedPreferences类来将记住密码的账号密码存储在缓存中，如果下一个不选择记住密码则进行清空。初始为空值。
 
-![](README.assets\image-20231215212748804.png)
+![image.png](https://pic.leetcode.cn/1702651430-eTvQYk-image.png)
 
 ### 视频播放页面
 
@@ -44,7 +44,7 @@ public class TikTokListFragment extends BaseFragment
 
 布局设置
 
-![](README.assets\image-20231212231950197.png)
+![image.png](https://pic.leetcode.cn/1702651461-chZpSC-image.png)
 
 每一行使用两列布局，实现两个视频同时在一行显示，扩充视图中的视频容量。
 
@@ -54,13 +54,13 @@ fragment_tiktok_list 设置主要格式，里面就设置一个RecycleView，然
 
 ##### 适配器设置
 
-![](README.assets\image-20231212232719396.png)
+![image.png](https://pic.leetcode.cn/1702651484-xbBmge-image.png)
 
 onCreateViewHolder 方法用于创建并返回一个TikTokListViewHolder对象。这个对象表示RecyclerView中每个列表项的视图。
 
 onBindViewHolder 方法用于将数据绑定到TikTokListViewHolder中的视图上。它从数据集合中获取特定位置的TiktokBean对象，然后将其标题设置到TextView上，将封面图加载到ImageView中。
 
-![2](README.assets\image-20231212232836751.png)
+![image.png](https://pic.leetcode.cn/1702651506-JLaypF-image.png)
 
 TikTokListViewHolder 是一个内部类，表示RecyclerView中每个列表项的视图持有者。它包含了列表项中显示的ImageView和TextView，以及一个点击事件监听器。当列表项被点击时，它会启动TikTok2Activity，并传递相应的位置信息。
 
@@ -70,11 +70,11 @@ TikTokListViewHolder 是一个内部类，表示RecyclerView中每个列表项�
 
 该页面通过Intent进行组件间的通信，从登录页面获取到当前登录用户的信息，并显示在用户名中。
 
-![](README.assets\image-20231215214141039.png)
+![image.png](https://pic.leetcode.cn/1702651523-VuUHwK-image.png)
 
 修改密码功能，为了减少Fragment的设计数量，选择使用弹窗的形式进行操作。
 
-![](README.assets\3WMC3PKC2M{0AC12[7J782A.png)
+![image.png](https://pic.leetcode.cn/1702651541-Xnkfab-image.png)
 
 通过 `LayoutInflater` 创建一个自定义的视图（`R.layout.dialog_update_password`），该视图包含三个输入框用于输入原密码、新密码和确认新密码。在点击确定按钮时，可以通过 `view.findViewById()` 获取输入框的引用，并获取输入的内容进行相应的处理。确保在你的布局文件中包含了这三个输入框。
 
