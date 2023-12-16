@@ -19,6 +19,9 @@ import org.json.JSONObject;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 import java.util.Random;
 
 import okhttp3.OkHttpClient;
@@ -38,7 +41,7 @@ public class ChannelFragment extends Fragment
     private static String GOOGLE_YOUTUBE_API_KEY = "AIzaSyAV9KXI6EFqwiTars_sCuuJxvDGDmXtLtg";
 
     //private static String CHANNEL_ID = "UC3KFV0PRieM4GoH8P5v6r0w";
-    private static String CHANNEL_ID = "UCb3TZ4SD_Ys3j4z0-8o6auA";
+    private static String CHANNEL_ID = "UCEjOSbbaOfgnfRODEEMYlCw";
 
     //private static String CHANNEL_GET_URL = "https://www.googleapis.com/youtube/v3/search?part=snippet&order=date&channelId=" + CHANNEL_ID + "&maxResults=20&key=" + GOOGLE_YOUTUBE_API_KEY;
     private static String CHANNEL_GET_URL()
@@ -57,7 +60,8 @@ public class ChannelFragment extends Fragment
     private RecyclerView _recyclerView = null;
     private VideoPostAdapter _adapter = null;
     private ArrayList<YoutubeDataModel> _data = new ArrayList<>();
-
+    private String[] _channelIds;
+    private List<String> remainingChannels = new ArrayList<>();
     /**
      * @noinspection deprecation
      * 视图层创建时调用
@@ -91,7 +95,13 @@ public class ChannelFragment extends Fragment
         swipeRefreshLayout.setOnRefreshListener(this::refreshContent);
 
         _recyclerView = view.findViewById(R.id.listVideos);
-        new RequestYoutubeAPI().execute();
+
+        _channelIds = getResources().getStringArray(R.array.channel_ids);
+        remainingChannels.addAll(Arrays.asList(_channelIds));
+        Collections.shuffle(remainingChannels);
+
+        refreshContent();
+        //new RequestYoutubeAPI().execute();
 
         return view;
     }
@@ -108,26 +118,37 @@ public class ChannelFragment extends Fragment
     }
 
 
+    // 弃用算法
+    //    private void updateChannelId()
+    //    {
+    //
+    //        //String[] channelIds = getResources().getStringArray(R.array.channel_ids);
+    //        String newChannelId;
+    //
+    //        do
+    //        {
+    //            // new Random().nextInt(MX) 生成一个[0, channelIds.length - 1] 的整数
+    //            // 用于从channels字符串数组中随机选择一个刷新后的频道id
+    //            newChannelId = _channelIds[new Random().nextInt(_channelIds.length)];
+    //            Log.d("updateChannelId", newChannelId);
+    //        } while (newChannelId.equals(CHANNEL_ID));  // 只要和当前的CHANNEL_ID一样就一直刷新
+    //
+    //        CHANNEL_ID = newChannelId;
+    //    }
+
+
     /**
      * 从资源文件中获取随机chanel Id
      */
-    private void updateChannelId()
-    {
-
-        String[] channelIds = getResources().getStringArray(R.array.channel_ids);
-        String newChannelId;
-
-        do
-        {
-            // new Random().nextInt(MX) 生成一个[0, channelIds.length - 1] 的整数
-            // 用于从channels字符串数组中随机选择一个刷新后的频道id
-            newChannelId = channelIds[new Random().nextInt(channelIds.length)];
-            Log.d("updateChannelId", newChannelId);
-        } while (newChannelId.equals(CHANNEL_ID));  // 只要和当前的CHANNEL_ID一样就一直刷新
-
-        CHANNEL_ID = newChannelId;
+    private void updateChannelId() {
+        if (remainingChannels.isEmpty()) {
+            for (String channelId : _channelIds) {
+                remainingChannels.add(channelId);
+            }
+            Collections.shuffle(remainingChannels);
+        }
+        CHANNEL_ID = remainingChannels.remove(0);
     }
-
 
     /**
      * @param data Youtube视频数据

@@ -1,7 +1,14 @@
 <resources>
     <string-array name="channel_ids">
-        <item>UC3KFV0PRieM4GoH8P5v6r0w</item>
+        <item>UCG08EqOAXJk_YXPDsAvReSg</item>
         <item>UCb3TZ4SD_Ys3j4z0-8o6auA</item>
+        <item>UCEjOSbbaOfgnfRODEEMYlCw</item>
+
+        <item>UCeKUWJFqZa7rR4G_NLnV_9g</item>
+        <item>UC6VcWc1rAoWdBCM0JxrRQ3A</item>
+        <item>UCftwRNsjfRo08xYE31tkiyw</item>
+        <item>UCi6UfyEmA5-fmShgd61DDFA</item>
+
         <!-- Add more channel IDs as needed -->
     </string-array>
 </resources>
