@@ -84,6 +84,7 @@ TikTokListViewHolder 是一个内部类，表示RecyclerView中每个列表项�
 
 （上面个人中心页面也使用该方式）首先是使用Intent通信，将LoginActivity中的登录信息，包括个人账号名以及密码（用于修改密码页面作用）等信息传递到MainActivity。然后在这个里面创建加入Fragment的时候，使用setArguments方法，将从Login接收到的消息传递给Fragment组件。然后通过Adapter参数构造传递给数据构造InitData函数，然后再去数据库查询相关用户的视频信息。
 ### 仿Youtube 视频播放
+
 主要布局XML说明如下：
 
 首先在fragment_channel 页面显示视频列表，该列表最外层使用SwipeRefreshLayout布局，这是Google官方推荐的下拉刷新布局控件，只需要把RecycleView或者ListView放在里面就可以实现简单的下拉刷新。

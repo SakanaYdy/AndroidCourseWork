@@ -42,7 +42,7 @@ public class ExtensionFragment extends BaseFragment implements View.OnClickListe
         super.initView();
         findViewById(R.id.update).setOnClickListener(this);
         findViewById(R.id.logout).setOnClickListener(this);
-
+        findViewById(R.id.aboutUs).setOnClickListener(this);
         TextView username = findViewById(R.id.yonghuxingming);
         Bundle arguments = getArguments();
         if(arguments != null) {
@@ -60,20 +60,19 @@ public class ExtensionFragment extends BaseFragment implements View.OnClickListe
 
 
         switch (v.getId()){
+            case R.id.aboutUs:
+                showAboutUsDialog();
+                break;
             case R.id.update:
                 Toast.makeText(getContext(),"密码更新", Toast.LENGTH_SHORT).show();
                 showUpdatePasswordDialog();
                 break;
             case R.id.logout:
-                Intent intent = new Intent();
-                intent.setClass(getContext(), LoginActivity.class);
-                Toast.makeText(getContext(),"用户登出", Toast.LENGTH_SHORT).show();
-                startActivity(intent);
+                showLogoutConfirmationDialog();
                 break;
         }
 
     }
-    // 显示密码更新的信息框
     // 显示密码更新的信息框
     private void showUpdatePasswordDialog() {
         // 创建一个布局，包含原密码、新密码和确认新密码的输入框
@@ -125,5 +124,60 @@ public class ExtensionFragment extends BaseFragment implements View.OnClickListe
         // 创建并显示对话框
         builder.create().show();
     }
+    private void showLogoutConfirmationDialog() {
+        // 创建一个确认登出的对话框
+        AlertDialog.Builder logoutDialogBuilder = new AlertDialog.Builder(getContext());
+        logoutDialogBuilder.setTitle("确认登出");  // 设置对话框标题
+        logoutDialogBuilder.setMessage("确定要登出吗？");  // 设置对话框消息
+
+        // 设置确定按钮
+        logoutDialogBuilder.setPositiveButton("确定", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                // 处理确定按钮点击事件
+                performLogout(); // 执行登出操作
+                dialog.dismiss(); // 关闭对话框
+            }
+        });
+
+        // 设置取消按钮
+        logoutDialogBuilder.setNegativeButton("取消", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                // 处理取消按钮点击事件
+                dialog.dismiss(); // 关闭对话框
+            }
+        });
+
+        // 显示确认登出对话框
+        logoutDialogBuilder.show();
+    }
+
+    private void performLogout() {
+        // 处理登出操作
+        Intent intent = new Intent();
+        intent.setClass(getContext(), LoginActivity.class);
+        Toast.makeText(getContext(), "用户登出", Toast.LENGTH_SHORT).show();
+        startActivity(intent);
+    }
+    private void showAboutUsDialog() {
+        // 创建一个关于信息的对话框
+        AlertDialog.Builder aboutUsDialogBuilder = new AlertDialog.Builder(getContext());
+        aboutUsDialogBuilder.setTitle("关于我们");  // 设置对话框标题
+        aboutUsDialogBuilder.setMessage("猪猪视频创作者：朱正阳 杨大宇");  // 设置对话框消息
+
+        // 设置确定按钮
+        aboutUsDialogBuilder.setPositiveButton("确定", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                // 处理确定按钮点击事件
+                dialog.dismiss(); // 关闭对话框
+            }
+        });
+
+        // 显示关于信息对话框
+        aboutUsDialogBuilder.show();
+    }
+
 
 }

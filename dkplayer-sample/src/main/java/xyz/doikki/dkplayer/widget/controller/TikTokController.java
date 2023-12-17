@@ -9,11 +9,6 @@ import androidx.annotation.Nullable;
 import xyz.doikki.dkplayer.widget.component.DebugInfoView;
 import xyz.doikki.videoplayer.controller.BaseVideoController;
 
-/**
- * 抖音
- * Created by Doikki on 2018/1/6.
- */
-
 public class TikTokController extends BaseVideoController {
 
     public TikTokController(@NonNull Context context) {
