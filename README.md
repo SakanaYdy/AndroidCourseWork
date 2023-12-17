@@ -83,7 +83,12 @@ TikTokListViewHolder 是一个内部类，表示RecyclerView中每个列表项�
 该页面功能较为简单，用来显示用户个人所上传的视频信息。主要操作在于将LoginActivity中的登录信息传递到该Fragment。
 
 （上面个人中心页面也使用该方式）首先是使用Intent通信，将LoginActivity中的登录信息，包括个人账号名以及密码（用于修改密码页面作用）等信息传递到MainActivity。然后在这个里面创建加入Fragment的时候，使用setArguments方法，将从Login接收到的消息传递给Fragment组件。然后通过Adapter参数构造传递给数据构造InitData函数，然后再去数据库查询相关用户的视频信息。
-### 仿Youtube 视频播放
+### 仿Youtube 视频播放页面
+
+效果展示：
+
+![image.png](https://pic.leetcode.cn/1702807268-gDZQly-image.png)
+
 主要布局XML说明如下：
 
 首先在fragment_channel 页面显示视频列表，该列表最外层使用SwipeRefreshLayout布局，这是Google官方推荐的下拉刷新布局控件，只需要把RecycleView或者ListView放在里面就可以实现简单的下拉刷新。
@@ -123,7 +128,7 @@ public class ChannelFragment extends Fragment
 
 在其中，maxResults表示最大请求数量，比如如果是访问频道视频，最多会爬取20个视频信息。googleapis获取的频道链接内容是Json格式，需要做Parse解析工作，得到需要的视频信息列表。
 
-#### OkHTTP 请求Url
+#### OkHTTP 请求Url + AsyncTask 异步网络请求
 
 上面准备工作完成后，需要对URL进行请求，并处理响应(response)，通过响应的内容（Json字符串）进行解析，得到数据。在使用OkHTTP的时候，在ChannelFragment中，进行引用：
 
@@ -158,6 +163,101 @@ private class RequestYoutubeAPI extends AsyncTask<Void, String, String>
 | `Result doInBackground(Params... params)` | 在 `onPreExecute()` 结束后立即调用这个方法。**耗时的异步任务就在这里操作。**执行任务时传入的参数会被传到这里。本项目中，用于OkHTTP的网络请求。 |
 | `onProgressUpdate(Progress... values)`    | 在 ui 线程中执行。后台任务还在进行的时候，这里负责处理进度信息。比如在这显示进度条动画，修改文字显示等。在本项目中没有使用到。 |
 | `onPostExecute(Result result)`            | **后台任务结束了调这个方法。它在 ui 线程执行**。最后的结果会传到这。本项目中，用于在这个方法中更新 UI，处理执行结果。 |
+
+doInBackground 方法的重写（传入Void类型，返回String类型的请求结果）。
+
+步骤如下，首先通过new OkHttpClient新建一个请求客户端，然后创建一个请求new Request.Builder().url(频道URL)).build()，在请求中，最多进行MAX_RETRIES次请求，每一次请求时，通过客户端创建一个newCall并执行：
+
+```java
+Response response = client.newCall(request).execute();
+```
+
+然后通过`response.isSuccessful()`判断是否请求成功，否则输出异常信息。
+
+![image.png](https://pic.leetcode.cn/1702805376-MWurlX-image.png)
+
+在请求完成后，执行重写的onPostExecute(String response)方法，它接受请求的结果。这是Json字符串构成的信息，然后通过解析Json, 更新数据，更新视图显示，再停止播放刷新动画：`swipeRefreshLayout.setRefreshing(false);`
+
+![image.png](https://pic.leetcode.cn/1702805656-aZoSRU-image.png)
+
+其中，通过数据更新视图是在该方法中调用init(_data)方法，该方法实现中，主要是重设_ recyclerView 的布局管理器（线性布局），然后初始化adapter适配器对象，绑定到该Activity上，再将适配器设置到循环试图即可。适配器的实现，会放在后面介绍。
+
+```java
+    private void init(ArrayList<YoutubeDataModel> data)
+    {
+        _recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+        _adapter = new VideoPostAdapter(data, getActivity());
+        _recyclerView.setAdapter(_adapter);
+    }
+```
+
+最后，通过`private ArrayList<YoutubeDataModel> parseVideoListFromResponse(JSONObject jsonObject)` 算法，进行Json解析。这个过程类似于剥洋葱，一层一层的往里面寻找信息。最后完成时，创建YoutubeDataModel对象，这是用来保存视频信息数据的类。
+
+![image.png](https://pic.leetcode.cn/1702805893-QORsRf-image.png)
+
+#### VideoPostAdapter 视频列表适配器
+
+该类继承自RecyclerView.Adapter<T> 类，泛型参数为其内部自定义类VideoPostAdapter.YoutubePostHolder。
+
+定义 Adapter 时，需要替换三个关键方法：
+
+- onCreateViewHolder：每当 `RecyclerView` 需要创建新的 `ViewHolder` 时，它都会调用此方法。此方法会创建并初始化 `ViewHolder` 及其关联的 `View`，但不会填充视图的内容，因为 `ViewHolder` 此时尚未绑定到具体数据。
+- onBindViewHolder：`RecyclerView` 调用此方法将 `ViewHolder` 与数据相关联。
+- getItemCount：RecyclerView 调用此方法来获取数据集的大小
+
+当RecyclerView 需要展示一个新的项时，它会调用适配器的 onCreateViewHolder 方法来创建一个新的 ViewHolder 实例。一个Holder 代表RecyclerView中的一个项目，表示一个视频。这个类YoutubePostHolder主要作用是绑定到R.layout.layout_youtube_post 中的各个控件，并存储在Holder中。
+
+![image.png](https://pic.leetcode.cn/1702806186-KYrQwd-image.png)
+
+![image.png](https://pic.leetcode.cn/1702806602-KgmxDY-image.png)
+
+内部类YoutubePostHolder实现如下：
+
+```java
+ public static class YoutubePostHolder extends RecyclerView.ViewHolder
+    {
+        TextView _textViewTitle;
+        TextView _textViewDes;
+        TextView _textViewData;
+        ImageView _imageThumb;
+
+        public YoutubePostHolder(@NonNull View itemView)
+        {
+            super(itemView);
+            this._textViewTitle = (TextView) itemView.findViewById(R.id.textViewTitle);
+            this._textViewDes = (TextView) itemView.findViewById(R.id.textViewDes);
+            this._textViewData = (TextView) itemView.findViewById(R.id.textViewData);
+            this._imageThumb = (ImageView) itemView.findViewById(R.id.imageThumb);
+        }
+    }
+```
+
+#### onBindViewHolder 绑定数据与视图
+
+在方法`public void onBindViewHolder(@NonNull YoutubePostHolder holder, int position)`中，会获得类内存储的YoutubeDataModel数据列表信息：
+
+```java
+  YoutubeDataModel dataObject = _listVideoDatas.get(position);
+```
+
+然后通过Picasso第三方库中提供的加载图片url的方法，将从数据对象中获得到的封面URL字符串信息，加载并装入到ImageView控件中：
+
+![image.png](https://pic.leetcode.cn/1702806999-vdwbfO-image.png)
+
+Picasso还能自动帮我们做以下事情：
+
+- 处理Adapter 中ImageView的回收和取消下载。
+- 使用最小的内存 来做复杂的图片变换。比如高斯模糊，圆角、圆形等处理。
+- 自动帮我们缓存图片。内存和磁盘缓存。
+
+使用前，需要添加依赖：
+
+```kotlin
+//  Picasso 开源图片加载库
+implementation 'com.squareup.picasso:picasso:2.71828'
+```
+
+
 
 
 

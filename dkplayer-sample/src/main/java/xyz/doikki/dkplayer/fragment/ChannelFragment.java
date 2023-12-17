@@ -232,7 +232,6 @@ public class ChannelFragment extends Fragment
                     e.printStackTrace();
                 }
             }
-
             // 停止播放刷新动画
             swipeRefreshLayout.setRefreshing(false);
         }
