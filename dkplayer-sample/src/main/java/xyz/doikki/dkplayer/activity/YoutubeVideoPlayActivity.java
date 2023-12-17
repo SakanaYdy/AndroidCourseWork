@@ -2,6 +2,7 @@ package xyz.doikki.dkplayer.activity;
 
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -64,7 +65,7 @@ public class YoutubeVideoPlayActivity extends AppCompatActivity
     {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_youtube_video_play);
-        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
+       // getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
 
         _recyclerView = findViewById(R.id.recyclerViewComments);
 
@@ -87,10 +88,11 @@ public class YoutubeVideoPlayActivity extends AppCompatActivity
         _videoId = getIntent().getStringExtra("videoId");
 
 
-
-
         // 设置 WebView 播放视频
         _webView.getSettings().setJavaScriptEnabled(true);
+
+
+
         String data_portait = "<!DOCTYPE html>\n"
                 + "<html>\n"
                 + "  <body>\n"
@@ -172,6 +174,7 @@ public class YoutubeVideoPlayActivity extends AppCompatActivity
             RecyclerView recyclerView = findViewById(R.id.recyclerViewComments);
             RelativeLayout.LayoutParams recyclerViewParams = (RelativeLayout.LayoutParams) recyclerView.getLayoutParams();
 
+
             @Override
             public void onGlobalLayout() {
                 // 横屏时，全屏
@@ -181,7 +184,7 @@ public class YoutubeVideoPlayActivity extends AppCompatActivity
                     }
                     getWindow().addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN); // 设置全屏标志
 
-                    // Remove RecyclerView from its parent if it has one
+                    // 移除评论区
                     if (recyclerView.getParent() != null) {
                         ((ViewGroup) recyclerView.getParent()).removeView(recyclerView);
                     }
@@ -194,12 +197,11 @@ public class YoutubeVideoPlayActivity extends AppCompatActivity
                     }
                     getWindow().clearFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN); // 隐藏全屏标志
 
-                    // Remove RecyclerView from its parent if it has one
                     if (recyclerView.getParent() != null) {
                         ((ViewGroup) recyclerView.getParent()).removeView(recyclerView);
                     }
 
-                    // Add RecyclerView back to the layout
+
                     layout.addView(recyclerView, recyclerViewParams);
 
                     _webView.setLayoutParams(new RelativeLayout.LayoutParams(

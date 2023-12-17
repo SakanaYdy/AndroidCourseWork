@@ -257,7 +257,125 @@ Picasso还能自动帮我们做以下事情：
 implementation 'com.squareup.picasso:picasso:2.71828'
 ```
 
+设置视频项点击事件（holder.itemView.setOnClickListener），通过实例化一个匿名内部类，作为setOnClickListener方法的参数，这是一种”函数时编程“的思想，实际上是为接口类型参数，填充一个实例化对象。可以类比于C++中的函数指针，C#中的委托。
+
+点击事件需要启动视频播放页面（YoutubeVideoPlayActivity，会在后面介绍），同时向它传递信息，通过intent.putExtra实现。这里需要传递视频的id信息，然后启动页面。
+
+![image.png](https://pic.leetcode.cn/1702807591-JLYwMH-image.png)
 
 
 
+### 视频播放 + 评论区页面
 
+这个页面的主要代码，放在YoutubeVideoPlayActivity中。
+
+最终效果，能够实现上方是视频小窗播放，下面是可滚动的评论区。评论区总体上也采用RecycleView布局，每一项是一个Holder，基本与视频列表类似。
+
+评论区理论上能够显示评论发布者的id，头像，发布时间，评论内容等。但是这里从简化处理，省略了头像的显示，如果希望实现，其实与视频封面的显示同理，可以通过Picasso进行get。
+
+![image.png](https://pic.leetcode.cn/1702807503-vuDtqa-image.png)
+
+在实现的时候，大部分代码和视频列表部分类似。需要实现`VideoCommentAdapter`，用作评论适配器；实现内部类`CommentHolder`，用于每条评论视图控件的绑定；`CommentDataModel`类，用作评论数据的存储；在`YoutubeVideoPlayActivity`中，也需要实现`VIDEO_COMMENTS_URL() `获得评论Url，RequestComment 类用于异步网络请求，`parseCommentListFromJson `用于解析评论信息等。
+
+#### 视频播放页面布局 ：NestedScrollView 嵌套 RecyclerView
+
+顶层布局使用NestedScrollView，然后内部是一个RelativeLayout，再往内部嵌套了用于视频播放的WebView 和 评论区显示的RecyclerView。
+
+NestedScrollView其作用就是作为控件父布局，从而具备（嵌套）滑动功能。ScrollView嵌套RecyclerView存在滑动冲突，显示不全的问题。NestedScrollView嵌套RecyclerView不会存在显示问题。
+
+#### 视频播放WebView 与 iFrame
+
+播放视频采用WebView嵌入HTML语言的方式实现。这是因为需要调用Youtube提供的iFrame框架，实现获取Youtube视频源。其中HTML示例代码如下：
+
+```html
+<!DOCTYPE html>
+<html>
+  <body>
+    <div id="player"></div>
+    <script>
+      var tag = document.createElement('script');
+
+      tag.src = "https://www.youtube.com/iframe_api";
+      var firstScriptTag = document.getElementsByTagName('script')[0];
+      firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
+  
+      var player;
+      function onYouTubeIframeAPIReady() {
+        player = new YT.Player('player', {
+          height: '200',
+          width: '400',
+          videoId: 'qZ4UEhFEzvI',
+          events: {
+            'onReady': onPlayerReady,
+            'onStateChange': onPlayerStateChange
+          }
+        });
+      }
+
+      function onPlayerReady(event) {
+        event.target.playVideo();
+      }
+
+      var done = false;
+      function onPlayerStateChange(event) {
+        if (event.data == YT.PlayerState.PLAYING && !done) {
+          setTimeout(stopVideo, 6000);
+          done = true;
+        }
+      }
+      function stopVideo() {
+        player.stopVideo();
+      }
+    </script>
+  </body>
+</html>
+```
+
+1. `onYouTubeIframeAPIReady` 函数会在播放器 API 代码下载后马上运行，构造视频播放器对象。
+2. `onPlayerReady` 在 `onReady` 事件触发时运行
+3. API会在播放器状态改变时调用 `onPlayerStateChange` 函数，指示播放器正在播放、已暂停、已完成等等。
+
+使用iFrame的好处，可以方便的解析视频源，获取Youtube提供的视频播放器功能（倍速，暂停，快进，画质设置等）且完美兼容嵌入到APP中。
+
+#### 横屏全屏播放
+
+上述过程中，使得WebView和评论区RecycleView在一个滚动布局下。但是问题是如果希望横屏时，能够实现类似于全屏播放的效果，可能需要再开一个Activity。这样做会带来很多麻烦，因此为了避免这个问题，采用重设布局参数的方式解决。
+
+当传感器检测到横屏时，能够自动将WebView的布局重设，并重新加载Landscape摸索下的HTML（长宽参数改变），同时”隐藏“评论区视，隐藏状态栏和APP信息栏。
+
+在视频播放界面创建的时候，需要做如下设置：
+
+```java
+// 获取状态栏
+// getSupportActionBar 是 父类AppCompatActivity的函数
+actionBar = getSupportActionBar();
+
+// 获取传递过来的视频 ID
+// getIntent()是最顶层父类Activity中的函数
+_videoId = getIntent().getStringExtra("videoId");
+
+// 设置 WebView 
+_webView.getSettings().setJavaScriptEnabled(true);
+
+// 加载Url，data_portait是默认竖屏下的HTML脚本
+_webView.loadDataWithBaseURL(null, data_portait, "text/html", "UTF-8", null);
+
+```
+
+同时需要设置WebView全局布局监听事件，创建匿名内部类，并重写onGlobalLayout方法。
+
+![image.png](https://pic.leetcode.cn/1702811139-kuZbyS-image.png)
+
+通过getResources() 在检测到横屏时，设置全屏标记，隐藏状态栏，移除评论区ViewGroup，并重新加载横屏下的WebViewURL，这里使用data_landscape。
+
+![image.png](https://pic.leetcode.cn/1702811217-fvGXjT-image.png)
+
+到检测到切换竖屏，显示状态栏，清楚全屏标志，先清空评论区视图，再重新添加，然后重设WebView参数为竖屏状态。
+
+![image.png](https://pic.leetcode.cn/1702811395-tdnqMA-image.png)
+
+最终效果如下，在横屏后自动检测并将视频播放状态变为全屏模式。
+
+同时，下图展示了Iframe提供的Youtube播放服务，包括画质，播放速度等。
+
+![image.png](https://pic.leetcode.cn/1702811511-QDcyDA-image.png)
