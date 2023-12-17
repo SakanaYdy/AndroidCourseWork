@@ -12,20 +12,12 @@ public class DbContect extends SQLiteOpenHelper {
         super(context,DBNAME,null,VERSION);
         mContext = context;
     }
-    //创建数据库  用户信息表
-//    public void onCreate(SQLiteDatabase db){
-//        //创建收入表    user_tb
-//        db.execSQL("create table user(id integer primary key autoincrement, name varchar(10)," +
-//                " password varchar(20))");
-//    }
-//    //数据库版本更新
-//    public void onUpgrade(SQLiteDatabase db,int oldVersion,int newVersion)
-//    {
-//        // db.execSQL("drop table if exists pwd_tb");
-//        db.execSQL("drop table if exists user");
-//        onCreate(db);
-//    }
-
+    // 创建数据库  用户信息表
+    public void onCreateUser(SQLiteDatabase db){
+        //创建收入表    user_tb
+        db.execSQL("create table user(id integer primary key autoincrement, name varchar(10)," +
+                " password varchar(20))");
+    }
     // 视频信息表
     public void onCreate(SQLiteDatabase db){
         //创建收入表    user_tb

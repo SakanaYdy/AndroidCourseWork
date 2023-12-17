@@ -52,8 +52,6 @@ public class MainActivity_ extends BaseActivity<VideoView> implements Navigation
         // 在此可以将用户名传递给 ExtensionFragment 或其他 Fragment
         Intent intent = getIntent();
         Bundle bundle = intent.getBundleExtra("login");
-        // Bundle bundle = new Bundle();
-        // bundle.putString("username", username);
         Log.d("info_get",bundle.get("username").toString());
         // 初始化 Fragment
         ListFragment listFragment = new ListFragment();
