@@ -27,6 +27,9 @@ import java.util.Random;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
+
+
+
 import xyz.doikki.dkplayer.R;
 import xyz.doikki.dkplayer.adapter.VideoPostAdapter;
 import xyz.doikki.dkplayer.dataModel.YoutubeDataModel;
@@ -44,16 +47,18 @@ public class ChannelFragment extends Fragment
     private static String CHANNEL_ID = "UCEjOSbbaOfgnfRODEEMYlCw";
 
     //private static String CHANNEL_GET_URL = "https://www.googleapis.com/youtube/v3/search?part=snippet&order=date&channelId=" + CHANNEL_ID + "&maxResults=20&key=" + GOOGLE_YOUTUBE_API_KEY;
+
+
+    /**
+     * @return 返回 googleapis URL，爬取频道视频Json信息
+     */
     private static String CHANNEL_GET_URL()
     {
         return "https://www.googleapis.com/youtube/v3/search?part=snippet&order=date&channelId="
                 + CHANNEL_ID + "&maxResults=20&key=" + GOOGLE_YOUTUBE_API_KEY;
     }
 
-    private static String VIDEO_COMMENTS_URL(String videoId) {
-        return "https://www.googleapis.com/youtube/v3/commentThreads?part=snippet&videoId="
-                + videoId + "&maxResults=20&key=" + GOOGLE_YOUTUBE_API_KEY;
-    }
+
 
     // https://www.googleapis.com/youtube/v3/commentThreads?part=snippet&videoId=HKW6LlBCAN0&maxResults=20&key=AIzaSyAV9KXI6EFqwiTars_sCuuJxvDGDmXtLtg
 
@@ -62,6 +67,7 @@ public class ChannelFragment extends Fragment
     private ArrayList<YoutubeDataModel> _data = new ArrayList<>();
     private String[] _channelIds;
     private List<String> remainingChannels = new ArrayList<>();
+
     /**
      * @noinspection deprecation
      * 视图层创建时调用
@@ -74,7 +80,6 @@ public class ChannelFragment extends Fragment
         View view = inflater.inflate(R.layout.fragment_channel, container, false);
         swipeRefreshLayout = view.findViewById(R.id.swipeRefreshLayout);
 
-        // 下拉刷新时的监听事件
 
         /*
          setOnRefreshListener 方法需要一个接口实例，而不是直接的方法调用。
@@ -92,6 +97,7 @@ public class ChannelFragment extends Fragment
             });
 
         */
+        // 下拉刷新时的监听事件
         swipeRefreshLayout.setOnRefreshListener(this::refreshContent);
 
         _recyclerView = view.findViewById(R.id.listVideos);
@@ -116,26 +122,6 @@ public class ChannelFragment extends Fragment
         _data.clear();
         new RequestYoutubeAPI().execute();
     }
-
-
-    // 弃用算法
-    //    private void updateChannelId()
-    //    {
-    //
-    //        //String[] channelIds = getResources().getStringArray(R.array.channel_ids);
-    //        String newChannelId;
-    //
-    //        do
-    //        {
-    //            // new Random().nextInt(MX) 生成一个[0, channelIds.length - 1] 的整数
-    //            // 用于从channels字符串数组中随机选择一个刷新后的频道id
-    //            newChannelId = _channelIds[new Random().nextInt(_channelIds.length)];
-    //            Log.d("updateChannelId", newChannelId);
-    //        } while (newChannelId.equals(CHANNEL_ID));  // 只要和当前的CHANNEL_ID一样就一直刷新
-    //
-    //        CHANNEL_ID = newChannelId;
-    //    }
-
 
     /**
      * 从资源文件中获取随机chanel Id

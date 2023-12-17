@@ -89,3 +89,75 @@ TikTokListViewHolder 是一个内部类，表示RecyclerView中每个列表项�
 首先在fragment_channel 页面显示视频列表，该列表最外层使用SwipeRefreshLayout布局，这是Google官方推荐的下拉刷新布局控件，只需要把RecycleView或者ListView放在里面就可以实现简单的下拉刷新。
 
 ![image.png](https://pic.leetcode.cn/1702699007-vUkpMA-image.png)
+
+#### 下拉刷新SwipeRefreshLayout
+
+在需要刷新视频内容的ChannelFragment中，代码如下。
+
+其中，刷新算法updateChannelId通过一个`List<String> remainingChannels`，每次从中选择随机项（视频id），然后从列表中移除。当移除为空的时候，使用` Collections.shuffle(remainingChannels);`进行打乱，从而进行下一轮的随机刷新选择。
+
+```java
+public class ChannelFragment extends Fragment
+{
+    private SwipeRefreshLayout swipeRefreshLayout;
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState){
+          swipeRefreshLayout = view.findViewById(R.id.swipeRefreshLayout);
+        // 下拉刷新时的监听事件
+         swipeRefreshLayout.setOnRefreshListener(this::refreshContent);
+    }          
+```
+
+![image.png](https://pic.leetcode.cn/1702804023-QYiEgu-image.png)
+
+在values/channel_id.xml下，提供了几个Youtube频道爬取id：
+
+![image.png](https://pic.leetcode.cn/1702804086-RgGODG-image.png)
+
+#### Googleapis爬取视频
+
+由于是爬取的Youtube视频，需要到Google的开发者控制台https://console.cloud.google.com/ 下申请启用[YouTube Data API v3](https://console.cloud.google.com/apis/api/youtube.googleapis.com/overview?project=youtubeapi-407214) 服务。在”凭据“处获取API KEY，此密钥用于访问爬取服务googleapis。
+
+![image.png](https://pic.leetcode.cn/1702804332-ZfdJft-image.png)
+
+![image.png](https://pic.leetcode.cn/1702804473-iioVZS-image.png)
+
+在其中，maxResults表示最大请求数量，比如如果是访问频道视频，最多会爬取20个视频信息。googleapis获取的频道链接内容是Json格式，需要做Parse解析工作，得到需要的视频信息列表。
+
+#### OkHTTP 请求Url
+
+上面准备工作完成后，需要对URL进行请求，并处理响应(response)，通过响应的内容（Json字符串）进行解析，得到数据。在使用OkHTTP的时候，在ChannelFragment中，进行引用：
+
+```java
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.Response;
+```
+
+`RequestYoutubeAPI`类是ChannelFragment中的内部类，用于GoogleapiURL的请求。它是一个继承自AsyncTask的类。由于主线程用于处理 UI 事件，如果在主线程中执行一些耗时的操作（例如网络请求、文件读写等），可能会导致界面卡顿或 ANR（Application Not Responding）错误。
+
+为了解决这个问题，可以使用 AsyncTask 将耗时的任务放在后台线程中执行，而在主线程中执行一些与 UI 相关的操作。 在早期版本的 Android 中，AsyncTask 主要用于在后台线程执行异步任务，并在主线程中更新 UI。它 不是传统意义上的多线程或协程。它是一种轻量级的异步任务框架， 其内部实现依赖于线程池和消息队列，以简化在 Android 应用中进行异步操作的代码编写。
+
+```java
+private class RequestYoutubeAPI extends AsyncTask<Void, String, String>
+    // AsyncTask 用于后台线程执行异步任务的类，它基于线程池和消息处理机制。
+```
+
+在使用的时候，它的三个类型：`AsyncTask<Params, Progress, Result>` 描述如下：
+
+| 属性       | 描述                                   |
+| ---------- | -------------------------------------- |
+| `Params`   | 执行任务前，传入的参数的类型           |
+| `Progress` | 后台线程执行的时候，用来表示进度的类型 |
+| `Result`   | 表示执行结果的类型                     |
+
+要使用 AsyncTask ，必须新建一个类来继承它，并且重写 `doInBackground` 方法。通常也会重写 `onPostExecute` 方法。 执行异步任务的时候，我们主要关心下面这4个方法。
+
+| 方法                                      | 描述                                                         |
+| ----------------------------------------- | ------------------------------------------------------------ |
+| `onPreExecute()`                          | **执行任务前**在ui线程调用。通用用来设置任务，比如在界面上显示一个进度条。在本项目中没有使用到。 |
+| `Result doInBackground(Params... params)` | 在 `onPreExecute()` 结束后立即调用这个方法。**耗时的异步任务就在这里操作。**执行任务时传入的参数会被传到这里。本项目中，用于OkHTTP的网络请求。 |
+| `onProgressUpdate(Progress... values)`    | 在 ui 线程中执行。后台任务还在进行的时候，这里负责处理进度信息。比如在这显示进度条动画，修改文字显示等。在本项目中没有使用到。 |
+| `onPostExecute(Result result)`            | **后台任务结束了调这个方法。它在 ui 线程执行**。最后的结果会传到这。本项目中，用于在这个方法中更新 UI，处理执行结果。 |
+
+
+
