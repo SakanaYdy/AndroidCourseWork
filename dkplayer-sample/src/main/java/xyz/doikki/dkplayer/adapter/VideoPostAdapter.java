@@ -88,8 +88,6 @@ public class VideoPostAdapter extends RecyclerView.Adapter<VideoPostAdapter.Yout
             public void onClick(View view)
             {
                 // Toast.makeText(_context,"textViewTitle" ,Toast.LENGTH_LONG).show();
-                //String videoId = "qZ4UEhFEzvI";
-
                 String videoId = dataObject.getVideoId();
 
                 // 启动新的 Activity，将视频 ID 传递给该 Activity
