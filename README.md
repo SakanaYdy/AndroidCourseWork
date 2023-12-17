@@ -379,3 +379,11 @@ _webView.loadDataWithBaseURL(null, data_portait, "text/html", "UTF-8", null);
 同时，下图展示了Iframe提供的Youtube播放服务，包括画质，播放速度等。
 
 ![image.png](https://pic.leetcode.cn/1702811511-QDcyDA-image.png)
+
+## 尾声
+
+在仿Youtube视频播放实现过程中，比较创新性，有挑战性的实现了Googleapis爬取视频功能，并加入刷新功能。在刷新功能实现后，甚至可以做随机推荐和算法推荐，即推送用户可能喜欢的视频。同时这里也可以加入通过标签和标题进行视频搜索播放功能，后续可以进行探究。
+
+然后，添加了iFrame框架，嵌入WebView HTML 语言的方式，实现了比较成熟的视频播放器。具体参数可以在HTML中设置。并且，加入NestedScrollView，解决嵌套滚动冲突问题，很好的实现了滚动评论区。
+
+最后，比较创新的实现了全屏播放效果和竖屏之间切换的逻辑，注重了用户体验性。
