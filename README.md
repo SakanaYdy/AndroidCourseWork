@@ -1,6 +1,8 @@
 # 猪猪视频
 
-一个安卓视频播放器
+一个安卓视频播放器，已上传github：
+
+[猪猪视频播放器https://github.com/ydyzlq/Android](https://github.com/ydyzlq/Android)
 
 ## 详细介绍
 
@@ -407,3 +409,12 @@ _webView.loadDataWithBaseURL(null, data_portait, "text/html", "UTF-8", null);
 然后，添加了iFrame框架，嵌入WebView HTML 语言的方式，实现了比较成熟的视频播放器。具体参数可以在HTML中设置。并且，加入NestedScrollView，解决嵌套滚动冲突问题，很好的实现了滚动评论区。
 
 最后，比较创新的实现了全屏播放效果和竖屏之间切换的逻辑，注重了用户体验性。
+
+#### 合作开发
+
+开发过程中，使用了sourceTree图形化版本管理软件，本人主页[TsingPig](https://github.com/TsingPig)
+
+和[ydy](https://github.com/ydyzlq) 共同开发。
+
+![image.png](https://pic.leetcode.cn/1702885941-Bmwunl-image.png)
+
