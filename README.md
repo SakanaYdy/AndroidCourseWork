@@ -140,12 +140,14 @@ import okhttp3.Response;
 
 `RequestYoutubeAPI`类是ChannelFragment中的内部类，用于GoogleapiURL的请求。它是一个继承自AsyncTask的类。由于主线程用于处理 UI 事件，如果在主线程中执行一些耗时的操作（例如网络请求、文件读写等），可能会导致界面卡顿或 ANR（Application Not Responding）错误。
 
-为了解决这个问题，可以使用 AsyncTask 将耗时的任务放在后台线程中执行，而在主线程中执行一些与 UI 相关的操作。 在早期版本的 Android 中，AsyncTask 主要用于在后台线程执行异步任务，并在主线程中更新 UI。它 不是传统意义上的多线程或协程。它是一种轻量级的异步任务框架， 其内部实现依赖于线程池和消息队列，以简化在 Android 应用中进行异步操作的代码编写。
+为了解决这个问题，可以使用 AsyncTask 将耗时的任务放在后台线程（子线程）中执行，而在主线程（UI线程）中执行一些与 UI 相关的操作。 在早期版本的 Android 中，AsyncTask 主要用于在后台线程执行异步任务，并在主线程中更新 UI。它不是传统意义上的多线程或协程。它是一种轻量级的异步任务框架， 其内部实现依赖于线程池和消息队列，以简化在 Android 应用中进行异步操作的代码编写。
 
 ```java
 private class RequestYoutubeAPI extends AsyncTask<Void, String, String>
     // AsyncTask 用于后台线程执行异步任务的类，它基于线程池和消息处理机制。
 ```
+
+AsyncTask 是一个在不需要开发者直接操作多线程和 Handler 的情况下的帮助类，适用于短时间的操作（最多几秒）。 如需长时间的线程操作，建议使用多线程包 java.util.concurrent 中的功能，比如线程池。
 
 在使用的时候，它的三个类型：`AsyncTask<Params, Progress, Result>` 描述如下：
 

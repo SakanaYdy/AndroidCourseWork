@@ -221,6 +221,7 @@ public class YoutubeVideoPlayActivity extends AppCompatActivity
     {
 
         // 最大网络请求次数3次
+
         private static final int MAX_RETRIES = 3;
 
         /**
@@ -231,6 +232,7 @@ public class YoutubeVideoPlayActivity extends AppCompatActivity
         @Override
         protected String doInBackground(Void... params)
         {
+
             OkHttpClient client = new OkHttpClient();
             // 使用okHTTP进行网络请求
             Request request = new Request.Builder().url(VIDEO_COMMENTS_URL(_videoId)).build();
