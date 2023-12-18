@@ -2,12 +2,11 @@ package xyz.doikki.dkplayer.activity;
 
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.app.Activity;
 import android.content.res.Configuration;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.ViewGroup;
@@ -29,6 +28,7 @@ import okhttp3.Response;
 import xyz.doikki.dkplayer.R;
 import xyz.doikki.dkplayer.adapter.VideoCommentAdapter;
 import xyz.doikki.dkplayer.dataModel.CommentDataModel;
+import xyz.doikki.dkplayer.util.BackgroundTask;
 
 /** @noinspection ALL*/
 
@@ -212,17 +212,22 @@ public class YoutubeVideoPlayActivity extends AppCompatActivity
 
 
         // 获取评论数据
-        new RequestComment().execute();
+        new RequestComment(this).execute();
 
 
     }
 
-    private class RequestComment extends AsyncTask<Void, String, String>
+    private class RequestComment extends BackgroundTask
     {
 
         // 最大网络请求次数3次
 
         private static final int MAX_RETRIES = 3;
+
+        public RequestComment(Activity activity)
+        {
+            super(activity);
+        }
 
         /**
          * @noinspection deprecation
@@ -230,32 +235,40 @@ public class YoutubeVideoPlayActivity extends AppCompatActivity
          * 在这个方法中执行网络请求、文件读写等耗时操作。
          */
         @Override
-        protected String doInBackground(Void... params)
-        {
-
+        public void doInBackground() {
             OkHttpClient client = new OkHttpClient();
-            // 使用okHTTP进行网络请求
             Request request = new Request.Builder().url(VIDEO_COMMENTS_URL(_videoId)).build();
 
             Log.d("Comment", VIDEO_COMMENTS_URL(_videoId));
-            for (int retry = 0; retry < MAX_RETRIES; retry++)
-            {
-                try
-                {
+
+            for (int retry = 0; retry < MAX_RETRIES; retry++) {
+                try {
+                    // execute同步请求，放在子线程中执行
                     Response response = client.newCall(request).execute();
+
                     Log.d("Comment", "请求结果" + response.toString());
-                    if (response.isSuccessful())
-                    {
-                        return response.body().string();
+                    if (response.isSuccessful()) {
+                        String responseBody = response.body().string();
+                        processResponse(responseBody);
+                        return;
                     }
-                } catch (IOException e)
-                {
+                } catch (IOException e) {
                     Log.e("Comment", "IOException: " + e.getMessage());
                     e.printStackTrace();
                 }
             }
-            return null;
         }
+
+
+        private void processResponse(String response) {
+            try {
+                JSONObject jsonObject = new JSONObject(response);
+                _data = parseCommentListFromJson(jsonObject);
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
+
 
         /**
          * @noinspection deprecation
@@ -263,35 +276,17 @@ public class YoutubeVideoPlayActivity extends AppCompatActivity
          * 用于处理执行结果。在这个方法中更新 UI，处理执行结果。
          */
         @Override
-        protected void onPostExecute(String response)
-        {
-            super.onPostExecute(response);
-            if (response != null)
-            {
-                try
-                {
-                    // doInBackground 中的response返回的数据（String) 会传进onPostExecute(String response)
-                    // response转换成JSONObject即为其中的Json序列化数据
-                    JSONObject jsonObject = new JSONObject(response);
-
-                    // Json序列化解析
-                    _data = parseCommentListFromJson(jsonObject);
-
-                    for (CommentDataModel item : _data)
-                    {
-                        Log.d("Comment", item.toString());
-                    }
-                    init(_data);
-
-                } catch (JSONException e)
-                {
-                    e.printStackTrace();
+        public void onPostExecute() {
+            if (_data != null) {
+                for (CommentDataModel item : _data) {
+                    Log.d("Comment", item.toString());
                 }
+                init(_data);
             }
-
-//            // 停止播放刷新动画
-//            swipeRefreshLayout.setRefreshing(false);
         }
+
+
+
 
         /**
          * @param jsonObject 序列化Json数据对象

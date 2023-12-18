@@ -168,7 +168,9 @@ AsyncTask 是一个在不需要开发者直接操作多线程和 Handler 的情�
 
 doInBackground 方法的重写（传入Void类型，返回String类型的请求结果）。
 
-步骤如下，首先通过new OkHttpClient新建一个请求客户端，然后创建一个请求new Request.Builder().url(频道URL)).build()，在请求中，最多进行MAX_RETRIES次请求，每一次请求时，通过客户端创建一个newCall并执行：
+步骤如下，首先通过new OkHttpClient新建一个请求客户端，然后Build一个请求new Request.Builder().url(频道URL)).build()，在请求中，最多进行MAX_RETRIES次请求，每一次请求时，通过客户端创建一个newCall并执行。
+
+execute是同步方法，网络请求是耗时的，因而需要放到AsyncTask后台线程中。
 
 ```java
 Response response = client.newCall(request).execute();
@@ -278,6 +280,22 @@ implementation 'com.squareup.picasso:picasso:2.71828'
 ![image.png](https://pic.leetcode.cn/1702807503-vuDtqa-image.png)
 
 在实现的时候，大部分代码和视频列表部分类似。需要实现`VideoCommentAdapter`，用作评论适配器；实现内部类`CommentHolder`，用于每条评论视图控件的绑定；`CommentDataModel`类，用作评论数据的存储；在`YoutubeVideoPlayActivity`中，也需要实现`VIDEO_COMMENTS_URL() `获得评论Url，RequestComment 类用于异步网络请求，`parseCommentListFromJson `用于解析评论信息等。
+
+#### AsyncTask替代品：封装Thread
+
+实际上AsyncTask已经被废弃。因此在评论获取的过程中，希望使用Thread多线程替代AsyncTask。后者的主要问题包括由于AsyncTask`与`Activity`或`Fragment`的生命周期无关而导致的内存泄漏等等。
+
+因而我简单封装了Thread 执行子线程任务的函数为一个抽象类BackgroundTask，其命名规范与AsyncTask完全一致。![image.png](https://pic.leetcode.cn/1702882123-VAfbFO-image.png)
+
+在启动子线程任务的时候，首先启动后台子线程。然后使用隶属于Acitivity的方法runOnUiThread()，这个方法是运行于主线程中，可以进行UI的更新。同样也是传递一个Runnable的匿名内部类并实现run()方法。
+
+![image.png](https://pic.leetcode.cn/1702882453-TCTzqh-image.png)
+
+评论数据请求的类定义为：
+
+```java
+private class RequestComment extends BackgroundTask
+```
 
 #### 视频播放页面布局 ：NestedScrollView 嵌套 RecyclerView
 
