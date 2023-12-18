@@ -1,17 +1,33 @@
 package xyz.doikki.dkplayer.fragment.main;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.media.MediaPlayer;
+import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.EditText;
+import android.widget.FrameLayout;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.widget.VideoView;
 
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -32,6 +48,20 @@ public class ExtensionFragment extends BaseFragment implements View.OnClickListe
     DbContect helper;
     String oldPass;
     String user_name;
+    private static final int REQUEST_PICK_VIDEO = 1;
+    private Uri selectedVideoUri;  // 成员变量用于保存选定的视频文件的URI
+    private VideoView videoView;
+    // 在类的成员变量中添加 ImageView 变量
+    private ImageView pauseIcon;
+
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        videoView = view.findViewById(R.id.videoView); // 替换为你实际的VideoView的ID
+
+    }
+
+
     @Override
     protected int getLayoutResId() {
         return R.layout.fragment_extension;
@@ -43,7 +73,11 @@ public class ExtensionFragment extends BaseFragment implements View.OnClickListe
         findViewById(R.id.update).setOnClickListener(this);
         findViewById(R.id.logout).setOnClickListener(this);
         findViewById(R.id.aboutUs).setOnClickListener(this);
+        findViewById(R.id.upload).setOnClickListener(this);
         TextView username = findViewById(R.id.yonghuxingming);
+
+
+
         Bundle arguments = getArguments();
         if(arguments != null) {
             ToastUtil.ShowMsg(getContext(),"获取到用户信息");
@@ -70,9 +104,126 @@ public class ExtensionFragment extends BaseFragment implements View.OnClickListe
             case R.id.logout:
                 showLogoutConfirmationDialog();
                 break;
+            case R.id.upload:
+                openFilePicker();
+                break;
         }
 
     }
+
+    private void openFilePicker() {
+        Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
+        intent.setType("*/*");
+        startActivityForResult(intent, REQUEST_PICK_VIDEO);
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (requestCode == REQUEST_PICK_VIDEO && resultCode == Activity.RESULT_OK && data != null) {
+            selectedVideoUri = data.getData();
+            uploadAndDisplayVideo();
+        }
+    }
+
+    /**
+     * 文件上传本地
+     */
+    private void uploadAndDisplayVideo() {
+        try {
+            InputStream inputStream = requireContext().getContentResolver().openInputStream(selectedVideoUri);
+
+            File outputVideoDirectory = new File(requireContext().getFilesDir(), "Movies");
+            if (!outputVideoDirectory.exists()) {
+                // 如果目录不存在，创建目录
+                outputVideoDirectory.mkdirs();
+            }
+
+            // 修改为将文件保存在目录下，而不是目录本身
+            File outputVideoFile = new File(outputVideoDirectory, "uploaded_video.mp4");
+            OutputStream outputStream = new FileOutputStream(outputVideoFile, true);
+
+            byte[] buffer = new byte[4 * 1024]; // 4 KB buffer
+            int bytesRead;
+
+            while ((bytesRead = inputStream.read(buffer)) != -1) {
+                outputStream.write(buffer, 0, bytesRead);
+            }
+
+            inputStream.close();
+            outputStream.close();
+
+            // 显示本地视频文件
+            displayLocalVideo(outputVideoFile.getAbsolutePath());
+        } catch (IOException e) {
+            e.printStackTrace();
+            // 处理异常
+            Toast.makeText(getContext(), "上传和显示视频时出错", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    private void displayLocalVideo(String videoPath) {
+        // 使用VideoView播放本地视频
+        videoView.setVideoPath(videoPath);
+        videoView.setAlpha(1);
+        videoView.start();
+        // 添加 ImageView 用于显示暂停图标
+        pauseIcon = new ImageView(getContext());
+        pauseIcon.setImageResource(R.drawable.selector_mute_icon); // 替换为你的暂停图标资源
+        pauseIcon.setScaleType(ImageView.ScaleType.CENTER);
+        pauseIcon.setVisibility(View.GONE); // 初始时隐藏
+
+        // 将暂停图标添加到布局中
+        FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(
+                ViewGroup.LayoutParams.WRAP_CONTENT,
+                ViewGroup.LayoutParams.WRAP_CONTENT,
+                Gravity.CENTER);
+        ViewGroup parentView = (ViewGroup) videoView.getParent();
+
+        if (parentView instanceof FrameLayout) {
+            ((FrameLayout) parentView).addView(pauseIcon, params);
+        } else {
+            // 创建一个新的 FrameLayout 包裹 videoView 和 pauseIcon
+            FrameLayout frameLayout = new FrameLayout(getContext());
+            frameLayout.setLayoutParams(videoView.getLayoutParams());
+
+            // 移除原先的 videoView，将其添加到新的 FrameLayout 中
+            parentView.removeView(videoView);
+            frameLayout.addView(videoView);
+
+            // 将 pauseIcon 添加到新的 FrameLayout 中
+            frameLayout.addView(pauseIcon, params);
+
+            // 将新的 FrameLayout 添加回原先的父布局中
+            parentView.addView(frameLayout);
+        }
+
+
+        videoView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (videoView.isPlaying()) {
+                    // 如果视频正在播放，暂停视频并显示暂停图标
+                    videoView.pause();
+                    pauseIcon.setVisibility(View.VISIBLE);
+                } else {
+                    // 如果视频没有播放，开始播放视频并隐藏暂停图标
+                    videoView.start();
+                    pauseIcon.setVisibility(View.GONE);
+                }
+            }
+        });
+
+        // 添加监听视频播放完成的监听器，用于重新显示暂停图标
+        videoView.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+            @Override
+            public void onCompletion(MediaPlayer mp) {
+                pauseIcon.setVisibility(View.VISIBLE);
+            }
+        });
+    }
+
     // 显示密码更新的信息框
     private void showUpdatePasswordDialog() {
         // 创建一个布局，包含原密码、新密码和确认新密码的输入框
