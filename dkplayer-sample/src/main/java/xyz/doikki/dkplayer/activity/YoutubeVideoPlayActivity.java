@@ -1,12 +1,5 @@
 package xyz.doikki.dkplayer.activity;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.appcompat.app.ActionBar;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-
 import android.app.Activity;
 import android.app.Application;
 import android.content.Intent;
@@ -18,7 +11,13 @@ import android.view.ViewTreeObserver;
 import android.view.WindowManager;
 import android.webkit.WebView;
 import android.widget.RelativeLayout;
-import android.widget.Toast;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -42,8 +41,10 @@ import xyz.doikki.dkplayer.util.BackgroundTask;
 
 public class YoutubeVideoPlayActivity extends AppCompatActivity
 {
+    private String _title = "";
+    private String _description = "";
     private String _videoId = "";
-    private boolean isForeground = false;//是否在前台 默认false
+    private boolean isForeground = true;//是否在前台 默认false
 
 
     // Google
@@ -58,10 +59,9 @@ public class YoutubeVideoPlayActivity extends AppCompatActivity
 
     private WebView _webView;
     private ActionBar actionBar;
-
     private RecyclerView _recyclerView = null;
     private VideoCommentAdapter _adapter = null;
-    private ArrayList<CommentDataModel> _data = new ArrayList<>();
+    private ArrayList<CommentDataModel> _datas = new ArrayList<>();
 
     private void init(ArrayList<CommentDataModel> data)
     {
@@ -91,6 +91,9 @@ public class YoutubeVideoPlayActivity extends AppCompatActivity
         // 获取传递过来的视频 ID
         // getIntent()是最顶层父类Activity中的函数
         _videoId = getIntent().getStringExtra("videoId");
+        _title = getIntent().getStringExtra("title");
+        _description = getIntent().getStringExtra("description");
+
 
         // 设置 WebView 播放视频
         _webView.getSettings().setJavaScriptEnabled(true);
@@ -253,7 +256,7 @@ public class YoutubeVideoPlayActivity extends AppCompatActivity
             try
             {
                 JSONObject jsonObject = new JSONObject(response);
-                _data = parseCommentListFromJson(jsonObject);
+                _datas = parseCommentListFromJson(jsonObject);
             } catch (JSONException e)
             {
                 e.printStackTrace();
@@ -269,13 +272,14 @@ public class YoutubeVideoPlayActivity extends AppCompatActivity
         @Override
         public void onPostExecute()
         {
-            if (_data != null)
+            if (_datas
+                    != null)
             {
-                for (CommentDataModel item : _data)
+                for (CommentDataModel item : _datas)
                 {
                     Log.d("Comment", item.toString());
                 }
-                init(_data);
+                init(_datas);
             }
         }
 
@@ -360,6 +364,8 @@ public class YoutubeVideoPlayActivity extends AppCompatActivity
                 _webView.onResume();
                 final Intent intent = new Intent(activity, YoutubeService.class);
                 intent.putExtra("cmd", 1);//0,开启前台服务,1,关闭前台服务
+                intent.putExtra("title", _title);
+                intent.putExtra("description", _description);
                 startService(intent);
             }
         }
@@ -392,6 +398,8 @@ public class YoutubeVideoPlayActivity extends AppCompatActivity
                 //Toast.makeText(activity, "进入后台", Toast.LENGTH_SHORT).show();
                 final Intent intent = new Intent(activity, YoutubeService.class);
                 intent.putExtra("cmd", 0);//0,开启前台服务,1,关闭前台服务
+                intent.putExtra("title", _title);
+                intent.putExtra("description", _description);
                 startService(intent);
             }
         }

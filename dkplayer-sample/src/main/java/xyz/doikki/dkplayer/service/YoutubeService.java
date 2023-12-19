@@ -19,19 +19,26 @@ import androidx.annotation.NonNull;
 
 import xyz.doikki.dkplayer.R;
 
-public class YoutubeService extends Service {
-
+public class YoutubeService extends Service
+{
+    private String _title;
+    private String _description;
     private MediaPlayer mediaPlayer;
     private boolean isRemove = false;
     private ProgressBar progressBar;
     private static final int NOTIFICATION_ID = 1;
 
     // Handler用于更新进度条
-    private final Handler handler = new Handler(new Handler.Callback() {
+    private final Handler handler = new Handler(new Handler.Callback()
+    {
         @Override
-        public boolean handleMessage(@NonNull Message msg) {
-            if (mediaPlayer != null) {
-                int progress = (int) (((float) mediaPlayer.getCurrentPosition() / mediaPlayer.getDuration()) * 100);
+        public boolean handleMessage(@NonNull Message msg)
+        {
+            if (mediaPlayer != null)
+            {
+                int progress = (int) (
+                        ((float) mediaPlayer.getCurrentPosition() / mediaPlayer.getDuration())
+                                * 100);
                 updateNotification(progress);
                 handler.sendEmptyMessageDelayed(0, 1000); // 每隔1秒更新一次
             }
@@ -39,16 +46,19 @@ public class YoutubeService extends Service {
         }
     });
 
-    public YoutubeService() {
+    public YoutubeService()
+    {
     }
 
     @Override
-    public IBinder onBind(Intent intent) {
+    public IBinder onBind(Intent intent)
+    {
         throw new UnsupportedOperationException("Not yet implemented");
     }
 
     @Override
-    public void onCreate() {
+    public void onCreate()
+    {
         mediaPlayer = MediaPlayer.create(this, R.raw.ayasa);
         progressBar = new ProgressBar(this, null, android.R.attr.progressBarStyleHorizontal);
         progressBar.setMax(100);
@@ -58,18 +68,28 @@ public class YoutubeService extends Service {
     }
 
     @Override
-    public int onStartCommand(Intent intent, int flags, int startId) {
+    public int onStartCommand(Intent intent, int flags, int startId)
+    {
+        _title = intent.getExtras().getString("title");
+        _description = intent.getExtras().getString("description");
+
         int cmd = intent.getExtras().getInt("cmd");
-        if (cmd == 0) {
-            if (!isRemove) {
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+        if (cmd == 0)
+        {
+            if (!isRemove)
+            {
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O)
+                {
                     createNotification();
                     mediaPlayer.start();
                 }
             }
             isRemove = true;
-        } else {
-            if (isRemove) {
+        }
+        else
+        {
+            if (isRemove)
+            {
                 stopForeground(true);
                 mediaPlayer.pause();
             }
@@ -79,14 +99,16 @@ public class YoutubeService extends Service {
     }
 
     @Override
-    public void onDestroy() {
+    public void onDestroy()
+    {
         isRemove = false;
         handler.removeCallbacksAndMessages(null); // 移除Handler的所有消息和回调
         mediaPlayer.release();
         super.onDestroy();
     }
 
-    private void createNotification() {
+    private void createNotification()
+    {
         String channelId = "your_channel_id";
         String channelName = "Your Channel Name";
         int importance = NotificationManager.IMPORTANCE_DEFAULT;
@@ -108,43 +130,46 @@ public class YoutubeService extends Service {
         }
 
         RemoteViews remoteViews = new RemoteViews(getPackageName(), R.layout.notification_layout);
-        remoteViews.setProgressBar(R.id.progressBar, 100, 0, false);
+        remoteViews.setTextViewText(R.id.notificationTitle, _title);
+        remoteViews.setTextViewText(R.id.description, _description);
+
 
         Notification notification = null;
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O)
         {
-            notification = new Notification.Builder(this, channelId)
-                    .setContentTitle("Your Notification Title")
-                    .setContentText("Your Notification Content")
+            notification = new Notification.Builder(this, "your_channel_id").setContentTitle("Your Notification Title")
+                    .setContentText(_description).setContentTitle("正在播放：" + _title)
                     .setLargeIcon(BitmapFactory.decodeResource(getResources(), R.drawable.ic_hello))
-                    .setSmallIcon(R.drawable.ic_hello)
-                    .setCustomContentView(remoteViews)
-                    .setCustomBigContentView(remoteViews)
-                    .build();
+                    .setSmallIcon(R.drawable.ic_hello).setCustomContentView(remoteViews)
+                    .setCustomBigContentView(remoteViews).build();
         }
 
         startForeground(NOTIFICATION_ID, notification);
         Toast.makeText(this, "Youtube Service 在后台运行", Toast.LENGTH_SHORT).show();
     }
 
-    private void updateNotification(int progress) {
+    private void updateNotification(int progress)
+    {
         RemoteViews remoteViews = new RemoteViews(getPackageName(), R.layout.notification_layout);
         remoteViews.setProgressBar(R.id.progressBar, 100, progress, false);
+        remoteViews.setTextViewText(R.id.notificationTitle, _title);
+        remoteViews.setTextViewText(R.id.description, _description);
 
         Notification notification = null;
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O)
         {
-            notification = new Notification.Builder(this, "your_channel_id")
-                    .setSmallIcon(R.drawable.ic_hello)
-                    .setCustomContentView(remoteViews)
-                    .setCustomBigContentView(remoteViews)
-                    .build();
+            notification = new Notification.Builder(this, "your_channel_id").setContentTitle("Your Notification Title")
+                    .setContentText(_description).setContentTitle("正在播放：" + _title)
+                    .setLargeIcon(BitmapFactory.decodeResource(getResources(), R.drawable.ic_hello))
+                    .setSmallIcon(R.drawable.ic_hello).setCustomContentView(remoteViews)
+                    .setCustomBigContentView(remoteViews).build();
         }
 
         NotificationManager notificationManager = null;
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M)
         {
             notificationManager = getSystemService(NotificationManager.class);
-        } notificationManager.notify(NOTIFICATION_ID, notification);
+        }
+        notificationManager.notify(NOTIFICATION_ID, notification);
     }
 }
