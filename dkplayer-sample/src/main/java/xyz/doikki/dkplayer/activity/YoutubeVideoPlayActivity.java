@@ -72,13 +72,6 @@ public class YoutubeVideoPlayActivity extends AppCompatActivity
         _webView = findViewById(R.id.webView);
         ArrayList<CommentDataModel> datas = new ArrayList<>();
 
-
-        //CommentDataModel data = new CommentDataModel("1", "1", "1");
-
-        //datas.add(data);
-
-        //init(datas);
-
         // 获取状态栏
         // getSupportActionBar 是 父类AppCompatActivity的函数
         actionBar = getSupportActionBar();
@@ -87,11 +80,8 @@ public class YoutubeVideoPlayActivity extends AppCompatActivity
         // getIntent()是最顶层父类Activity中的函数
         _videoId = getIntent().getStringExtra("videoId");
 
-
         // 设置 WebView 播放视频
         _webView.getSettings().setJavaScriptEnabled(true);
-
-
 
         String data_portait = "<!DOCTYPE html>\n"
                 + "<html>\n"

@@ -1,5 +1,7 @@
 # 猪猪视频
 
+[TOC]
+
 一个安卓视频播放器，已上传github：
 
 [猪猪视频播放器https://github.com/ydyzlq/Android](https://github.com/ydyzlq/Android)
@@ -402,6 +404,21 @@ _webView.loadDataWithBaseURL(null, data_portait, "text/html", "UTF-8", null);
 
 ![image.png](https://pic.leetcode.cn/1702811511-QDcyDA-image.png)
 
+### Service与后台服务
+
+- 启动状态
+    当应用组件（如 Activity）通过调用 startService() 启动服务时，服务即处于“启动”状态。一旦启动，服务即可在后台无限期运行，即使**启动服务的组件已被销毁也不受影响，除非手动调用才能停止服务**， 已启动的服务通常是执行单一操作，而且**不会将结果返回给调用方**。
+
+- 绑定状态
+    当应用组件通过调用 bindService() 绑定到服务时，服务即处于“绑定”状态。绑定服务提供了一个客户端-服务器接口，允许**组件与服务进行交互、发送请求、获取结果**，甚至是利用**进程间通信 (IPC) 跨进程执行这些操作。** 仅当与另一个**应用组件绑定时，绑定服务才会运行**。 多个组件可以同时绑定到该服务，但全部取消绑定后，该服务即会被销毁。
+
+**启动服务**
+
+启动服务使用startService(Intent intent)方法，仅需要传递一个Intent对象即可，在Intent对象中指定需要启动的服务。而使用startService()方法启动的服务，在服务的外部，必须使用stopService()方法停止，在服务的内部可以调用stopSelf()方法停止当前服务。
+
+如果使用stopService()或者stopSelf()方法请求停止服务，系统会就会尽快销毁这个服务。值得注意的是对于启动服务，一旦启动将与访问它的组件无任何关联，即使访问它的组件被销毁了，这个服务也一直运行下去，直到手动调用停止服务才被销毁，至于onBind方法，只有在绑定服务时才会起作用，在启动状态下，无需关注此方法。
+
+
 ## 尾声
 
 在仿Youtube视频播放实现过程中，比较创新性，有挑战性的实现了Googleapis爬取视频功能，并加入刷新功能。在刷新功能实现后，甚至可以做随机推荐和算法推荐，即推送用户可能喜欢的视频。同时这里也可以加入通过标签和标题进行视频搜索播放功能，后续可以进行探究。
@@ -409,8 +426,6 @@ _webView.loadDataWithBaseURL(null, data_portait, "text/html", "UTF-8", null);
 然后，添加了iFrame框架，嵌入WebView HTML 语言的方式，实现了比较成熟的视频播放器。具体参数可以在HTML中设置。并且，加入NestedScrollView，解决嵌套滚动冲突问题，很好的实现了滚动评论区。
 
 最后，比较创新的实现了全屏播放效果和竖屏之间切换的逻辑，注重了用户体验性。
-
-#### 合作开发
 
 开发过程中，使用了sourceTree图形化版本管理软件，本人主页[TsingPig](https://github.com/TsingPig)
 
