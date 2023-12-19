@@ -23,7 +23,6 @@ public class YoutubeService extends Service
     /**
      * id不可设置为0,否则不能设置为前台service
      */
-    private static final int NOTIFICATION_DOWNLOAD_PROGRESS_ID = 1;
     private boolean isRemove = false;//是否需要移除
 
     public YoutubeService()
@@ -91,7 +90,8 @@ public class YoutubeService extends Service
                 if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M)
                 {
                     notificationManager = getSystemService(NotificationManager.class);
-                } notificationManager.cancel(/*notificationId*/ 1);
+                }
+                notificationManager.cancel(/*notificationId*/ 1);
 
             }
             isRemove = false;
@@ -115,9 +115,11 @@ public class YoutubeService extends Service
     /**
      * Notification
      */
-    public void createNotification() {
+    public void createNotification()
+    {
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O)
+        {
             String channelId = "your_channel_id"; // 替换为你想要的通知渠道ID
             String channelName = "Your Channel Name"; // 替换为你想要的通知渠道名称
             int importance = NotificationManager.IMPORTANCE_DEFAULT;
@@ -129,8 +131,7 @@ public class YoutubeService extends Service
             notificationManager.createNotificationChannel(channel);
 
             // 创建通知实例
-            Notification notification = new Notification.Builder(this, channelId)
-                    .setContentTitle("Your Notification Title")
+            Notification notification = new Notification.Builder(this, channelId).setContentTitle("Your Notification Title")
                     .setContentText("Your Notification Content")
                     .setSmallIcon(R.drawable.ic_hello) // 替换为你的通知图标
                     .build();

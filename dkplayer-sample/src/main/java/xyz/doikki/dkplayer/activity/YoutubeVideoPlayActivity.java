@@ -93,8 +93,10 @@ public class YoutubeVideoPlayActivity extends AppCompatActivity
         _videoId = getIntent().getStringExtra("videoId");
 
         // 设置 WebView 播放视频
-        _webView.getSettings()
-                .setJavaScriptEnabled(true);
+        _webView.getSettings().setJavaScriptEnabled(true);
+        // 允许在没有用户手势的情况下自动播放音频。
+        _webView.getSettings().setMediaPlaybackRequiresUserGesture(false);
+
 
         String data_portait =
                 "<!DOCTYPE html>\n" + "<html>\n" + "  <body>\n" + "    <div id=\"player\"></div>\n"
@@ -159,8 +161,7 @@ public class YoutubeVideoPlayActivity extends AppCompatActivity
                             {
                                 actionBar.hide();   // 隐藏状态栏
                             }
-                            getWindow().addFlags(
-                                    WindowManager.LayoutParams.FLAG_FULLSCREEN); // 设置全屏标志
+                            getWindow().addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN); // 设置全屏标志
 
                             // 移除评论区
                             if (recyclerView.getParent() != null)
@@ -168,8 +169,7 @@ public class YoutubeVideoPlayActivity extends AppCompatActivity
                                 ((ViewGroup) recyclerView.getParent()).removeView(recyclerView);
                             }
 
-                            _webView.loadDataWithBaseURL(null, data_landscape, "text/html", "UTF-8",
-                                    null);
+                            _webView.loadDataWithBaseURL(null, data_landscape, "text/html", "UTF-8", null);
                         }
                         else
                         {
@@ -178,8 +178,7 @@ public class YoutubeVideoPlayActivity extends AppCompatActivity
                             {
                                 actionBar.show();   // 显示状态栏
                             }
-                            getWindow().clearFlags(
-                                    WindowManager.LayoutParams.FLAG_FULLSCREEN); // 隐藏全屏标志
+                            getWindow().clearFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN); // 隐藏全屏标志
 
                             if (recyclerView.getParent() != null)
                             {
@@ -189,9 +188,7 @@ public class YoutubeVideoPlayActivity extends AppCompatActivity
 
                             layout.addView(recyclerView, recyclerViewParams);
 
-                            _webView.setLayoutParams(new RelativeLayout.LayoutParams(
-                                    RelativeLayout.LayoutParams.MATCH_PARENT,
-                                    RelativeLayout.LayoutParams.WRAP_CONTENT));
+                            _webView.setLayoutParams(new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.WRAP_CONTENT));
                         }
                     }
                 });
@@ -224,8 +221,7 @@ public class YoutubeVideoPlayActivity extends AppCompatActivity
         public void doInBackground()
         {
             OkHttpClient client = new OkHttpClient();
-            Request request = new Request.Builder().url(VIDEO_COMMENTS_URL(_videoId))
-                    .build();
+            Request request = new Request.Builder().url(VIDEO_COMMENTS_URL(_videoId)).build();
 
             Log.d("Comment", VIDEO_COMMENTS_URL(_videoId));
 
@@ -234,14 +230,12 @@ public class YoutubeVideoPlayActivity extends AppCompatActivity
                 try
                 {
                     // execute同步请求，放在子线程中执行
-                    Response response = client.newCall(request)
-                            .execute();
+                    Response response = client.newCall(request).execute();
 
                     Log.d("Comment", "请求结果" + response.toString());
                     if (response.isSuccessful())
                     {
-                        String responseBody = response.body()
-                                .string();
+                        String responseBody = response.body().string();
                         processResponse(responseBody);
                         return;
                     }
@@ -308,19 +302,15 @@ public class YoutubeVideoPlayActivity extends AppCompatActivity
                             JSONObject jsonSnippet = jsonItem.getJSONObject("snippet");
                             if (jsonSnippet.has("topLevelComment"))
                             {
-                                JSONObject jsonTopComment = jsonSnippet.getJSONObject(
-                                        "topLevelComment");
-                                JSONObject jsonSnippetComment = jsonTopComment.getJSONObject(
-                                        "snippet");
+                                JSONObject jsonTopComment = jsonSnippet.getJSONObject("topLevelComment");
+                                JSONObject jsonSnippetComment = jsonTopComment.getJSONObject("snippet");
 
                                 String textDisplay = jsonSnippetComment.getString("textDisplay");
-                                String authorDisplayName = jsonSnippetComment.getString(
-                                        "authorDisplayName");
+                                String authorDisplayName = jsonSnippetComment.getString("authorDisplayName");
                                 String publishedAt = jsonSnippetComment.getString("publishedAt");
 
 
-                                CommentDataModel commentData = new CommentDataModel(
-                                        authorDisplayName, textDisplay, publishedAt);
+                                CommentDataModel commentData = new CommentDataModel(authorDisplayName, textDisplay, publishedAt);
                                 list.add(commentData);
                             }
                         }
@@ -401,7 +391,7 @@ public class YoutubeVideoPlayActivity extends AppCompatActivity
                 isForeground = false;
                 //Toast.makeText(activity, "进入后台", Toast.LENGTH_SHORT).show();
                 final Intent intent = new Intent(activity, YoutubeService.class);
-                intent.putExtra("cmd",0);//0,开启前台服务,1,关闭前台服务
+                intent.putExtra("cmd", 0);//0,开启前台服务,1,关闭前台服务
                 startService(intent);
             }
         }
