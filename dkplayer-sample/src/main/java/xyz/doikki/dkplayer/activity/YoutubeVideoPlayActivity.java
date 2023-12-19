@@ -9,6 +9,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.app.Activity;
 import android.app.Application;
+import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.util.Log;
@@ -31,8 +32,8 @@ import okhttp3.Request;
 import okhttp3.Response;
 import xyz.doikki.dkplayer.R;
 import xyz.doikki.dkplayer.adapter.VideoCommentAdapter;
-import xyz.doikki.dkplayer.app.BaseApplication;
 import xyz.doikki.dkplayer.dataModel.CommentDataModel;
+import xyz.doikki.dkplayer.service.YoutubeService;
 import xyz.doikki.dkplayer.util.BackgroundTask;
 
 /**
@@ -158,7 +159,8 @@ public class YoutubeVideoPlayActivity extends AppCompatActivity
                             {
                                 actionBar.hide();   // 隐藏状态栏
                             }
-                            getWindow().addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN); // 设置全屏标志
+                            getWindow().addFlags(
+                                    WindowManager.LayoutParams.FLAG_FULLSCREEN); // 设置全屏标志
 
                             // 移除评论区
                             if (recyclerView.getParent() != null)
@@ -166,7 +168,8 @@ public class YoutubeVideoPlayActivity extends AppCompatActivity
                                 ((ViewGroup) recyclerView.getParent()).removeView(recyclerView);
                             }
 
-                            _webView.loadDataWithBaseURL(null, data_landscape, "text/html", "UTF-8", null);
+                            _webView.loadDataWithBaseURL(null, data_landscape, "text/html", "UTF-8",
+                                    null);
                         }
                         else
                         {
@@ -175,7 +178,8 @@ public class YoutubeVideoPlayActivity extends AppCompatActivity
                             {
                                 actionBar.show();   // 显示状态栏
                             }
-                            getWindow().clearFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN); // 隐藏全屏标志
+                            getWindow().clearFlags(
+                                    WindowManager.LayoutParams.FLAG_FULLSCREEN); // 隐藏全屏标志
 
                             if (recyclerView.getParent() != null)
                             {
@@ -185,7 +189,9 @@ public class YoutubeVideoPlayActivity extends AppCompatActivity
 
                             layout.addView(recyclerView, recyclerViewParams);
 
-                            _webView.setLayoutParams(new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.WRAP_CONTENT));
+                            _webView.setLayoutParams(new RelativeLayout.LayoutParams(
+                                    RelativeLayout.LayoutParams.MATCH_PARENT,
+                                    RelativeLayout.LayoutParams.WRAP_CONTENT));
                         }
                     }
                 });
@@ -302,15 +308,19 @@ public class YoutubeVideoPlayActivity extends AppCompatActivity
                             JSONObject jsonSnippet = jsonItem.getJSONObject("snippet");
                             if (jsonSnippet.has("topLevelComment"))
                             {
-                                JSONObject jsonTopComment = jsonSnippet.getJSONObject("topLevelComment");
-                                JSONObject jsonSnippetComment = jsonTopComment.getJSONObject("snippet");
+                                JSONObject jsonTopComment = jsonSnippet.getJSONObject(
+                                        "topLevelComment");
+                                JSONObject jsonSnippetComment = jsonTopComment.getJSONObject(
+                                        "snippet");
 
                                 String textDisplay = jsonSnippetComment.getString("textDisplay");
-                                String authorDisplayName = jsonSnippetComment.getString("authorDisplayName");
+                                String authorDisplayName = jsonSnippetComment.getString(
+                                        "authorDisplayName");
                                 String publishedAt = jsonSnippetComment.getString("publishedAt");
 
 
-                                CommentDataModel commentData = new CommentDataModel(authorDisplayName, textDisplay, publishedAt);
+                                CommentDataModel commentData = new CommentDataModel(
+                                        authorDisplayName, textDisplay, publishedAt);
                                 list.add(commentData);
                             }
                         }
@@ -356,27 +366,20 @@ public class YoutubeVideoPlayActivity extends AppCompatActivity
                 // 进入前台
                 isForeground = true;
                 // TODO: 进入前台后的操作
-                Toast.makeText(activity, "进入前台", Toast.LENGTH_SHORT)
-                        .show();
+                //Toast.makeText(activity, "进入前台", Toast.LENGTH_SHORT).show();
+
+                final Intent intent = new Intent(activity, YoutubeService.class);
+                intent.putExtra("cmd", 1);//0,开启前台服务,1,关闭前台服务
+                startService(intent);
             }
         }
 
-        /**
-         * Activity 变为前台时调用
-         *
-         * @param activity
-         */
         @Override
         public void onActivityResumed(@NonNull Activity activity)
         {
 
         }
 
-        /**
-         * Activity 变为后台时调用
-         *
-         * @param activity
-         */
         @Override
         public void onActivityPaused(@NonNull Activity activity)
         {
@@ -396,8 +399,10 @@ public class YoutubeVideoPlayActivity extends AppCompatActivity
             {
                 // 从前台进入后台
                 isForeground = false;
-                Toast.makeText(activity, "进入后台", Toast.LENGTH_SHORT)
-                        .show();
+                //Toast.makeText(activity, "进入后台", Toast.LENGTH_SHORT).show();
+                final Intent intent = new Intent(activity, YoutubeService.class);
+                intent.putExtra("cmd",0);//0,开启前台服务,1,关闭前台服务
+                startService(intent);
             }
         }
 
