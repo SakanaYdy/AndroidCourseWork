@@ -1,9 +1,11 @@
 <!-- res/layout/notification_layout.xml -->
 
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/notificationLayout"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+
     android:padding="16dp">
 
 
@@ -44,6 +46,7 @@
             android:layout_marginTop="8dp"
             android:max="100"
             android:progress="0" />
+
 
     </LinearLayout>
 </FrameLayout>

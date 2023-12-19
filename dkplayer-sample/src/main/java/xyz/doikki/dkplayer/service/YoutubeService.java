@@ -3,6 +3,7 @@ package xyz.doikki.dkplayer.service;
 import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Intent;
 import android.graphics.BitmapFactory;
@@ -27,6 +28,7 @@ public class YoutubeService extends Service
     private boolean isRemove = false;
     private ProgressBar progressBar;
     private static final int NOTIFICATION_ID = 1;
+    private boolean isPlaying = false;
 
     // Handler用于更新进度条
     private final Handler handler = new Handler(new Handler.Callback()
@@ -80,10 +82,7 @@ public class YoutubeService extends Service
             {
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O)
                 {
-                    createNotification();
-                    mediaPlayer.start();
-                    handler.sendEmptyMessageDelayed(0, 1000); // 每隔1秒更新一次
-
+                    start();
                 }
             }
             isRemove = true;
@@ -92,15 +91,31 @@ public class YoutubeService extends Service
         {
             if (isRemove)
             {
-                stopForeground(true);
-                mediaPlayer.pause();
-                handler.removeMessages(0); // 停止Handler的消息发送
-
+                stop();
             }
             isRemove = false;
         }
         return super.onStartCommand(intent, flags, startId);
     }
+
+    private void stop()
+    {
+        isPlaying = false;
+        stopForeground(true);
+        mediaPlayer.pause();
+        handler.removeMessages(0); // 停止Handler的消息发送
+    }
+
+    private void start()
+    {
+        isPlaying = true;
+        createNotification();
+        mediaPlayer.start();
+        handler.sendEmptyMessageDelayed(0, 1000); // 每隔1秒更新一次
+
+    }
+
+
 
     @Override
     public void onDestroy()
