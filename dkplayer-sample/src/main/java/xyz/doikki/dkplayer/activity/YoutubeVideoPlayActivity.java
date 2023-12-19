@@ -357,7 +357,7 @@ public class YoutubeVideoPlayActivity extends AppCompatActivity
                 isForeground = true;
                 // TODO: 进入前台后的操作
                 //Toast.makeText(activity, "进入前台", Toast.LENGTH_SHORT).show();
-
+                _webView.onResume();
                 final Intent intent = new Intent(activity, YoutubeService.class);
                 intent.putExtra("cmd", 1);//0,开启前台服务,1,关闭前台服务
                 startService(intent);

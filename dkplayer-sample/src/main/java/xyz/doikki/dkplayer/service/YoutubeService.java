@@ -56,6 +56,7 @@ public class YoutubeService extends Service
     public void onCreate()
     {
         medioPlayer = MediaPlayer.create(this,R.raw.ayasa);
+        Toast.makeText(this, "Youtube Service 创建", Toast.LENGTH_SHORT).show();
         super.onCreate();
     }
 
@@ -98,8 +99,7 @@ public class YoutubeService extends Service
                     notificationManager = getSystemService(NotificationManager.class);
                 }
                 notificationManager.cancel(/*notificationId*/ 1);
-                medioPlayer.stop();
-
+                medioPlayer.pause();
 
             }
             isRemove = false;
@@ -117,6 +117,7 @@ public class YoutubeService extends Service
     {
         //移除前台服务
         isRemove = false;
+        medioPlayer.release();
         super.onDestroy();
     }
 
