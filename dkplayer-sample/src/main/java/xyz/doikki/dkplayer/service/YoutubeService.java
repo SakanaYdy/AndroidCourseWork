@@ -82,6 +82,8 @@ public class YoutubeService extends Service
                 {
                     createNotification();
                     mediaPlayer.start();
+                    handler.sendEmptyMessageDelayed(0, 1000); // 每隔1秒更新一次
+
                 }
             }
             isRemove = true;
@@ -92,6 +94,8 @@ public class YoutubeService extends Service
             {
                 stopForeground(true);
                 mediaPlayer.pause();
+                handler.removeMessages(0); // 停止Handler的消息发送
+
             }
             isRemove = false;
         }
