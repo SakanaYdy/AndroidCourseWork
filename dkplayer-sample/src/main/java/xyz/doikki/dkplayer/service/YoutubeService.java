@@ -9,6 +9,7 @@ import android.app.Service;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.BitmapFactory;
+import android.media.MediaPlayer;
 import android.os.Build;
 import android.os.IBinder;
 import android.widget.Toast;
@@ -16,10 +17,13 @@ import android.widget.Toast;
 import androidx.core.app.NotificationCompat;
 import androidx.core.content.ContextCompat;
 
+import java.io.IOException;
+
 import xyz.doikki.dkplayer.R;
 
 public class YoutubeService extends Service
 {
+    private MediaPlayer medioPlayer;
     /**
      * id不可设置为0,否则不能设置为前台service
      */
@@ -51,6 +55,7 @@ public class YoutubeService extends Service
     @Override
     public void onCreate()
     {
+        medioPlayer = MediaPlayer.create(this,R.raw.ayasa);
         super.onCreate();
     }
 
@@ -76,6 +81,7 @@ public class YoutubeService extends Service
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O)
                 {
                     createNotification();
+                    medioPlayer.start();
                 }
             }
             isRemove = true;
@@ -92,6 +98,8 @@ public class YoutubeService extends Service
                     notificationManager = getSystemService(NotificationManager.class);
                 }
                 notificationManager.cancel(/*notificationId*/ 1);
+                medioPlayer.stop();
+
 
             }
             isRemove = false;
