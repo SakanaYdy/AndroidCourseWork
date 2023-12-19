@@ -52,7 +52,6 @@ public class YoutubeService extends Service
     @Override
     public void onCreate()
     {
-
         super.onCreate();
     }
 
@@ -87,7 +86,6 @@ public class YoutubeService extends Service
             //移除前台服务
             if (isRemove)
             {
-                stopForeground(true);
                 // 关闭通知
                 NotificationManager notificationManager = null;
                 if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M)
@@ -110,10 +108,6 @@ public class YoutubeService extends Service
     public void onDestroy()
     {
         //移除前台服务
-        if (isRemove)
-        {
-            stopForeground(true);
-        }
         isRemove = false;
         super.onDestroy();
     }
