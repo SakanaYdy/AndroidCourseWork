@@ -348,7 +348,7 @@ public class YoutubeVideoPlayActivity extends AppCompatActivity
         }
 
         /**
-         * Activity 启动时调用
+         * Activity 前台时调用
          *
          * @param activity
          */
@@ -359,12 +359,8 @@ public class YoutubeVideoPlayActivity extends AppCompatActivity
             {
                 // 进入前台
                 isForeground = true;
-                // TODO: 进入前台后的操作
-                //Toast.makeText(activity, "进入前台", Toast.LENGTH_SHORT).show();
                 final Intent intent = new Intent(activity, YoutubeService.class);
-                intent.putExtra("cmd", 1);//0,开启前台服务,1,关闭前台服务
-                intent.putExtra("title", _title);
-                intent.putExtra("description", _description);
+                intent.putExtra("cmd", 1);//0,开启后台服务,1,关闭后台服务
                 startService(intent);
             }
         }
@@ -381,6 +377,9 @@ public class YoutubeVideoPlayActivity extends AppCompatActivity
 
         }
 
+        /**
+         * @param activity 进入后台的回调
+         */
         @Override
         public void onActivityStopped(@NonNull Activity activity)
         {
@@ -394,9 +393,8 @@ public class YoutubeVideoPlayActivity extends AppCompatActivity
             {
                 // 从前台进入后台
                 isForeground = false;
-                //Toast.makeText(activity, "进入后台", Toast.LENGTH_SHORT).show();
                 final Intent intent = new Intent(activity, YoutubeService.class);
-                intent.putExtra("cmd", 0);//0,开启前台服务,1,关闭前台服务
+                intent.putExtra("cmd", 0);//0,开启后台服务,1,关闭后台服务
                 intent.putExtra("title", _title);
                 intent.putExtra("description", _description);
                 startService(intent);

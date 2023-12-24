@@ -412,11 +412,36 @@ _webView.loadDataWithBaseURL(null, data_portait, "text/html", "UTF-8", null);
 - 绑定状态
     当应用组件通过调用 bindService() 绑定到服务时，服务即处于“绑定”状态。绑定服务提供了一个客户端-服务器接口，允许**组件与服务进行交互、发送请求、获取结果**，甚至是利用**进程间通信 (IPC) 跨进程执行这些操作。** 仅当与另一个**应用组件绑定时，绑定服务才会运行**。 多个组件可以同时绑定到该服务，但全部取消绑定后，该服务即会被销毁。
 
-**启动服务**
+#### 启动服务
 
 启动服务使用startService(Intent intent)方法，仅需要传递一个Intent对象即可，在Intent对象中指定需要启动的服务。而使用startService()方法启动的服务，在服务的外部，必须使用stopService()方法停止，在服务的内部可以调用stopSelf()方法停止当前服务。
 
 如果使用stopService()或者stopSelf()方法请求停止服务，系统会就会尽快销毁这个服务。值得注意的是对于启动服务，一旦启动将与访问它的组件无任何关联，即使访问它的组件被销毁了，这个服务也一直运行下去，直到手动调用停止服务才被销毁，至于onBind方法，只有在绑定服务时才会起作用，在启动状态下，无需关注此方法。
+
+#### 生命周期回调类
+
+在YoutubeVideoPlayActivity中实现一个子类，继承自ActivityLifecycleCallbacks。
+
+```java
+ private class MyActivityLifecycleCallbacks implements Application.ActivityLifecycleCallbacks
+```
+
+实现应用进入前台的回调监听onActivityStarted，这里传入的参数activity就是YoutubeVideoPlayActivity。设置意图为希望启动的服务，这里是YoutubeService，向其传递cmd信息为1，表示应用进入前台，可以关闭后台服务。
+
+多次启动一个服务，onCreate方法只会调用一次，但是onStartCommand的方法会反复调用。
+
+![image.png](https://pic.leetcode.cn/1703405198-OYEopS-image.png)
+
+实现应用进入后台的回调监听onActivityStopped。忽略如屏幕变换到引起的情况，在真正进入后台时，再次启动服务，向其cmd传入0，表示应用进入后台，开启后台服务。
+
+![image-20231224160852293](C:\Users\TsingPig\AppData\Roaming\Typora\typora-user-images\image-20231224160852293.png)
+
+#### YoutubeService + Handle实现定时任务：更新进度条
+
+```java
+public class YoutubeService extends Service
+```
+
 
 
 ## 尾声
