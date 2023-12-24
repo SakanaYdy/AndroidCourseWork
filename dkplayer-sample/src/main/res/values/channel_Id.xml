@@ -1,13 +1,16 @@
 <resources>
     <string-array name="channel_ids">
         <item>UCG08EqOAXJk_YXPDsAvReSg</item>
-        <item>UCb3TZ4SD_Ys3j4z0-8o6auA</item>
         <item>UCEjOSbbaOfgnfRODEEMYlCw</item>
-
-        <item>UCeKUWJFqZa7rR4G_NLnV_9g</item>
         <item>UC6VcWc1rAoWdBCM0JxrRQ3A</item>
         <item>UCftwRNsjfRo08xYE31tkiyw</item>
         <item>UCi6UfyEmA5-fmShgd61DDFA</item>
+        <item>UCHEf6T_gVq4tlW5i91ESiWg</item>  <!--美食-->
+        <item>UCa2YiSXNTkmOA-QTKdzzbSQ</item>     <!--吃貨豪豪HowHowEat-->
+        <item>UCfdl8L_FBD7mMGmhTcyp8Qw</item>     <!--数码产品-->
+        <item>UCguGEOVcT9gEJvYGFzgkTyw</item>       <!--国语电视剧-->
+        <item>UC8ycFlguVIToxRB34x3g1eQ</item>       <!--音乐-->
+
 
         <!-- Add more channel IDs as needed -->
     </string-array>

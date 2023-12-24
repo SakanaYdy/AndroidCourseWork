@@ -13,8 +13,9 @@
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
-    <uses-permission android:name="android.permission.INTERNET"/>
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
 
     <application
         android:name=".app.MyApplication"
@@ -27,10 +28,14 @@
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true"
         tools:ignore="LockedOrientationActivity">
+        <service
+            android:name=".service.YoutubeService"
+            android:enabled="true"
+            android:exported="true"></service>
+
         <activity
             android:name=".activity.YoutubeVideoPlayActivity"
-            android:exported="false" />
-        <!-- 允许绘制到oppo、vivo刘海屏机型的刘海区域 -->
+            android:exported="false" /> <!-- 允许绘制到oppo、vivo刘海屏机型的刘海区域 -->
         <meta-data
             android:name="android.max_aspect"
             android:value="2.8" /> <!-- 允许绘制到华为刘海屏机型的刘海区域 -->
@@ -52,12 +57,10 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
-         <activity
-         android:name=".activity.MainActivity_"
-         android:exported="false"
-         android:label="主程序" />
-
+        <activity
+            android:name=".activity.MainActivity_"
+            android:exported="false"
+            android:label="主程序" />
         <activity
             android:name=".activity.LoginActivity"
             android:exported="false"

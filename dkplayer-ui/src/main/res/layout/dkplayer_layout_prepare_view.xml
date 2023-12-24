@@ -11,7 +11,7 @@
         android:scaleType="centerCrop" />
 
     <ImageView
-        android:id="@+id/start_play"
+        android:id="@+id/startStop"
         android:layout_width="@dimen/dkplayer_play_btn_size"
         android:layout_height="@dimen/dkplayer_play_btn_size"
         android:layout_gravity="center"

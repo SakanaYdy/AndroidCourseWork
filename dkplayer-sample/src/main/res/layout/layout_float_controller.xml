@@ -4,7 +4,7 @@
     android:layout_height="match_parent"
     xmlns:tools="http://schemas.android.com/tools">
     <ImageView
-        android:id="@+id/start_play"
+        android:id="@+id/startStop"
         android:layout_width="@dimen/player_play_btn_size"
         android:layout_height="@dimen/player_play_btn_size"
         android:layout_gravity="center"

@@ -26,8 +26,6 @@ public class VideoPostAdapter extends RecyclerView.Adapter<VideoPostAdapter.Yout
 {
     // 存储了要在 RecyclerView 中显示的数据
     private ArrayList<YoutubeDataModel> _listVideoDatas;
-
-
     // 存储 Android 应用程序的上下文对象。在 Android 中，Context 对象提供了应用程序的全局信息，
     // 包括访问资源、启动活动等。在适配器中，通常使用上下文来获取系统服务、加载布局资源等。
     private Context _context = null;
@@ -93,6 +91,11 @@ public class VideoPostAdapter extends RecyclerView.Adapter<VideoPostAdapter.Yout
                 // 启动新的 Activity，将视频 ID 传递给该 Activity
                 Intent intent = new Intent(_context, YoutubeVideoPlayActivity.class);
                 intent.putExtra("videoId", videoId);
+                intent.putExtra("title", dataObject.getTitle());
+                intent.putExtra("description", dataObject.getDescription());
+                intent.putExtra("thumbNail", dataObject.getThumbNail());
+
+
                 _context.startActivity(intent);
             }
         });

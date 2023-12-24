@@ -41,7 +41,7 @@ public class PipControlView extends FrameLayout implements IControlComponent, Vi
 
     {
         LayoutInflater.from(getContext()).inflate(R.layout.layout_float_controller, this, true);
-        mPlay = findViewById(R.id.start_play);
+        mPlay = findViewById(R.id.startStop);
         mLoading = findViewById(R.id.loading);
         mClose = findViewById(R.id.btn_close);
         mClose.setOnClickListener(this);
@@ -55,7 +55,7 @@ public class PipControlView extends FrameLayout implements IControlComponent, Vi
         if (id == R.id.btn_close) {
             PIPManager.getInstance().stopFloatWindow();
             PIPManager.getInstance().reset();
-        } else if (id == R.id.start_play) {
+        } else if (id == R.id.startStop) {
             mControlWrapper.togglePlay();
         } else if (id == R.id.btn_skip) {
             if (PIPManager.getInstance().getActClass() != null) {
