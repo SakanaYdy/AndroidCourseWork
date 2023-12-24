@@ -1,6 +1,8 @@
 package xyz.doikki.dkplayer.fragment.list;
 
 import android.content.pm.ActivityInfo;
+import android.graphics.Bitmap;
+import android.media.MediaMetadataRetriever;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -8,8 +10,15 @@ import android.widget.AbsListView;
 import android.widget.FrameLayout;
 import android.widget.ListView;
 
+import com.bumptech.glide.Glide;
+
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.UUID;
 
 import xyz.doikki.dkplayer.R;
 import xyz.doikki.dkplayer.adapter.ListPagerAdapter;
@@ -22,6 +31,7 @@ import xyz.doikki.dkplayer.dataSource.DbcUtils;
 import xyz.doikki.dkplayer.fragment.BaseFragment;
 import xyz.doikki.dkplayer.util.DataUtil;
 import xyz.doikki.dkplayer.util.Tag;
+import xyz.doikki.dkplayer.util.ToastUtil;
 import xyz.doikki.dkplayer.util.Utils;
 import xyz.doikki.videocontroller.StandardVideoController;
 import xyz.doikki.videocontroller.component.CompleteView;
@@ -35,6 +45,8 @@ import xyz.doikki.videoplayer.player.VideoView;
  * ListView demo，不推荐，建议使用{@link RecyclerViewFragment}
  */
 public class ListViewFragment extends BaseFragment implements OnItemChildClickListener, ListPagerAdapter.OnMessageReceivedListener {
+
+    String url = "https://ydy-sky.oss-cn-beijing.aliyuncs.com/0.jpg";
 
     private List<VideoBean> mVideos = new ArrayList<>();
     private VideoListViewAdapter mAdapter;
@@ -68,6 +80,192 @@ public class ListViewFragment extends BaseFragment implements OnItemChildClickLi
         receivedId = query.getId();
     }
 
+
+//    private void initData(int id) {
+//
+//        List<VideoBean> videoList = new ArrayList<>();
+//        if(id == -1){
+//            // 从虚拟机文件存储位置获取到视频信息
+//            // 获取内部存储目录
+//            File filesDir = getContext().getFilesDir();
+//            Log.d("fileDir", String.valueOf(filesDir));
+//            // 构建视频文件夹的绝对路径
+//            String videoFolderPath = filesDir.getAbsolutePath() + File.separator + "Movies";
+//
+//            // 构建视频文件夹的 File 对象
+//            File videoFolder = new File(videoFolderPath);
+//
+//            // 检查视频文件夹是否存在
+//            if (videoFolder.exists() && videoFolder.isDirectory()) {
+//                // 获取视频文件夹下所有文件
+//                File[] videoFiles = videoFolder.listFiles();
+//                int cnt = 0;
+//                // 遍历文件列表，处理视频文件
+//                for (File videoFile : videoFiles) {
+//                    // videoFile 是视频文件，可以处理它的路径或其他操作
+//                    String videoFilePath = videoFile.getAbsolutePath();
+//                    // 处理视频文件路径，例如添加到列表中或进行其他操作
+//                    VideoBean videoBean = new VideoBean("文件视频"+cnt,"https://ydy-sky.oss-cn-beijing.aliyuncs.com/0.jpg",videoFilePath);
+//                    videoList.add(videoBean);
+//                }
+//            } else {
+//                // 视频文件夹不存在或不是一个目录
+//                // 处理相应的逻辑，例如创建文件夹等
+//                ToastUtil.ShowMsg(getContext(),"文件错误");
+//            }
+//
+//        }else{
+//            // 使用接收到的 id 进行初始化
+//            videoList = DataUtil.getVideoList(new DbContect(getContext()), id);
+//        }
+//        mVideos.addAll(videoList);
+//        mAdapter.notifyDataSetChanged();
+//
+//    }
+private void initData(int id) {
+    List<VideoBean> videoList = new ArrayList<>();
+
+    if (id == -1) {
+        // 从虚拟机文件存储位置获取到视频信息
+        // 获取内部存储目录
+        File filesDir = getContext().getFilesDir();
+        Log.d("fileDir", String.valueOf(filesDir));
+
+        // 构建视频文件夹的绝对路径
+        String videoFolderPath = filesDir.getAbsolutePath() + File.separator + "Movies";
+
+        // 构建视频文件夹的 File 对象
+        File videoFolder = new File(videoFolderPath);
+
+        // 检查视频文件夹是否存在
+        if (videoFolder.exists() && videoFolder.isDirectory()) {
+            // 获取视频文件夹下所有文件
+            File[] videoFiles = videoFolder.listFiles();
+            int cnt = 0;
+
+            // 遍历文件列表，处理视频文件
+            for (File videoFile : videoFiles) {
+                // videoFile 是视频文件，可以处理它的路径或其他操作
+                String videoFilePath = videoFile.getAbsolutePath();
+                Log.d("视频文件路径,",videoFilePath);
+                // 获取视频首帧路径
+                String videoCoverPath = getVideoCoverPath(videoFilePath);
+                // Log.d("封面图片路径",videoCoverPath);
+                // 处理视频文件路径，例如添加到列表中或进行其他操作
+                VideoBean videoBean = new VideoBean("文件视频" + cnt, videoCoverPath, videoFilePath);
+                videoList.add(videoBean);
+
+                cnt++;
+            }
+        } else {
+            // 视频文件夹不存在或不是一个目录
+            // 处理相应的逻辑，例如创建文件夹等
+            ToastUtil.ShowMsg(getContext(), "文件错误");
+        }
+
+    } else {
+        // 使用接收到的 id 进行初始化
+        videoList = DataUtil.getVideoList(new DbContect(getContext()), id);
+    }
+
+    mVideos.addAll(videoList);
+    mAdapter.notifyDataSetChanged();
+}
+
+     // 获取视频首帧路径
+    private String getVideoCoverPath(String videoPath) {
+        MediaMetadataRetriever retriever = new MediaMetadataRetriever();
+
+        try {
+            // 设置数据源
+            retriever.setDataSource(videoPath, new HashMap<>());
+            // 获取首帧
+            Bitmap videoCoverBitmap = retriever.getFrameAtTime();
+            // 将首帧图片保存到 "imgs" 文件夹下
+            File imgsDirectory = new File(getContext().getCacheDir(), "imgs");
+            if (!imgsDirectory.exists()) {
+                imgsDirectory.mkdirs();
+            }
+            // 构建文件名，使用视频文件名作为图片文件名
+            String videoFileName = new File(videoPath).getName();
+            String imageFileName = videoFileName.substring(0, videoFileName.lastIndexOf('.')) + ".jpg";
+
+            // 构建图片文件路径
+            File coverFile = new File(imgsDirectory, imageFileName);
+            // 将图片保存到文件
+            saveBitmapToFile(videoCoverBitmap, coverFile);
+            return coverFile.getAbsolutePath();
+        } catch (Exception e) {
+            e.printStackTrace();
+            // Log.e("VideoCoverPathError", "Error getting video cover path: " + e.getMessage());
+        } finally {
+            // 释放资源
+            retriever.release();
+        }
+
+        return null;
+    }
+//    private String getVideoCoverPath(String videoPath) {
+//        try {
+//            // 使用 Glide 加载视频封面
+//            Bitmap bitmap = Glide.with(this)
+//                    .asBitmap()
+//                    .load(videoPath)
+//                    .submit()
+//                    .get();
+//
+//            // 将首帧图片保存到 "imgs" 文件夹下
+//            File imgsDirectory = new File(getContext().getCacheDir(), "imgs");
+//            if (!imgsDirectory.exists()) {
+//                imgsDirectory.mkdirs();
+//            }
+//
+//            // 构建文件名，使用视频文件名作为图片文件名
+//            String videoFileName = new File(videoPath).getName();
+//            String imageFileName = videoFileName.substring(0, videoFileName.lastIndexOf('.')) + ".jpg";
+//
+//            // 构建图片文件路径
+//            File coverFile = new File(imgsDirectory, imageFileName);
+//            // 将图片保存到文件
+//            saveBitmapToFile(bitmap, coverFile);
+//
+//            return coverFile.getAbsolutePath();
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//            Log.e("获取视频封面异常", "Error: " + e.getMessage());
+//        }
+//
+//        return null;
+//    }
+
+
+    // 将 Bitmap 保存到文件
+    private void saveBitmapToFile(Bitmap bitmap, File file) {
+        try {
+            FileOutputStream outputStream = new FileOutputStream(file);
+            bitmap.compress(Bitmap.CompressFormat.JPEG, 100, outputStream);
+            outputStream.flush();
+            outputStream.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+
+    @Override
+    protected void initData() {
+        super.initData();
+//        List<VideoBean> videoList = DataUtil.getVideoList(new DbContect(getContext()),1);
+//        mVideos.addAll(videoList);
+//        mAdapter.notifyDataSetChanged();
+        initData(receivedId);
+        Log.d("initData_id" ,"" + receivedId);
+    }
+    public void refreshData(String filePath) {
+        Log.d("new_add_video",filePath);
+        mVideos.add(new VideoBean("新增数据",url,filePath));
+        mAdapter.notifyDataSetChanged();
+    }
     @Override
     protected void initView() {
         super.initView();
@@ -162,21 +360,6 @@ public class ListViewFragment extends BaseFragment implements OnItemChildClickLi
             }
         });
     }
-    private void initData(int id) {
-        // 使用接收到的 id 进行初始化
-        List<VideoBean> videoList = DataUtil.getVideoList(new DbContect(getContext()), id);
-        mVideos.addAll(videoList);
-        mAdapter.notifyDataSetChanged();
-    }
-    @Override
-    protected void initData() {
-        super.initData();
-//        List<VideoBean> videoList = DataUtil.getVideoList(new DbContect(getContext()),1);
-//        mVideos.addAll(videoList);
-//        mAdapter.notifyDataSetChanged();
-        initData(receivedId);
-        Log.d("initData_id" ,"" + receivedId);
-    }
 
     @Override
     protected boolean isLazyLoad() {
@@ -232,4 +415,6 @@ public class ListViewFragment extends BaseFragment implements OnItemChildClickLi
         // 在这里处理接收到的消息
         Log.d("ListViewFragment_info", "Received message: " + message);
     }
+
+
 }

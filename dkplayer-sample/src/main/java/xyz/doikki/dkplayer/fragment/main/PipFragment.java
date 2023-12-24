@@ -1,19 +1,28 @@
 package xyz.doikki.dkplayer.fragment.main;
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
+import androidx.annotation.Nullable;
+import androidx.lifecycle.ViewModelProvider;
+import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 import androidx.viewpager.widget.ViewPager;
 
 import com.google.android.material.tabs.TabLayout;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Observer;
 
 import xyz.doikki.dkplayer.R;
 import xyz.doikki.dkplayer.adapter.ListPagerAdapter;
+import xyz.doikki.dkplayer.bean.SharedViewModel;
 import xyz.doikki.dkplayer.bean.User;
 import xyz.doikki.dkplayer.dataSource.DbContect;
 import xyz.doikki.dkplayer.dataSource.DbcUtils;
@@ -24,10 +33,12 @@ public class PipFragment extends BaseFragment implements View.OnClickListener,Li
 
     private ListPagerAdapter pagerAdapter;
     DbContect helper;
+    private SharedViewModel sharedViewModel;
     @Override
     protected int getLayoutResId() {
         return R.layout.fragment_list;
     }
+
 
     @Override
     protected void initView() {
@@ -44,13 +55,40 @@ public class PipFragment extends BaseFragment implements View.OnClickListener,Li
         List<String> titles = new ArrayList<>();
         titles.add("个人上传视频" + id);
         Log.d("个人id",id+"");
-        pagerAdapter = new ListPagerAdapter(getChildFragmentManager(),titles,this,id);
+        pagerAdapter = new ListPagerAdapter(getChildFragmentManager(),titles,this,-1);
         pagerAdapter.setListFragmentMessage(username);
         viewPager.setAdapter(pagerAdapter);
 
         TabLayout tabLayout = findViewById(R.id.tab_layout);
         tabLayout.setupWithViewPager(viewPager);
     }
+
+    private final BroadcastReceiver uploadCompletedReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            String uploadedVideoPath = intent.getStringExtra("videoPath");
+            assert uploadedVideoPath != null;
+            Log.d("接收到广播消息",uploadedVideoPath);
+            // 在这里执行刷新数据的逻辑
+            pagerAdapter.refreshData(uploadedVideoPath);
+        }
+    };
+
+    @Override
+    public void onResume() {
+        Log.d("广播注册","success");
+        super.onResume();
+        LocalBroadcastManager.getInstance(getContext())
+                .registerReceiver(uploadCompletedReceiver, new IntentFilter("UPLOAD_VIDEO_COMPLETED"));
+    }
+
+//    @Override
+//    public void onPause() {
+//        Log.d("广播销毁","success");
+//        super.onPause();
+//        LocalBroadcastManager.getInstance(getContext()).unregisterReceiver(uploadCompletedReceiver);
+//    }
+
 
     @Override
     public void onDetach() {
@@ -60,20 +98,6 @@ public class PipFragment extends BaseFragment implements View.OnClickListener,Li
     }
     @Override
     public void onClick(View v) {
-//        switch (v.getId()) {
-//            case R.id.test1:
-//                Toast.makeText(getContext(),"test1", Toast.LENGTH_SHORT).show();
-//                break;
-//            case R.id.test2:
-//                Toast.makeText(getContext(),"test2", Toast.LENGTH_SHORT).show();
-//                break;
-//            case R.id.test3:
-//                Toast.makeText(getContext(),"test3", Toast.LENGTH_SHORT).show();
-//                break;
-//            case R.id.test4:
-//                Toast.makeText(getContext(),"test4", Toast.LENGTH_SHORT).show();
-//                break;
-//        }
     }
 
     @Override

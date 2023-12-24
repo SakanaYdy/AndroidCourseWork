@@ -1,5 +1,6 @@
 package xyz.doikki.dkplayer.util;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 
 import xyz.doikki.dkplayer.bean.TiktokBean;
@@ -54,9 +55,9 @@ public class DataUtil {
 
     public static List<VideoBean> getVideoList(DbContect helper,int id) {
         List<VideoBean> videoList = new ArrayList<>();
-        if(id == 0){
-
-        }
+//        if(id == 0){
+//
+//        }
         List<Video> videos = DbcUtils.queryVideo(helper, id);
         int cnt = 1;
         for(Video video:videos){
@@ -64,6 +65,8 @@ public class DataUtil {
             cnt ++;
             videoList.add(videoBean);
         }
+        @SuppressLint("SdCardPath") VideoBean videoBean = new VideoBean("文件测试","https://ydy-sky.oss-cn-beijing.aliyuncs.com/0.jpg","/data/user/0/xyz.doikki.dkplayer/files/Movies/uploaded_video.mp4");
+        videoList.add(videoBean);
         return videoList;
     }
     public static List<TiktokBean> tiktokData;
@@ -85,132 +88,5 @@ public class DataUtil {
         }
         return new ArrayList<>();
     }
-
-
-
-    //        videoList.add(new VideoBean("预告片1",
-//                "https://ydy-sky.oss-cn-beijing.aliyuncs.com/421fc209-3647-4c20-bd0f-9c1e2460ae81.jpg?Expires=1702222432&OSSAccessKeyId=TMP.3KgAG35gUn1AmayZAsjkzdQ9LTduzFK1Uh32BHxLnazyC2XDwTzkG9gWEozLJfv9ByweTQk49uLz8n1Jb4CohBVtMjD5Fc&Signature=qlHSEBFJZFYltMAlhQeIIMf85rA%3D",
-//                "https://ydy-sky.oss-cn-beijing.aliyuncs.com/1.mp4?Expires=1702309304&OSSAccessKeyId=TMP.3KdZz6YQeVBtaoSw3r2nUvAo3Ry42A2nZZaQRk6qcxJTJmw5KbS7TDGUmPDBnxz7be2uPbMwoL4bMZ1hvPU1xZyH6at8zM&Signature=Ysyl3NzMdRzz89%2FhbbjOYempmDE%3D"));
-//
-//        videoList.add(new VideoBean("预告片2",
-//                "https://cms-bucket.nosdn.127.net/cb37178af1584c1588f4a01e5ecf323120180418133127.jpeg",
-//                "http://vfx.mtime.cn/Video/2019/03/21/mp4/190321153853126488.mp4"));
-//
-//        videoList.add(new VideoBean("预告片3",
-//                "https://cms-bucket.nosdn.127.net/eb411c2810f04ffa8aaafc42052b233820180418095416.jpeg",
-//                "http://vfx.mtime.cn/Video/2019/03/19/mp4/190319222227698228.mp4"));
-//
-//        videoList.add(new VideoBean("预告片4",
-//                "https://cms-bucket.nosdn.127.net/cb37178af1584c1588f4a01e5ecf323120180418133127.jpeg",
-//                "http://vfx.mtime.cn/Video/2019/03/19/mp4/190319212559089721.mp4"));
-//
-//        videoList.add(new VideoBean("预告片5",
-//                "https://cms-bucket.nosdn.127.net/eb411c2810f04ffa8aaafc42052b233820180418095416.jpeg",
-//                "http://vfx.mtime.cn/Video/2019/03/18/mp4/190318231014076505.mp4"));
-//
-//        videoList.add(new VideoBean("预告片6",
-//                "https://cms-bucket.nosdn.127.net/cb37178af1584c1588f4a01e5ecf323120180418133127.jpeg",
-//                "http://vfx.mtime.cn/Video/2019/03/18/mp4/190318214226685784.mp4"));
-//
-//        videoList.add(new VideoBean("预告片7",
-//                "https://cms-bucket.nosdn.127.net/eb411c2810f04ffa8aaafc42052b233820180418095416.jpeg",
-//                "http://vfx.mtime.cn/Video/2019/03/19/mp4/190319104618910544.mp4"));
-//
-//        videoList.add(new VideoBean("预告片8",
-//                "https://cms-bucket.nosdn.127.net/cb37178af1584c1588f4a01e5ecf323120180418133127.jpeg",
-//                "http://vfx.mtime.cn/Video/2019/03/19/mp4/190319125415785691.mp4"));
-//
-//        videoList.add(new VideoBean("预告片9",
-//                "https://cms-bucket.nosdn.127.net/eb411c2810f04ffa8aaafc42052b233820180418095416.jpeg",
-//                "http://vfx.mtime.cn/Video/2019/03/17/mp4/190317150237409904.mp4"));
-//
-//        videoList.add(new VideoBean("预告片10",
-//                "https://cms-bucket.nosdn.127.net/cb37178af1584c1588f4a01e5ecf323120180418133127.jpeg",
-//                "http://vfx.mtime.cn/Video/2019/03/14/mp4/190314223540373995.mp4"));
-//
-//        videoList.add(new VideoBean("预告片11",
-//                "https://cms-bucket.nosdn.127.net/eb411c2810f04ffa8aaafc42052b233820180418095416.jpeg",
-//                "http://vfx.mtime.cn/Video/2019/03/14/mp4/190314102306987969.mp4"));
-//
-//        videoList.add(new VideoBean("预告片12",
-//                "https://cms-bucket.nosdn.127.net/cb37178af1584c1588f4a01e5ecf323120180418133127.jpeg",
-//                "http://vfx.mtime.cn/Video/2019/03/13/mp4/190313094901111138.mp4"));
-//
-//        videoList.add(new VideoBean("预告片13",
-//                "https://cms-bucket.nosdn.127.net/eb411c2810f04ffa8aaafc42052b233820180418095416.jpeg",
-//                "http://vfx.mtime.cn/Video/2019/03/12/mp4/190312143927981075.mp4"));
-//
-//        videoList.add(new VideoBean("预告片14",
-//                "https://cms-bucket.nosdn.127.net/cb37178af1584c1588f4a01e5ecf323120180418133127.jpeg",
-//                "http://vfx.mtime.cn/Video/2019/03/12/mp4/190312083533415853.mp4"));
-
-
-//    /**
-//     * 抖音演示数据
-//     */
-//    public static List<VideoBean> getTikTokVideoList() {
-//        List<VideoBean> videoList = new ArrayList<>();
-//        videoList.add(new VideoBean("",
-//                "https://p9.pstatp.com/large/4c87000639ab0f21c285.jpeg",
-//                "https://aweme.snssdk.com/aweme/v1/play/?video_id=97022dc18711411ead17e8dcb75bccd2&line=0&ratio=720p&media_type=4&vr_type=0"));
-//
-//        videoList.add(new VideoBean("",
-//                "https://p1.pstatp.com/large/4bea0014e31708ecb03e.jpeg",
-//                "https://aweme.snssdk.com/aweme/v1/play/?video_id=374e166692ee4ebfae030ceae117a9d0&line=0&ratio=720p&media_type=4&vr_type=0"));
-//
-//        videoList.add(new VideoBean("",
-//                "https://p1.pstatp.com/large/4bb500130248a3bcdad0.jpeg",
-//                "https://aweme.snssdk.com/aweme/v1/play/?video_id=8a55161f84cb4b6aab70cf9e84810ad2&line=0&ratio=720p&media_type=4&vr_type=0"));
-//
-//        videoList.add(new VideoBean("",
-//                "https://p9.pstatp.com/large/4b8300007d1906573584.jpeg",
-//                "https://aweme.snssdk.com/aweme/v1/play/?video_id=47a9d69fe7d94280a59e639f39e4b8f4&line=0&ratio=720p&media_type=4&vr_type=0"));
-//
-//        videoList.add(new VideoBean("",
-//                "https://p9.pstatp.com/large/4b61000b6a4187626dda.jpeg",
-//                "https://aweme.snssdk.com/aweme/v1/play/?video_id=3fdb4876a7f34bad8fa957db4b5ed159&line=0&ratio=720p&media_type=4&vr_type=0"));
-//
-//        videoList.add(new VideoBean("",
-//                "https://p9.pstatp.com/large/4c87000639ab0f21c285.jpeg",
-//                "https://aweme.snssdk.com/aweme/v1/play/?video_id=97022dc18711411ead17e8dcb75bccd2&line=0&ratio=720p&media_type=4&vr_type=0"));
-//
-//        videoList.add(new VideoBean("",
-//                "https://p1.pstatp.com/large/4bea0014e31708ecb03e.jpeg",
-//                "https://aweme.snssdk.com/aweme/v1/play/?video_id=374e166692ee4ebfae030ceae117a9d0&line=0&ratio=720p&media_type=4&vr_type=0"));
-//
-//        videoList.add(new VideoBean("",
-//                "https://p1.pstatp.com/large/4bb500130248a3bcdad0.jpeg",
-//                "https://aweme.snssdk.com/aweme/v1/play/?video_id=8a55161f84cb4b6aab70cf9e84810ad2&line=0&ratio=720p&media_type=4&vr_type=0"));
-//
-//        videoList.add(new VideoBean("",
-//                "https://p9.pstatp.com/large/4b8300007d1906573584.jpeg",
-//                "https://aweme.snssdk.com/aweme/v1/play/?video_id=47a9d69fe7d94280a59e639f39e4b8f4&line=0&ratio=720p&media_type=4&vr_type=0"));
-//
-//        videoList.add(new VideoBean("",
-//                "https://p9.pstatp.com/large/4b61000b6a4187626dda.jpeg",
-//                "https://aweme.snssdk.com/aweme/v1/play/?video_id=3fdb4876a7f34bad8fa957db4b5ed159&line=0&ratio=720p&media_type=4&vr_type=0"));
-//
-//        videoList.add(new VideoBean("",
-//                "https://p9.pstatp.com/large/4c87000639ab0f21c285.jpeg",
-//                "https://aweme.snssdk.com/aweme/v1/play/?video_id=97022dc18711411ead17e8dcb75bccd2&line=0&ratio=720p&media_type=4&vr_type=0"));
-//
-//        videoList.add(new VideoBean("",
-//                "https://p1.pstatp.com/large/4bea0014e31708ecb03e.jpeg",
-//                "https://aweme.snssdk.com/aweme/v1/play/?video_id=374e166692ee4ebfae030ceae117a9d0&line=0&ratio=720p&media_type=4&vr_type=0"));
-//
-//        videoList.add(new VideoBean("",
-//                "https://p1.pstatp.com/large/4bb500130248a3bcdad0.jpeg",
-//                "https://aweme.snssdk.com/aweme/v1/play/?video_id=8a55161f84cb4b6aab70cf9e84810ad2&line=0&ratio=720p&media_type=4&vr_type=0"));
-//
-//        videoList.add(new VideoBean("",
-//                "https://p9.pstatp.com/large/4b8300007d1906573584.jpeg",
-//                "https://aweme.snssdk.com/aweme/v1/play/?video_id=47a9d69fe7d94280a59e639f39e4b8f4&line=0&ratio=720p&media_type=4&vr_type=0"));
-//
-//        videoList.add(new VideoBean("",
-//                "https://p9.pstatp.com/large/4b61000b6a4187626dda.jpeg",
-//                "https://aweme.snssdk.com/aweme/v1/play/?video_id=3fdb4876a7f34bad8fa957db4b5ed159&line=0&ratio=720p&media_type=4&vr_type=0"));
-//        return videoList;
-//    }
-
 
 }

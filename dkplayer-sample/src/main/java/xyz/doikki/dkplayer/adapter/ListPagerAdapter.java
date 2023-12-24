@@ -25,6 +25,16 @@ import java.util.List;
  */
 public class ListPagerAdapter extends FragmentStatePagerAdapter {
 
+    public void refreshData(String filePath) {
+        // 遍历所有的 Fragment，如果是 ListViewFragment 就调用它的 refreshData 方法
+        for (int i = 0; i < mFragments.size(); i++) {
+            Fragment fragment = mFragments.valueAt(i);
+            if (fragment instanceof ListViewFragment) {
+                ((ListViewFragment) fragment).refreshData(filePath);
+            }
+        }
+    }
+
     public interface OnMessageReceivedListener {
         void onMessageReceived(String message);
     }

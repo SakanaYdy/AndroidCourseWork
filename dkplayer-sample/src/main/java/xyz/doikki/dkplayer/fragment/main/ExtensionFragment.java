@@ -1,7 +1,9 @@
 package xyz.doikki.dkplayer.fragment.main;
 
+
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.PendingIntent;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.media.MediaPlayer;
@@ -22,22 +24,20 @@ import android.widget.VideoView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.app.NotificationCompat;
+import androidx.core.app.NotificationManagerCompat;
+import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.sql.Connection;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
+import java.util.UUID;
 
 import xyz.doikki.dkplayer.R;
+import xyz.doikki.dkplayer.Service.AudioPlayService;
 import xyz.doikki.dkplayer.activity.LoginActivity;
-import xyz.doikki.dkplayer.activity.MainActivity_;
-import xyz.doikki.dkplayer.bean.User;
-import xyz.doikki.dkplayer.dataSource.DBOpenHelper;
 import xyz.doikki.dkplayer.dataSource.DbContect;
 import xyz.doikki.dkplayer.dataSource.DbcUtils;
 import xyz.doikki.dkplayer.fragment.BaseFragment;
@@ -89,6 +89,7 @@ public class ExtensionFragment extends BaseFragment implements View.OnClickListe
         else ToastUtil.ShowMsg(getContext(),"获取用户信息失败");
     }
 
+
     @Override
     public void onClick(View v) {
 
@@ -106,9 +107,34 @@ public class ExtensionFragment extends BaseFragment implements View.OnClickListe
                 break;
             case R.id.upload:
                 openFilePicker();
+
                 break;
         }
 
+    }
+    private void showNotification() {
+        // 创建 PendingIntent 以启动服务
+        Intent playIntent = new Intent(getContext(), AudioPlayService.class);
+        playIntent.setAction("ACTION_PLAY");
+        PendingIntent playPendingIntent = PendingIntent.getService(getContext(), 0, playIntent, PendingIntent.FLAG_IMMUTABLE);
+
+        Intent stopIntent = new Intent(getContext(), AudioPlayService.class);
+        stopIntent.setAction("ACTION_STOP");
+        PendingIntent stopPendingIntent = PendingIntent.getService(getContext(), 0, stopIntent, PendingIntent.FLAG_IMMUTABLE);
+
+        // 创建通知
+        NotificationCompat.Builder builder = new NotificationCompat.Builder(getContext(), "channel_id")
+                .setSmallIcon(R.drawable.shape_ad_bg)
+                .setContentTitle("My App")
+                .setContentText("正在播放音频")
+                .setPriority(NotificationCompat.PRIORITY_DEFAULT)
+                .addAction(R.drawable.ic_play, "播放", playPendingIntent)
+                .addAction(R.drawable.ic_stop, "停止", stopPendingIntent)
+                .setAutoCancel(true);
+
+        // 显示通知
+        NotificationManagerCompat notificationManager = NotificationManagerCompat.from(getContext());
+        notificationManager.notify(1, builder.build());
     }
 
     private void openFilePicker() {
@@ -141,7 +167,8 @@ public class ExtensionFragment extends BaseFragment implements View.OnClickListe
             }
 
             // 修改为将文件保存在目录下，而不是目录本身
-            File outputVideoFile = new File(outputVideoDirectory, "uploaded_video.mp4");
+            String file_name = UUID.randomUUID().toString() + ".mp4";
+            File outputVideoFile = new File(outputVideoDirectory, file_name);
             OutputStream outputStream = new FileOutputStream(outputVideoFile, true);
 
             byte[] buffer = new byte[4 * 1024]; // 4 KB buffer
@@ -155,13 +182,20 @@ public class ExtensionFragment extends BaseFragment implements View.OnClickListe
             outputStream.close();
 
             // 显示本地视频文件
+            Log.d("video_url",outputVideoFile.getAbsolutePath());
             displayLocalVideo(outputVideoFile.getAbsolutePath());
+            Intent broadcastIntent = new Intent("UPLOAD_VIDEO_COMPLETED");
+            // 添加额外的数据，以便在接收端可以根据需要进行处理
+            broadcastIntent.putExtra("videoPath", outputVideoFile.getAbsolutePath());
+            LocalBroadcastManager.getInstance(getContext()).sendBroadcast(broadcastIntent);
+            Log.d("广播新增数据",outputVideoFile.getAbsolutePath());
         } catch (IOException e) {
             e.printStackTrace();
             // 处理异常
             Toast.makeText(getContext(), "上传和显示视频时出错", Toast.LENGTH_SHORT).show();
         }
     }
+
 
     private void displayLocalVideo(String videoPath) {
         // 使用VideoView播放本地视频
@@ -207,10 +241,18 @@ public class ExtensionFragment extends BaseFragment implements View.OnClickListe
                     // 如果视频正在播放，暂停视频并显示暂停图标
                     videoView.pause();
                     pauseIcon.setVisibility(View.VISIBLE);
+                    // 启动音频播放服务
+//                    Intent playIntent = new Intent(getContext(), AudioPlayService.class);
+//                    playIntent.setAction("ACTION_PLAY");
+//                    getContext().startService(playIntent);
+                    showNotification();
                 } else {
                     // 如果视频没有播放，开始播放视频并隐藏暂停图标
                     videoView.start();
                     pauseIcon.setVisibility(View.GONE);
+//                    Intent stopIntent = new Intent(getContext(), AudioPlayService.class);
+//                    stopIntent.setAction("ACTION_STOP");
+//                    getContext().startService(stopIntent);
                 }
             }
         });
