@@ -406,6 +406,8 @@ _webView.loadDataWithBaseURL(null, data_portait, "text/html", "UTF-8", null);
 
 ### Service与后台服务
 
+![image.png](https://pic.leetcode.cn/1703410192-JSCElv-image.png)
+
 - 启动状态
     当应用组件（如 Activity）通过调用 startService() 启动服务时，服务即处于“启动”状态。一旦启动，服务即可在后台无限期运行，即使**启动服务的组件已被销毁也不受影响，除非手动调用才能停止服务**， 已启动的服务通常是执行单一操作，而且**不会将结果返回给调用方**。
 
@@ -442,7 +444,132 @@ _webView.loadDataWithBaseURL(null, data_portait, "text/html", "UTF-8", null);
 public class YoutubeService extends Service
 ```
 
+**onCreate**方法在首次启动服务时调用初始化媒体播放器，进度条控件，进度条handler。
 
+![image.png](https://pic.leetcode.cn/1703409658-UhbIkt-image.png)
+
+ Handler用于更新进度条，创建Handler对象，并传入一个 Handler.Callback 的接口的实现（匿名接口）作为构造函数参数。 重写handleMessage方法， 该方法定义了在接收到消息时的处理逻辑。消息的获取由主线程的Looper从主线程的消息队列中完成。
+
+```java
+ _progressHandler = new Handler(new Handler.Callback()
+        {
+            @Override
+            public boolean handleMessage(@NonNull Message msg)
+            {
+                if (mediaPlayer != null)
+                {
+                    int progress = (int) (((float) mediaPlayer.getCurrentPosition() / mediaPlayer.getDuration()) * 100);
+                    updateNotification(progress);
+
+                    // 这行代码会向与 Handler 相关联的消息队列（主线程中的消息队列）发送一条空消息，
+                    // 并且要求在指定的延迟时间后执行。
+                    // 具体来说，这里是在 1000 毫秒（1秒）后执行。
+                    // 发送的消息会进入消息队列，消息不会立即被处理。只有当循环到达消息的执行时间时，才会调用 handleMessage 方法。
+                    // 相当于，每次接收消息对会发送一条在1秒后执行的，what为0的消息，实现后台任务的一直执行
+                    _progressHandler.sendEmptyMessageDelayed(0, 1000); // 每隔1秒更新一次
+                }
+                return false;
+            }
+        });
+```
+
+ 在 Service 中使用 Handler 通常用于在服务的后台线程中执行异步任务、定时任务或处理其他一些与服务相关的逻辑。Service的生命周期独立于创建它的Activity。Handler的生命周期与所在Service关联。而Service在主线程中执行（默认情况下，除非需要在Service中执行后台耗时操作），Handler 被创建时没有显式传递 Looper，因此它默认与当前线程的 Looper 相关联，Handler的Looper即主线程的Looper。
+
+Looper：Looper 是一个消息循环器，它不断地从消息队列中取出消息并传递给相应的 Handler 处理。每个线程只能有一个 Looper。
+
+MessageQueue：MessageQueue 是消息队列，存储着待处理的消息。Looper 从队列中取出消息，并将其传递给关联的 Handler 处理。
+
+ Handler 本身并不是多线程的，但它能够在多线程环境中实现线程间通信。 通过在不同线程上创建 Handler，可以在一个线程中投递消息或任务，然后在关联的线程上处理它们。 这种机制有助于避免直接在不同线程之间进行共享数据，从而减少了多线程编程中的竞态条件和死锁等问题。
+
+**onStartCommand**当反复启动服务时调用，接收当前需要开启/关闭后台播放服务的命令，以及显示的标题和描述。
+
+```java
+public int onStartCommand(Intent intent, int flags, int startId)
+{
+    int cmd = intent.getExtras().getInt("cmd");
+
+    // cmd 为0， 表示应用进入后台，开启后台服务
+    if (cmd == 0)
+    {
+        if (!isRemove)
+        {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O)
+            {
+                _title = intent.getExtras().getString("title");
+                _description = intent.getExtras().getString("description");
+                start();
+            }
+        }
+        isRemove = true;
+    }
+    else    // cmd为1，表示应用进入前台，关闭后台服务
+    {
+        if (isRemove)
+        {
+            stop();
+        }
+        isRemove = false;
+    }
+    return super.onStartCommand(intent, flags, startId);
+}
+```
+
+当后台服务启动时，创建通知，更新remoteViews界面，并且播放（或者继续播放）媒体音乐，然后立即向消息队列发送一条没有延迟的空消息，从而开始更新进度条。
+
+```java
+private void start()
+{
+    isPlaying = true;
+    createNotification();
+    mediaPlayer.start();
+    _progressHandler.sendEmptyMessage(0); // 立即发送第一条消息
+
+}
+```
+
+当后台服务关闭时，暂停媒体音乐播放，调用Service类方法stopForeground，关闭通知，并通过handler.removeMessages方法，将消息队列中所有what字段为0的消息都移除，从而实现停止handle处理消息，停止进度条的更新的效果。
+
+```java
+private void stop()
+{
+    isPlaying = false;
+    stopForeground(true);
+    mediaPlayer.pause();
+
+    // handler.removeMessages(0) 则用于停止这个定时任务，即移除所有待处理的空消息。
+    // 通过移除所有what字段为0的消息，可以实现停止定时任务的继续产生。
+    _progressHandler.removeMessages(0); // 停止Handler的消息发送
+}
+```
+
+**updateNotification**方法更新任务栏通知，更新进度条进度。
+
+```java
+private void updateNotification(int progress)
+{
+    _remoteViews = new RemoteViews(getPackageName(), R.layout.notification_layout);
+    _remoteViews.setProgressBar(R.id.progressBar, 100, progress, false);
+    _remoteViews.setTextViewText(R.id.notificationTitle, _title);
+    _remoteViews.setTextViewText(R.id.description, _description);
+
+    Notification notification = null;
+    if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O)
+    {
+        notification = new Notification.Builder(this, "your_channel_id").setContentTitle("Your Notification Title")
+                .setContentText(_description).setContentTitle("正在播放：" + _title)
+                .setLargeIcon(BitmapFactory.decodeResource(getResources(), R.drawable.ic_hello))
+                .setSmallIcon(R.drawable.ic_hello).setCustomContentView(_remoteViews)
+                .setCustomBigContentView(_remoteViews).build();
+    }
+
+    NotificationManager notificationManager = null;
+    if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M)
+    {
+        notificationManager = getSystemService(NotificationManager.class);
+    }
+    notificationManager.notify(NOTIFICATION_ID, notification);
+}
+```
 
 ## 尾声
 
@@ -458,3 +585,10 @@ public class YoutubeService extends Service
 
 ![image.png](https://pic.leetcode.cn/1702885941-Bmwunl-image.png)
 
+
+
+### 分工
+
+登录，个人信息，视频上传：杨大宇
+
+Youtube视频爬取/播放，后台Service音乐：朱正阳
