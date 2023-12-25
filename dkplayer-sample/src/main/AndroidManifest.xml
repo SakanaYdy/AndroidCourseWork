@@ -83,6 +83,9 @@
             android:configChanges="keyboardHidden|orientation|screenSize|screenLayout"
             android:screenOrientation="portrait"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
+        <service
+            android:name=".Service.AudioPlayService"
+            android:exported="false" />
     </application>
 
 </manifest>
