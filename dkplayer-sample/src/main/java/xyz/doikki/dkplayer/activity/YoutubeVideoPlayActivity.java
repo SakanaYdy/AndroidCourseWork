@@ -53,8 +53,7 @@ public class YoutubeVideoPlayActivity extends AppCompatActivity
 
     private static String VIDEO_COMMENTS_URL(String videoId)
     {
-        return "https://www.googleapis.com/youtube/v3/commentThreads?part=snippet&videoId="
-                + videoId + "&maxResults=20&key=" + GOOGLE_YOUTUBE_API_KEY;
+        return "https://www.googleapis.com/youtube/v3/commentThreads?part=snippet&videoId=" + videoId + "&maxResults=20&key=" + GOOGLE_YOUTUBE_API_KEY;
     }
 
     private WebView _webView;
@@ -101,47 +100,9 @@ public class YoutubeVideoPlayActivity extends AppCompatActivity
         _webView.getSettings().setMediaPlaybackRequiresUserGesture(false);
 
 
-        String data_portait =
-                "<!DOCTYPE html>\n" + "<html>\n" + "  <body>\n" + "    <div id=\"player\"></div>\n"
-                        + "\n" + "    <script>\n"
-                        + "      var tag = document.createElement('script');\n"
-                        + "      tag.src = \"https://www.youtube.com/iframe_api\";\n"
-                        + "      var firstScriptTag = document.getElementsByTagName('script')[0];\n"
-                        + "      firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);\n"
-                        + "\n" + "      var player;\n"
-                        + "      function onYouTubeIframeAPIReady() {\n"
-                        + "        player = new YT.Player('player', {\n"
-                        + "          height: '200',\n" + "          width: '100%',\n"
-                        + "          videoId: '" + _videoId + "',\n" + "          events: {\n"
-                        + "            'onReady': onPlayerReady,\n"
-                        + "            'onStateChange': onPlayerStateChange\n" + "          }\n"
-                        + "        });\n" + "      }\n" + "\n"
-                        + "      function onPlayerReady(event) {\n"
-                        + "        event.target.playVideo();\n" + "      }\n" + "\n"
-                        + "      function onPlayerStateChange(event) {\n"
-                        + "        // Handle player state changes if needed\n" + "      }\n"
-                        + "    </script>\n" + "  </body>\n" + "</html>";
+        String data_portait = "<!DOCTYPE html>\n" + "<html>\n" + "  <body>\n" + "    <div id=\"player\"></div>\n" + "\n" + "    <script>\n" + "      var tag = document.createElement('script');\n" + "      tag.src = \"https://www.youtube.com/iframe_api\";\n" + "      var firstScriptTag = document.getElementsByTagName('script')[0];\n" + "      firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);\n" + "\n" + "      var player;\n" + "      function onYouTubeIframeAPIReady() {\n" + "        player = new YT.Player('player', {\n" + "          height: '200',\n" + "          width: '100%',\n" + "          videoId: '" + _videoId + "',\n" + "          events: {\n" + "            'onReady': onPlayerReady,\n" + "            'onStateChange': onPlayerStateChange\n" + "          }\n" + "        });\n" + "      }\n" + "\n" + "      function onPlayerReady(event) {\n" + "        event.target.playVideo();\n" + "      }\n" + "\n" + "      function onPlayerStateChange(event) {\n" + "        // Handle player state changes if needed\n" + "      }\n" + "    </script>\n" + "  </body>\n" + "</html>";
 
-        String data_landscape =
-                "<!DOCTYPE html>\n" + "<html>\n" + "  <body>\n" + "    <div id=\"player\"></div>\n"
-                        + "\n" + "    <script>\n"
-                        + "      var tag = document.createElement('script');\n"
-                        + "      tag.src = \"https://www.youtube.com/iframe_api\";\n"
-                        + "      var firstScriptTag = document.getElementsByTagName('script')[0];\n"
-                        + "      firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);\n"
-                        + "\n" + "      var player;\n"
-                        + "      function onYouTubeIframeAPIReady() {\n"
-                        + "        player = new YT.Player('player', {\n"
-                        + "          height: 380,\n" + "          width: '100%',\n"
-                        + "          videoId: '" + _videoId + "',\n" + "          events: {\n"
-                        + "            'onReady': onPlayerReady,\n"
-                        + "            'onStateChange': onPlayerStateChange\n" + "          }\n"
-                        + "        });\n" + "      }\n" + "\n"
-                        + "      function onPlayerReady(event) {\n"
-                        + "        event.target.playVideo();\n" + "      }\n" + "\n"
-                        + "      function onPlayerStateChange(event) {\n"
-                        + "        // Handle player state changes if needed\n" + "      }\n"
-                        + "    </script>\n" + "  </body>\n" + "</html>";
+        String data_landscape = "<!DOCTYPE html>\n" + "<html>\n" + "  <body>\n" + "    <div id=\"player\"></div>\n" + "\n" + "    <script>\n" + "      var tag = document.createElement('script');\n" + "      tag.src = \"https://www.youtube.com/iframe_api\";\n" + "      var firstScriptTag = document.getElementsByTagName('script')[0];\n" + "      firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);\n" + "\n" + "      var player;\n" + "      function onYouTubeIframeAPIReady() {\n" + "        player = new YT.Player('player', {\n" + "          height: 380,\n" + "          width: '100%',\n" + "          videoId: '" + _videoId + "',\n" + "          events: {\n" + "            'onReady': onPlayerReady,\n" + "            'onStateChange': onPlayerStateChange\n" + "          }\n" + "        });\n" + "      }\n" + "\n" + "      function onPlayerReady(event) {\n" + "        event.target.playVideo();\n" + "      }\n" + "\n" + "      function onPlayerStateChange(event) {\n" + "        // Handle player state changes if needed\n" + "      }\n" + "    </script>\n" + "  </body>\n" + "</html>";
         _webView.loadDataWithBaseURL(null, data_portait, "text/html", "UTF-8", null);
 
         _webView.getViewTreeObserver()
@@ -157,8 +118,7 @@ public class YoutubeVideoPlayActivity extends AppCompatActivity
                     public void onGlobalLayout()
                     {
                         // 横屏时，全屏
-                        if (getResources().getConfiguration().orientation
-                                == Configuration.ORIENTATION_LANDSCAPE)
+                        if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE)
                         {
                             if (actionBar != null)
                             {
@@ -232,6 +192,8 @@ public class YoutubeVideoPlayActivity extends AppCompatActivity
             {
                 try
                 {
+                    Log.d("CommentTag", "client.newCall(request).execute();");
+
                     // execute同步请求，放在子线程中执行
                     Response response = client.newCall(request).execute();
 
@@ -240,6 +202,8 @@ public class YoutubeVideoPlayActivity extends AppCompatActivity
                     {
                         String responseBody = response.body().string();
                         processResponse(responseBody);
+                        Log.d("CommentTag", "isSuccessful");
+
                         return;
                     }
                 } catch (IOException e)
@@ -261,6 +225,8 @@ public class YoutubeVideoPlayActivity extends AppCompatActivity
             {
                 e.printStackTrace();
             }
+            Log.d("CommentTag", "processResponse");
+
         }
 
 
@@ -272,8 +238,8 @@ public class YoutubeVideoPlayActivity extends AppCompatActivity
         @Override
         public void onPostExecute()
         {
-            if (_datas
-                    != null)
+            Log.d("CommentTag", "onPostExecute");
+            if (_datas != null)
             {
                 for (CommentDataModel item : _datas)
                 {

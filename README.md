@@ -32,10 +32,6 @@
 
 使用简单的继承自BaseFragment的实现类，其显示内容为数据库中所有用户的所有视频，通过查询数据库的方式去InitData，单个item实现点击播放以及暂停功能。
 
-#### RecycleView -- ChannelFragment
-
-
-
 #### 抖音 --  TikTokListFragment
 
 同样继承自BaseFragment，但是这里的显示内容为爬虫所获取到的存储在云端的视频连接进行显示。
@@ -68,13 +64,39 @@ onBindViewHolder 方法用于将数据绑定到TikTokListViewHolder中的视图�
 
 TikTokListViewHolder 是一个内部类，表示RecyclerView中每个列表项的视图持有者。它包含了列表项中显示的ImageView和TextView，以及一个点击事件监听器。当列表项被点击时，它会启动TikTok2Activity，并传递相应的位置信息。
 
+这就会产生从下左图到右图的效果：
+
+![image-20231225091956005](D:\Android\course-work\tmp\README.assets\image-20231225091956005.png)
+
+##### TikTok2Activity 
+initVideoView 方法初始化了视频播放组件 VideoView。
+initViewPager 方法初始化了垂直滚动的 ViewPager，设置了适配器、页面切换监听器。
+startPlay 方法用于开始播放指定位置的视频。在滚动页面时，根据页面位置找到对应的 ViewHolder，通过 VideoView 播放视频。
+addData 方法用于添加视频数据，从 DataUtil 中获取 TikTok 风格的数据并更新适配器。、
+
+TikTok2Activity 具体的适配器设置：与其他适配器类的主要区别在于对于initViewPager（）方法
+用来判断当前页面滑动顺序播放页面  也就是实现了一个滑动监听器。
+
+设置 ViewPager 的滑动监听器：
+setOnPageChangeListener: 通过 ViewPager.SimpleOnPageChangeListener 监听器，实现对页面切换的监听。
+
+onPageScrolled 方法：
+监听页面滑动过程中的回调。在这里，通过比较当前位置 position 和上一次的位置 mCurItem，判断滑动的方向，即是否反向滑动。
+
+onPageSelected 方法：
+页面选中时的回调。在这里，判断当前选中的页面位置是否和上一次的位置相同，如果不同，则调用 startPlay 方法，可能用于开始播放视频。
+
+![image-20231225092151187](D:\Android\course-work\tmp\README.assets\image-20231225092151187.png)
+
 ### 个人中心页面
 
 这里主要实现一些APP的关于账户的操作，包括退出登录，修改密码，显示个人信息等操作。
 
 该页面通过Intent进行组件间的通信，从登录页面获取到当前登录用户的信息，并显示在用户名中。
 
-![image.png](https://pic.leetcode.cn/1702651523-VuUHwK-image.png)
+![image-20231225094854345](D:\Android\course-work\tmp\README.assets\1703468823-nEVCfj-image.png)
+
+![image-20231225094815113](D:\Android\course-work\tmp\README.assets\1703468817-PdBwix-image.png)
 
 修改密码功能，为了减少Fragment的设计数量，选择使用弹窗的形式进行操作。
 
@@ -82,11 +104,53 @@ TikTokListViewHolder 是一个内部类，表示RecyclerView中每个列表项�
 
 通过 `LayoutInflater` 创建一个自定义的视图（`R.layout.dialog_update_password`），该视图包含三个输入框用于输入原密码、新密码和确认新密码。在点击确定按钮时，可以通过 `view.findViewById()` 获取输入框的引用，并获取输入的内容进行相应的处理。确保在你的布局文件中包含了这三个输入框。
 
+##### 上传文件
+
+当点击文件上传按钮时，则会跳转到文件夹中，选择视频然后进行本地上传。同时当前上传的视频会显示在按钮下方。同时在文件上传成功之后，通过动态广播机制，通知“我的”页面进行数据更新。
+
+<img src="D:\Android\course-work\tmp\README.assets\1703469136-yGWCBc-image.png" alt="image-20231225095155440" style="zoom: 67%;" />
+
+<img src="D:\Android\course-work\tmp\README.assets\1703469153-xiTQlt-image.png" alt="image-20231225095141249" style="zoom: 67%;" />
+
+它的主要功能包括从 selectedVideoUri 获取输入流，将视频保存到本地目录，并显示本地视频文件。
+然后发送广播，通知 我的 页面进行页面数据更新
+
+同时为了防止文件上传被覆盖，使用UUID进行文件名唯一生成，可以防止这个问题
+
+<img src="D:\Android\course-work\tmp\README.assets\1703469188-lMdmjV-image.png" alt="image-20231225095320456" style="zoom:67%;" />
+
+##### 改进
+
+改进：使用后台上传文件
+考虑到可能视频文件较大，影响上传效率，使用Service后台进程实现文件上传工作。在UploadService中实现文件上传逻辑，并用intent从主类中接收到需要上传的文件路径
+
+<img src="D:\Android\course-work\tmp\README.assets\1703469273-UPpkyF-image.png" alt="image-20231225095438760" style="zoom:67%;" />
+
+![image-20231225095517656](D:\Android\course-work\tmp\README.assets\1703469300-OntaNZ-image.png)
+
+在页面的最下面，设置了一个VideoView用来展示最新上传的视频.此外，给这个视频也添加了一个后台Service任务，使得切换到其他视图时，也能够接着播放。
+
+![image-20231225095543383](D:\Android\course-work\tmp\README.assets\1703469346-cBzbeu-image.png)
+
 ### 我的 页面
 
-该页面功能较为简单，用来显示用户个人所上传的视频信息。主要操作在于将LoginActivity中的登录信息传递到该Fragment。
+该页面功能较为简单，用来显示用户个人所上传的视频信息。主要操作在于将LoginActivity中的登录信息传递到该Fragment，以及接收广播获取到最新的用户视频数据
 
-（上面个人中心页面也使用该方式）首先是使用Intent通信，将LoginActivity中的登录信息，包括个人账号名以及密码（用于修改密码页面作用）等信息传递到MainActivity。然后在这个里面创建加入Fragment的时候，使用setArguments方法，将从Login接收到的消息传递给Fragment组件。然后通过Adapter参数构造传递给数据构造InitData函数，然后再去数据库查询相关用户的视频信息。
+（上面个人中心页面也使用该方式）首先是使用Intent通信，将LoginActivity中的登录信息，包括个人账号名以及密码（用于修改密码页面作用）等信息传递到MainActivity。然后在这个里面创建加入Fragment的时候，使用setArguments方法，将从Login接收到的消息传递给Fragment组件。然后通过Adapter参数构造传递给数据构造InitData函数。
+
+接收到广播之后，同时也会接收到新增加的视频的文件路径，会进行数据刷新。
+此外，当前视频item显示的封面是采用视频首帧来设置的，将获取到的封面同时上传到本地，命名与视频名称一致。
+
+![image-20231225095724034](D:\Android\course-work\tmp\README.assets\1703469449-dYgLWz-image.png)
+
+<img src="D:\Android\course-work\tmp\README.assets\1703469481-OfvDOD-image.png" alt="image-20231225095757825" style="zoom:67%;" />
+
+个人页面数据初始化：从虚拟机存储路径中获取到上传的所有视频以及保存的封面。
+
+主要通过构建视频文件存放的绝对路劲进行获取。
+
+<img src="D:\Android\course-work\tmp\README.assets\1703469562-QzQaDB-image.png" alt="image-20231225095912381" style="zoom:67%;" />
+
 ### 仿Youtube 视频播放页面
 
 效果展示：

@@ -32,10 +32,13 @@ public abstract class BackgroundTask
     }
 
     /**
+     *
      * 在后台线程中调用 doInBackground 方法，然后在主线程中调用 onPostExecute。
      */
     private void startBackground()
     {
+        // ew Thread(new Runnable() { ... }): 创建了一个新的线程，并通过匿名内部类实现了Runnable接口。
+        // Runnable接口中有一个run()方法，该方法定义了在线程中执行的任务。
         // 实现一个匿名内部类，传递给接口参数，“函数式编程“
         new Thread(new Runnable()
         {
@@ -44,7 +47,10 @@ public abstract class BackgroundTask
                 // 首先在子线程启动后台任务
                 doInBackground();
 
+                // 通过_activity.runOnUiThread()方法切换到主线程。
                 // 然后在主线程中调用 onPostExecute 方法
+                // 如果该方法是运行在主线程，Runnable的run方法会马上运行；而如果不是在主线程，
+                //  就post到主线程的looper的MessageQueue中排队执行。
                 _activity.runOnUiThread(new Runnable()
                 {
                     public void run()
